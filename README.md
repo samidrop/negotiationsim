@@ -9,6 +9,11 @@ The point is not to "win". It is to notice that some issues are cheap for you
 and precious for them (and vice versa), and to trade those rather than split
 every difference down the middle.
 
+Every game generates a **random product** — facial tissue, lithium cells, solar
+microinverters, oat milk — with its own realistic prices and volumes, and freshly
+randomised hidden point values. The generator guarantees that a zone of possible
+agreement exists but is narrow, so a deal is always available and never easy.
+
 ## The five issues
 
 | Issue | Options |
@@ -22,7 +27,19 @@ every difference down the middle.
 Each side privately scores every option. A perfect sweep is 100 points. Each
 side also has a **walk-away score** — sign nothing worth less than that.
 
-## Try it
+## Play
+
+```bash
+python3 negotiate.py play                # a random deal
+python3 negotiate.py play --seed 42      # replay an exact deal
+python3 negotiate.py play --rounds 12    # a longer negotiation
+```
+
+Each round you can counter-offer, accept, ask what matters to them, re-read your
+brief, or walk away. A side bar tracks the price on the table, the estimated
+annual contract value, and your score against your walk-away line.
+
+## Inspect
 
 ```bash
 python3 negotiate.py sheet              # your confidential brief
@@ -42,6 +59,10 @@ python3 -m unittest discover -s tests
 |---|---|
 | `negosim/deal.py` | The scenario: issues, options, and both sides' secret points |
 | `negosim/analysis.py` | Scores every one of the 1,280 possible packages and finds the win-win swaps you missed |
+| `negosim/products.py` | Random products and guaranteed-negotiable scenario generation |
+| `negosim/opponent.py` | The supplier: concession schedule, and learning what you care about |
+| `negosim/game.py` | The playable round loop |
+| `negosim/hud.py` | The live side bar |
 | `negosim/sheet.py` | Renders the confidential briefs |
 | `negosim/ui.py` | Terminal colours and tables |
 | `negotiate.py` | Command line entry point |

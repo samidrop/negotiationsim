@@ -73,3 +73,68 @@ def table(headers: list[str], rows: list[list[str]], aligns: str = "") -> str:
 def bar(value: int, maximum: int, width: int = 24, style: str = "green") -> str:
     filled = 0 if maximum <= 0 else max(0, min(width, round(width * value / maximum)))
     return paint("#" * filled, style) + paint("." * (width - filled), "dim")
+
+
+# --------------------------------------------------------------------------
+# Layout helpers: panels and side-by-side columns.
+# --------------------------------------------------------------------------
+
+import re as _re
+
+_ANSI = _re.compile(r"\033\[[0-9;]*m")
+
+
+def visible_len(text: str) -> int:
+    """Length as the eye sees it, ignoring invisible colour codes."""
+    return len(_ANSI.sub("", text))
+
+
+def pad(text: str, width: int) -> str:
+    return text + " " * max(0, width - visible_len(text))
+
+
+def truncate(text: str, width: int) -> str:
+    if visible_len(text) <= width:
+        return text
+    plain = _ANSI.sub("", text)
+    return plain[: max(0, width - 1)] + "~"
+
+
+def columns(left: list[str], right: list[str], left_width: int, gap: str = " | ") -> str:
+    """Put two blocks of text side by side, like a main view and a sidebar."""
+    height = max(len(left), len(right))
+    lines = []
+    for i in range(height):
+        l = truncate(left[i], left_width) if i < len(left) else ""
+        r = right[i] if i < len(right) else ""
+        lines.append(pad(l, left_width) + paint(gap, "dim") + r)
+    return "\n".join(lines)
+
+
+def panel(lines: list[str], title: str = "", width: int = WIDTH) -> str:
+    """A boxed block of text."""
+    inner = width - 4
+    top = f"+- {paint(title, 'bold')} " + "-" * max(0, inner - visible_len(title) - 1) + "+"
+    if not title:
+        top = "+" + "-" * (width - 2) + "+"
+    body = [f"| {pad(truncate(line, inner), inner)} |" for line in lines]
+    bottom = "+" + "-" * (width - 2) + "+"
+    return "\n".join([paint(top, "dim"), *body, paint(bottom, "dim")])
+
+
+def meter(value: int, maximum: int, threshold: int | None = None, width: int = 18) -> str:
+    """A horizontal bar with an optional walk-away marker shown as a pipe."""
+    cells = []
+    for i in range(width):
+        lo = maximum * i / width
+        filled = value > lo
+        at_threshold = (
+            threshold is not None and lo <= threshold < maximum * (i + 1) / width
+        )
+        if at_threshold:
+            cells.append(paint("|", "bold", "red"))
+        elif filled:
+            cells.append(paint("#", "green" if threshold is None or value >= threshold else "yellow"))
+        else:
+            cells.append(paint(".", "dim"))
+    return "".join(cells)

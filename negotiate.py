@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Negotiation simulator - command line entry point.
 
+  python3 negotiate.py play              play a negotiation
   python3 negotiate.py sheet             your confidential brief
   python3 negotiate.py sheet --reveal     ...with the AI's hidden points too
   python3 negotiate.py score price=18 volume=100k payment=net90 delivery=2w exclusivity=global2y
@@ -14,7 +15,18 @@ import sys
 from negosim import ui
 from negosim.analysis import issue_by_issue_diff, judge
 from negosim.deal import BUYER, SELLER, SUPPLIER_DEAL, Offer
+from negosim.game import start
+from negosim.products import generate_scenario
 from negosim.sheet import offer_card, scoresheet
+
+
+def _scenario_for(args: argparse.Namespace):
+    """The fixed practice deal, or a freshly generated random one."""
+    if getattr(args, "classic", False):
+        return SUPPLIER_DEAL
+    if getattr(args, "seed", None) is not None:
+        return generate_scenario(args.seed)[0]
+    return SUPPLIER_DEAL
 
 
 def _parse_terms(terms: list[str]) -> dict[str, str]:
@@ -27,14 +39,19 @@ def _parse_terms(terms: list[str]) -> dict[str, str]:
     return choices
 
 
+def cmd_play(args: argparse.Namespace) -> int:
+    start(seed=args.seed, rounds=args.rounds)
+    return 0
+
+
 def cmd_sheet(args: argparse.Namespace) -> int:
     side = SELLER if args.side == "seller" else BUYER
-    print(scoresheet(SUPPLIER_DEAL, side, reveal=args.reveal))
+    print(scoresheet(_scenario_for(args), side, reveal=args.reveal))
     return 0
 
 
 def cmd_score(args: argparse.Namespace) -> int:
-    scenario = SUPPLIER_DEAL
+    scenario = _scenario_for(args)
     if not args.terms:
         print("Give me a package, e.g.:")
         print("  python3 negotiate.py score " + " ".join(
@@ -84,14 +101,24 @@ def main(argv: list[str] | None = None) -> int:
     )
     subs = parser.add_subparsers(dest="command", required=True)
 
+    p_play = subs.add_parser("play", help="play a negotiation")
+    p_play.add_argument("--seed", type=int, default=None,
+                        help="replay an exact deal you played before")
+    p_play.add_argument("--rounds", type=int, default=8,
+                        help="how many rounds before the clock runs out")
+    p_play.set_defaults(func=cmd_play)
+
     p_sheet = subs.add_parser("sheet", help="show a confidential scoresheet")
     p_sheet.add_argument("--side", choices=["buyer", "seller"], default="buyer")
     p_sheet.add_argument("--reveal", action="store_true",
                          help="also show the other side's hidden points")
+    p_sheet.add_argument("--seed", type=int, default=None,
+                         help="show the brief for a generated deal")
     p_sheet.set_defaults(func=cmd_sheet)
 
     p_score = subs.add_parser("score", help="score a package, e.g. price=18 volume=100k")
     p_score.add_argument("terms", nargs="*")
+    p_score.add_argument("--seed", type=int, default=None)
     p_score.set_defaults(func=cmd_score)
 
     args = parser.parse_args(argv)
