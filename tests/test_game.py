@@ -5,7 +5,7 @@ import unittest
 
 from negosim.analysis import all_offers, judge, viable_offers
 from negosim.deal import BUYER, PERFECT_SCORE, SELLER, Offer
-from negosim.opponent import ACCEPT, COUNTER, NO_DEAL, SellerAgent
+from negosim.opponent import ACCEPT, COUNTER, NO_DEAL, RAGE_QUIT, SellerAgent
 from negosim.products import CATALOG, contract_value, generate_scenario, parse_volume
 
 SEEDS = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 500, 777, 999]
@@ -202,8 +202,9 @@ def _package_worth(scenario, side, at_least):
 
 
 class DealQualityOfPlay(unittest.TestCase):
-    def test_a_stubborn_player_gets_no_deal_and_scores_their_walk_away(self):
-        """Refusing to move is a strategy, and it is usually a losing one."""
+    def test_a_stubborn_player_never_gets_a_deal(self):
+        """Refusing to move is a strategy, and it is usually a losing one.
+        Depending on who you drew, it ends in a timeout or a slammed door."""
         scenario, agent = fresh(rounds=6)
         agent.opening_offer()
         never_moving = Offer.build(
@@ -212,7 +213,7 @@ class DealQualityOfPlay(unittest.TestCase):
         outcome = None
         for round_no in range(1, 7):
             outcome = agent.respond(never_moving, round_no)
-        self.assertEqual(outcome.kind, NO_DEAL)
+        self.assertIn(outcome.kind, (NO_DEAL, RAGE_QUIT))
 
     def test_judge_still_works_on_a_generated_scenario(self):
         scenario, _, _ = generate_scenario(99)

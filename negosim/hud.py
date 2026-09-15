@@ -40,7 +40,7 @@ def sidebar(
     lines.append(ui.paint(f"ROUND {round_no} OF {rounds}", "bold"))
     lines.append("")
 
-    lines.append(ui.paint(f"PRICE PER {product.unit.upper()}", "bold"))
+    lines.append(ui.paint(f"PRICE PER {product.short_unit.upper()}", "bold"))
     lines.extend(_price_ladder(on_table, yours))
     lines.append(ui.paint("  > theirs  * yours", "dim"))
     lines.append("")

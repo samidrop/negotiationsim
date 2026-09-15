@@ -33,6 +33,11 @@ class Product:
     buyer_kind: str     # what the buyer's business does with it
     seller_kind: str    # what the seller's business is
 
+    @property
+    def short_unit(self) -> str:
+        """'case of 12' is fine in prose but too long for a table column."""
+        return self.unit.split(" of ")[0]
+
 
 CATALOG: tuple[Product, ...] = (
     Product("facial tissue", "case", "cases", 18.40, (8_000, 20_000, 45_000, 90_000),
@@ -166,7 +171,7 @@ def generate_scenario(seed: int | None = None) -> tuple[Scenario, Product, int]:
         prices = [round(mid * m, 2) for m in multipliers]
     buyer_price_pts = _ladder(price_weight, len(prices))
     price = Issue(
-        "price", f"Price per {product.unit}", "USD",
+        "price", f"Price per {product.short_unit}", "USD",
         tuple(
             # seller points are exactly what the buyer gives up: a zero sum rung
             Option(f"{p}", _money(p), bp, price_weight - bp)

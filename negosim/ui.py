@@ -22,6 +22,16 @@ _CODES = {
 WIDTH = 74
 
 
+def colour_enabled() -> bool:
+    return _ENABLED
+
+
+def set_colour(enabled: bool) -> None:
+    """Force colour on or off. Useful for previews and for tests."""
+    global _ENABLED
+    _ENABLED = enabled
+
+
 def paint(text: str, *styles: str) -> str:
     if not _ENABLED or not styles:
         return text

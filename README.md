@@ -27,17 +27,61 @@ agreement exists but is narrow, so a deal is always available and never easy.
 Each side privately scores every option. A perfect sweep is 100 points. Each
 side also has a **walk-away score** — sign nothing worth less than that.
 
+## Who you negotiate against
+
+Every game generates a person: a name, a drawn portrait, and one of **eight
+personality types** — the Shark, the Professional, the Burnout, the Hype Guy,
+the Bureaucrat, the Live Wire, the Old Head, the Quant. Appearance and
+personality are drawn completely independently, so you cannot read a negotiator
+off their face. You find out who you drew in the debrief, not before.
+
+Personality is not decoration. It changes how greedy their opening is, how fast
+they concede, how honest they are when you ask what they want, and how much
+disrespect they will absorb before they walk out for good. **Lowball a Live Wire
+and they will overturn the chair and leave.** Massively overpay anyone and they
+will sign it with dollar signs in their eyes before you can reread it.
+
+Their face reacts to every offer — bored, thinking, smug, annoyed, furious,
+delighted — and they have real opinions, which they will share whether you asked
+or not.
+
 ## Play
 
 ```bash
 python3 negotiate.py play                # a random deal
 python3 negotiate.py play --seed 42      # replay an exact deal
 python3 negotiate.py play --rounds 12    # a longer negotiation
+
+python3 negotiate.py faces               # browse the randomly generated people
+python3 negotiate.py faces --expressions # one person in every mood
+python3 negotiate.py check               # is live AI dialogue switched on?
 ```
 
-Each round you can counter-offer, accept, ask what matters to them, re-read your
-brief, or walk away. A side bar tracks the price on the table, the estimated
-annual contract value, and your score against your walk-away line.
+Each round you can counter-offer, accept, ask what matters to them, **say
+something to them in plain English**, re-read your brief, or walk away. A side
+bar tracks the price on the table, the estimated annual contract value, and your
+score against your walk-away line.
+
+Talking is not cosmetic. Insulting them burns goodwill and shortens their fuse;
+being warm buys patience back; telling them you are flexible on a term makes
+them stop paying you for it; naming a trade out loud makes them expect it.
+
+## Live AI dialogue (optional)
+
+Out of the box every character speaks from 241 hand-written lines and reads your
+typed English by intent. If you install the Anthropic SDK and provide a key, the
+same characters write their lines fresh instead:
+
+```bash
+pip install anthropic
+export ANTHROPIC_API_KEY=sk-ant-...
+python3 negotiate.py check
+```
+
+The language model only chooses the words. Whether an offer is accepted,
+refused, or rage-quit is always decided by the rules, so the game cannot be
+talked out of its own logic. If the key is missing or the network fails, it
+falls back to the written dialogue silently and the game plays identically.
 
 ## Inspect
 
@@ -60,7 +104,13 @@ python3 -m unittest discover -s tests
 | `negosim/deal.py` | The scenario: issues, options, and both sides' secret points |
 | `negosim/analysis.py` | Scores every one of the 1,280 possible packages and finds the win-win swaps you missed |
 | `negosim/products.py` | Random products and guaranteed-negotiable scenario generation |
-| `negosim/opponent.py` | The supplier: concession schedule, and learning what you care about |
+| `negosim/opponent.py` | The supplier: concession schedule, learning what you care about, losing their temper |
+| `negosim/persona.py` | Eight personality types and 241 lines of dialogue |
+| `negosim/character.py` | Random people: name, look and temperament, drawn independently |
+| `negosim/portrait.py` | Clipart faces in 256 colours, with thirteen expressions |
+| `negosim/intent.py` | Reading what the player typed in plain English |
+| `negosim/banter.py` | Choosing the face and the line for the moment |
+| `negosim/llm.py` | Optional live dialogue via the Claude API |
 | `negosim/game.py` | The playable round loop |
 | `negosim/hud.py` | The live side bar |
 | `negosim/sheet.py` | Renders the confidential briefs |

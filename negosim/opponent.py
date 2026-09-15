@@ -12,27 +12,34 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 
+from . import persona as P
 from .deal import BUYER, SELLER, Offer, Scenario
+from .persona import Persona
 
 ACCEPT = "accept"
 COUNTER = "counter"
 NO_DEAL = "no_deal"
+RAGE_QUIT = "rage_quit"
 
 
 @dataclass
 class Reply:
+    """What the seller does, and which situation the game should voice."""
+
     kind: str
     offer: Offer | None
-    message: str
+    situation: str
 
 
 class SellerAgent:
     """Plays the supplier across a fixed number of rounds."""
 
-    def __init__(self, scenario: Scenario, rounds: int = 8, rng: random.Random | None = None):
+    def __init__(self, scenario: Scenario, rounds: int = 8,
+                 rng: random.Random | None = None, persona: Persona | None = None):
         self.scenario = scenario
         self.rounds = rounds
         self.rng = rng or random.Random()
+        self.persona = persona or P.PRO
         self.walkaway = scenario.seller_walkaway
 
         # Every package, scored once up front.
@@ -45,18 +52,28 @@ class SellerAgent:
         self.importance: dict[str, float] = {k: 1.0 for k in scenario.issue_keys}
         self.last_player_offer: Offer | None = None
         self.last_counter: Offer | None = None
-        self.opening_target = 92
+        self.opening_target = self.persona.opening_target
         self.insults = 0
+        self.walked_out = False
 
     # -- what the seller wants this round ----------------------------------
 
     def target(self, round_no: int) -> int:
-        """Its minimum acceptable score, sliding down as the clock runs."""
+        """Its minimum acceptable score, sliding down as the clock runs.
+        A stubborn personality concedes more slowly than a generous one."""
         floor = self.walkaway + 3
         if self.rounds <= 1:
             return floor
         progress = (round_no - 1) / (self.rounds - 1)
+        progress = min(1.0, progress * self.persona.concession_rate)
         return round(self.opening_target - (self.opening_target - floor) * progress)
+
+    def is_insulting(self, offer: Offer) -> int:
+        """0 if the offer is merely bad, 1 if rude, 2 if outrageous."""
+        gap = self.walkaway - offer.score(SELLER)
+        if gap < self.persona.insult_margin:
+            return 0
+        return 2 if gap >= self.persona.insult_margin * 2 else 1
 
     # -- learning from the buyer -------------------------------------------
 
@@ -113,26 +130,44 @@ class SellerAgent:
         target = self.target(round_no)
         final_round = round_no >= self.rounds
 
+        # They have handed over far more than they needed to. Take it, gladly.
+        if mine >= self.persona.delight_at:
+            return Reply(ACCEPT, player_offer, P.DELIGHT)
+
+        severity = self.is_insulting(player_offer)
+        if severity:
+            self.insults += severity
+            if self.insults > self.persona.rage_patience:
+                self.walked_out = True
+                return Reply(RAGE_QUIT, None, P.RAGE)
+            if not final_round:
+                counter = self._advance(target)
+                return Reply(COUNTER, counter, P.INSULT)
+
         if mine >= target:
-            return Reply(ACCEPT, player_offer, self._accept_line(mine, target))
+            return Reply(ACCEPT, player_offer, P.ACCEPT)
 
         if final_round:
             if mine >= self.walkaway:
-                return Reply(ACCEPT, player_offer, self._reluctant_line())
-            return Reply(NO_DEAL, None, self._walk_line(mine))
+                return Reply(ACCEPT, player_offer, P.THIN)
+            return Reply(NO_DEAL, None, P.WALK)
 
-        if mine < self.walkaway - 12:
-            self.insults += 1
+        counter = self._advance(target)
+        return Reply(COUNTER, counter, P.BELOW if mine < self.walkaway else P.CLOSE)
 
+    def _advance(self, target: int) -> Offer:
+        """Produce the next counter, never hardening on the last one."""
         ceiling = self.last_counter.score(SELLER) if self.last_counter else None
         counter = self._pick(target, ceiling)
-        # Never counter with something worth LESS to the buyer than last time;
-        # a negotiator who goes backwards is just wasting the clock.
         if self.last_counter is not None and self._preference_guess(counter) < self._preference_guess(self.last_counter):
             counter = self.last_counter
-        moved = self._describe_move(self.last_counter, counter)
         self.last_counter = counter
-        return Reply(COUNTER, counter, self._counter_line(mine, moved, round_no))
+        return counter
+
+    def moved_to(self, before: Offer | None, after: Offer | None) -> str | None:
+        if before is None or after is None:
+            return None
+        return self._describe_move(before, after)
 
     # -- flavour text ------------------------------------------------------
 
@@ -203,13 +238,20 @@ class SellerAgent:
         return f"{opener} Here's where I am.{pressure}"
 
     def hint(self) -> str:
-        """An honest but self-serving answer to 'what matters most to you?'"""
+        """An answer to 'what matters most to you?'. How straight it is
+        depends entirely on who you are talking to."""
         ranked = sorted(self.scenario.issues, key=lambda i: -i.stake(SELLER))
-        top, second = ranked[0], ranked[1]
-        cheap = ranked[-1]
+        honest = self.rng.random() < self.persona.hint_honesty
+        if honest:
+            top, second, cheap = ranked[0], ranked[1], ranked[-1]
+            return (
+                f"{top.label} is the one that decides whether this is worth doing "
+                f"for me, with {second.label.lower()} behind it. {cheap.label} I "
+                f"have more room on than you'd think."
+            )
+        # Not lying exactly. Just pointing at the wrong thing on purpose.
+        decoy = ranked[1] if len(ranked) > 1 else ranked[0]
         return (
-            f"Honestly? {top.label} is the one that decides whether this deal is "
-            f"worth doing for me, with {second.label.lower()} behind it. "
-            f"{cheap.label} I have more room on than you'd think. "
-            f"Though don't take that as an invitation to squeeze me on price."
+            f"{decoy.label} is what I'm being measured on this quarter, so that's "
+            f"where I'm least flexible. Everything else I can look at."
         )

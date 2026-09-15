@@ -2,6 +2,7 @@
 """Negotiation simulator - command line entry point.
 
   python3 negotiate.py play              play a negotiation
+  python3 negotiate.py faces             browse the randomly generated people
   python3 negotiate.py sheet             your confidential brief
   python3 negotiate.py sheet --reveal     ...with the AI's hidden points too
   python3 negotiate.py score price=18 volume=100k payment=net90 delivery=2w exclusivity=global2y
@@ -10,11 +11,14 @@
 from __future__ import annotations
 
 import argparse
+import random
 import sys
 
 from negosim import ui
 from negosim.analysis import issue_by_issue_diff, judge
 from negosim.deal import BUYER, SELLER, SUPPLIER_DEAL, Offer
+from negosim import llm, portrait as X
+from negosim.character import generate_character
 from negosim.game import start
 from negosim.products import generate_scenario
 from negosim.sheet import offer_card, scoresheet
@@ -37,6 +41,55 @@ def _parse_terms(terms: list[str]) -> dict[str, str]:
         key, _, value = term.partition("=")
         choices[key.strip()] = value.strip()
     return choices
+
+
+def _gallery(rows: list[list[str]], labels: list[str], per_row: int = 3) -> None:
+    """Print portraits side by side with a caption under each."""
+    for start_at in range(0, len(rows), per_row):
+        chunk = rows[start_at:start_at + per_row]
+        caps = labels[start_at:start_at + per_row]
+        for line_no in range(X.HEIGHT):
+            print("  ".join(ui.pad(face[line_no], X.WIDTH) for face in chunk))
+        print("  ".join(ui.pad(ui.paint(c, "bold"), X.WIDTH) for c in caps))
+        print()
+
+
+def cmd_faces(args: argparse.Namespace) -> int:
+    """Browse randomly generated people, or one person's full range."""
+    rng = random.Random(args.seed) if args.seed is not None else random.Random()
+    if args.expressions:
+        person = generate_character(rng, "Sample Supply Co.")
+        print(ui.heading(f"{person.name} -- every expression"))
+        print(ui.wrap(person.describe_appearance().capitalize() + "."))
+        print()
+        order = list(X.EXPRESSIONS)
+        _gallery([person.portrait(e) for e in order], order)
+        return 0
+
+    print(ui.heading("a random cast"))
+    people = [generate_character(rng, "Sample Supply Co.") for _ in range(args.count)]
+    moods = [X.NEUTRAL, X.SMUG, X.DELIGHTED, X.FURIOUS, X.BORED, X.LAUGHING]
+    _gallery(
+        [p.portrait(moods[i % len(moods)]) for i, p in enumerate(people)],
+        [p.name for p in people],
+    )
+    for person in people:
+        print(f"  {ui.paint(person.name, 'bold')} -- {person.describe_appearance()}")
+    print(ui.paint(
+        "\n  Personality is drawn separately from appearance, so any of these "
+        "people\n  could be any of the eight negotiating types.", "dim"))
+    return 0
+
+
+def cmd_check(args: argparse.Namespace) -> int:
+    available, message = llm.status()
+    print(ui.paint("Live AI dialogue: ", "bold") + message)
+    if not available:
+        print(ui.wrap(
+            "The game is fully playable without it -- every character has written "
+            "dialogue. To switch live dialogue on, install the SDK with "
+            "'pip install anthropic' and set an ANTHROPIC_API_KEY.", "  "))
+    return 0
 
 
 def cmd_play(args: argparse.Namespace) -> int:
@@ -107,6 +160,16 @@ def main(argv: list[str] | None = None) -> int:
     p_play.add_argument("--rounds", type=int, default=8,
                         help="how many rounds before the clock runs out")
     p_play.set_defaults(func=cmd_play)
+
+    p_faces = subs.add_parser("faces", help="browse randomly generated characters")
+    p_faces.add_argument("--count", type=int, default=6)
+    p_faces.add_argument("--seed", type=int, default=None)
+    p_faces.add_argument("--expressions", action="store_true",
+                         help="show one person in every mood instead")
+    p_faces.set_defaults(func=cmd_faces)
+
+    p_check = subs.add_parser("check", help="is live AI dialogue switched on?")
+    p_check.set_defaults(func=cmd_check)
 
     p_sheet = subs.add_parser("sheet", help="show a confidential scoresheet")
     p_sheet.add_argument("--side", choices=["buyer", "seller"], default="buyer")
