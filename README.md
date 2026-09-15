@@ -1,5 +1,14 @@
 # Negotiation Simulator
 
+**Play it in a browser: [The Deal Room](https://claude.ai/artifact/2eBLh7kWZ9KJCc6oyfShsb)** — nothing to install.
+The drawn character, the term sheet, the live score meter and the full debrief
+all run in one self-contained page (`web/dealroom.html`).
+
+The rest of this repo is the original terminal version, which shares the same
+design and maths.
+
+## The terminal version
+
 A terminal negotiation trainer. You play Head of Procurement buying a critical
 component. An AI character plays the supplier's VP of Sales. You haggle across
 five issues, sign a deal, and then find out how much value the two of you threw
@@ -162,5 +171,6 @@ python3 -m unittest discover -s tests
 | `negosim/ui.py` | Terminal colours and tables |
 | `negotiate.py` | Command line entry point |
 | `tests/` | Checks that the scenario is actually negotiable and the maths is right |
+| `web/dealroom.html` | The browser game: the whole simulator in one page, no dependencies |
 
 Python 3.9+. No dependencies. 100 tests: `python3 -m unittest discover -s tests`

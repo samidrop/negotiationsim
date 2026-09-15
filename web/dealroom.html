@@ -1,0 +1,1537 @@
+<title>The Deal Room</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --ground:#171512; --panel:#211E1A; --raised:#2B2721; --edge:#3A342C;
+    --ink:#EDE6D9; --ink-dim:#A79E8E; --ink-faint:#6F675B;
+    --you:#4EA8A0; --you-dim:#2C5E5A;
+    --them:#C9873F; --them-dim:#6B4922;
+    --bad:#C2554A; --good:#7FA860;
+    --display:"Zilla Slab",Georgia,serif;
+    --body:"Archivo","Helvetica Neue",Arial,sans-serif;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--body);font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 48px}
+  h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
+  .num{font-variant-numeric:tabular-nums}
+  button{font-family:var(--body);font:inherit;cursor:pointer}
+  button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--you);outline-offset:2px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:10px 14px;background:var(--panel);border:1px solid var(--edge);border-radius:10px;
+  }
+  .brandmark{font-family:var(--display);font-weight:700;letter-spacing:.02em;font-size:17px}
+  .brandmark span{color:var(--them)}
+  .topbar .spacer{flex:1}
+  .chip{
+    font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-dim);
+    border:1px solid var(--edge);border-radius:99px;padding:3px 10px;white-space:nowrap;
+  }
+  .clock{display:flex;gap:4px;align-items:center}
+  .tick{width:9px;height:9px;border-radius:2px;background:var(--edge);transition:background .3s}
+  .tick.used{background:var(--them)}
+  .tick.now{background:var(--ink);box-shadow:0 0 0 2px rgba(237,230,217,.2)}
+
+  /* ---------- layout ---------- */
+  .table{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;margin-top:18px;align-items:start}
+  @media (max-width:860px){.table{grid-template-columns:minmax(0,1fr)}}
+  .panel{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:16px}
+  .panel + .panel{margin-top:14px}
+  .eyebrow{
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);
+    margin-bottom:10px;
+  }
+
+  /* ---------- character ---------- */
+  .stage{
+    position:relative;display:flex;justify-content:center;
+    background:
+      radial-gradient(120% 80% at 50% 8%, rgba(201,135,63,.10), transparent 62%),
+      linear-gradient(180deg,#1C1915,#141210);
+    border:1px solid var(--edge);border-radius:12px;padding:6px 0 0;overflow:hidden;
+  }
+  .stage svg{width:min(100%,280px);height:auto;display:block}
+  .stage.shake{animation:shake .5s}
+  .stage.pop{animation:pop .5s}
+  @keyframes shake{
+    10%,90%{transform:translateX(-3px)}30%,70%{transform:translateX(6px)}
+    50%{transform:translateX(-7px)}
+  }
+  @keyframes pop{40%{transform:scale(1.035)}}
+  .nameplate{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:10px 14px;border-top:1px solid var(--edge);background:var(--panel);flex-wrap:wrap;
+  }
+  .nameplate strong{font-family:var(--display);font-size:17px;font-weight:600}
+  .nameplate em{font-style:normal;color:var(--ink-faint);font-size:12px}
+
+  .bubble{
+    position:relative;margin-top:14px;background:var(--raised);border:1px solid var(--edge);
+    border-radius:12px;padding:14px 16px;font-size:16px;
+  }
+  .bubble::before{
+    content:"";position:absolute;top:-8px;left:26px;width:14px;height:14px;
+    background:var(--raised);border-left:1px solid var(--edge);border-top:1px solid var(--edge);
+    transform:rotate(45deg);
+  }
+  .bubble p{margin:0;animation:fade .35s ease-out}
+  .bubble .note{margin-top:8px;font-size:13px;color:var(--ink-dim);border-top:1px dashed var(--edge);padding-top:8px}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* ---------- term sheets ---------- */
+  .terms{display:flex;flex-direction:column;gap:12px}
+  .term{display:grid;grid-template-columns:1fr;gap:6px}
+  .term-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .term-name{font-family:var(--display);font-size:15px;font-weight:600}
+  .stake{font-size:11px;color:var(--ink-faint);letter-spacing:.04em;white-space:nowrap}
+  .opts{display:flex;gap:6px;flex-wrap:wrap}
+  .opt{
+    flex:1 1 auto;min-width:0;background:var(--raised);color:var(--ink-dim);
+    border:1px solid var(--edge);border-radius:8px;padding:7px 8px;text-align:center;
+    font-size:13px;transition:background .15s,color .15s,border-color .15s;
+  }
+  .opt:hover{border-color:var(--you-dim);color:var(--ink)}
+  .opt .pts{display:block;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+  .opt[aria-pressed="true"]{background:var(--you-dim);border-color:var(--you);color:#fff}
+  .opt[aria-pressed="true"] .pts{color:rgba(255,255,255,.8)}
+  .opt.theirs{box-shadow:inset 0 -3px 0 var(--them)}
+
+  .sheet{width:100%;border-collapse:collapse;font-size:14px}
+  .sheet td{padding:5px 0;border-bottom:1px solid rgba(58,52,44,.6)}
+  .sheet td:first-child{color:var(--ink-dim);width:44%}
+  .sheet td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-faint);width:44px}
+  .sheet tr:last-child td{border-bottom:0}
+
+  /* ---------- meter ---------- */
+  .meter{margin-top:14px}
+  .meter-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:6px}
+  .meter-top b{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
+  .bar{position:relative;height:16px;background:var(--raised);border:1px solid var(--edge);border-radius:6px;overflow:hidden}
+  .fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--you-dim),var(--you));transition:width .4s ease}
+  .fill.under{background:linear-gradient(90deg,#5A2A25,var(--bad))}
+  .floor{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);box-shadow:0 0 0 1px var(--ground)}
+  .meter-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);margin-top:5px}
+
+  /* ---------- actions ---------- */
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .btn{
+    border:1px solid var(--edge);background:var(--raised);color:var(--ink);
+    border-radius:9px;padding:10px 14px;font-size:14px;font-weight:500;transition:.15s;
+  }
+  .btn:hover{border-color:var(--ink-faint)}
+  .btn.primary{background:var(--you);border-color:var(--you);color:#08201F;font-weight:700}
+  .btn.primary:hover{filter:brightness(1.1)}
+  .btn.primary[disabled]{background:var(--raised);border-color:var(--edge);color:var(--ink-faint);cursor:not-allowed;filter:none}
+  .btn.ghost{background:transparent}
+  .btn.danger:hover{border-color:var(--bad);color:var(--bad)}
+  .btn.wide{flex:1 1 100%}
+
+  .say{display:flex;gap:8px;margin-top:10px}
+  .say input{
+    flex:1;min-width:0;background:var(--raised);border:1px solid var(--edge);color:var(--ink);
+    border-radius:9px;padding:10px 12px;font-size:14px;
+  }
+  .say input::placeholder{color:var(--ink-faint)}
+
+  /* ---------- brief / debrief ---------- */
+  .lede{font-size:17px;color:var(--ink-dim);max-width:62ch}
+  .lede strong{color:var(--ink);font-weight:600}
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
+  .rule{height:1px;background:var(--edge);margin:22px 0}
+  .prio{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .prio-row{display:grid;grid-template-columns:1fr 120px 42px;gap:10px;align-items:center;font-size:14px}
+  .prio-bar{height:9px;background:var(--raised);border-radius:99px;overflow:hidden}
+  .prio-bar i{display:block;height:100%;background:var(--you);border-radius:99px}
+  .prio-row span:last-child{text-align:right;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+
+  .verdict{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .grade{
+    font-family:var(--display);font-size:56px;font-weight:700;line-height:1;
+    width:96px;height:96px;display:grid;place-items:center;border-radius:14px;
+    background:var(--raised);border:2px solid var(--edge);
+  }
+  .grade.hi{color:var(--good);border-color:var(--good)}
+  .grade.mid{color:var(--them);border-color:var(--them)}
+  .grade.lo{color:var(--bad);border-color:var(--bad)}
+  .stats{display:flex;gap:22px;flex-wrap:wrap}
+  .stat b{display:block;font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums}
+  .stat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+
+  .scorecard{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  .scorecard th{
+    text-align:left;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:500;padding:0 8px 7px 0;border-bottom:1px solid var(--edge);
+  }
+  .scorecard td{padding:9px 8px 9px 0;border-bottom:1px solid rgba(58,52,44,.55);vertical-align:middle}
+  .scorecard td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .won{font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:99px;white-space:nowrap}
+  .won.you{background:rgba(78,168,160,.16);color:var(--you)}
+  .won.them{background:rgba(201,135,63,.16);color:var(--them)}
+  .won.split{background:var(--raised);color:var(--ink-faint)}
+
+  .trade{border:1px solid var(--edge);border-radius:10px;padding:12px 14px;background:var(--raised)}
+  .trade .line{display:flex;gap:8px;align-items:baseline;font-size:14px;margin-bottom:4px}
+  .trade .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;width:38px;flex:none}
+  .trade .tag.give{color:var(--them)}
+  .trade .tag.take{color:var(--you)}
+  .trade s{color:var(--ink-faint);text-decoration-color:var(--ink-faint)}
+  .trade .gain{font-size:12px;color:var(--good);margin-top:6px;font-variant-numeric:tabular-nums}
+
+  .lesson{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid rgba(58,52,44,.55)}
+  .lesson:last-child{border-bottom:0}
+  .lesson .mark{font-family:var(--display);font-weight:700;font-size:16px;text-align:center}
+  .lesson h4{margin:0 0 3px;font-family:var(--display);font-size:15px;font-weight:600}
+  .lesson p{margin:0;color:var(--ink-dim);font-size:14px}
+  .lesson.critical .mark{color:var(--bad)} .lesson.critical h4{color:var(--bad)}
+  .lesson.major .mark{color:var(--them)} .lesson.major h4{color:var(--them)}
+  .lesson.minor .mark{color:var(--ink-dim)}
+  .lesson.good .mark{color:var(--good)} .lesson.good h4{color:var(--good)}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-dim);margin-top:8px}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:5px;vertical-align:middle}
+
+  .modal-back{
+    position:fixed;inset:0;background:rgba(10,9,8,.72);z-index:100;
+    display:grid;place-items:center;padding:20px;animation:fade .18s ease-out;
+  }
+  .modal{
+    background:var(--panel);border:1px solid var(--edge);border-radius:14px;
+    padding:22px;max-width:min(94vw,440px);box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+  .modal h3{font-size:19px;margin-bottom:8px}
+  .modal p{margin:0;color:var(--ink-dim);font-size:14px}
+  .modal p b{color:var(--ink)}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+  .toast{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));
+    background:var(--raised);border:1px solid var(--edge);border-radius:10px;padding:10px 16px;
+    font-size:14px;z-index:50;box-shadow:0 8px 28px rgba(0,0,0,.5);max-width:min(92vw,420px);
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brandmark">The Deal<span>&nbsp;Room</span></div>
+    <div class="spacer"></div>
+    <div id="hud" class="chip" hidden></div>
+    <div id="clock" class="clock" hidden></div>
+    <button id="restart" class="btn ghost" hidden>New deal</button>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script>
+"use strict";
+
+/* ======================================================================
+   1. Seeded randomness, so any deal can be replayed exactly.
+   ====================================================================== */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function rngFrom(seed){const r=mulberry32(seed);return{
+  next:r,
+  int:(lo,hi)=>lo+Math.floor(r()*(hi-lo+1)),
+  pick:arr=>arr[Math.floor(r()*arr.length)],
+  chance:p=>r()<p,
+  shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+}}
+
+/* ======================================================================
+   2. What is being bought and sold.
+   ====================================================================== */
+const CATALOG=[
+  {item:"facial tissue",unit:"case",units:"cases",price:18.40,vols:[8000,20000,45000,90000],buyer:"a national drugstore chain",seller:"a paper converting mill"},
+  {item:"lithium cells",unit:"cell",units:"cells",price:4.75,vols:[50000,150000,400000,900000],buyer:"an e-bike manufacturer",seller:"a battery fabricator"},
+  {item:"cold brew concentrate",unit:"keg",units:"kegs",price:62.00,vols:[1200,3000,7500,16000],buyer:"a coffee shop group",seller:"a specialty roastery"},
+  {item:"corrugated shipping boxes",unit:"bundle",units:"bundles",price:11.20,vols:[25000,60000,140000,300000],buyer:"an online retailer",seller:"a packaging plant"},
+  {item:"stainless fasteners",unit:"box",units:"boxes",price:27.50,vols:[6000,15000,36000,80000],buyer:"an appliance assembler",seller:"a fastener works"},
+  {item:"organic oat milk",unit:"case",units:"cases",price:21.80,vols:[10000,26000,60000,130000],buyer:"a grocery chain",seller:"a plant-milk dairy"},
+  {item:"nitrile gloves",unit:"case",units:"cases",price:46.00,vols:[4000,11000,26000,55000],buyer:"a hospital network",seller:"a medical supplies maker"},
+  {item:"recycled printer paper",unit:"pallet",units:"pallets",price:385.00,vols:[900,2200,5000,11000],buyer:"a government print office",seller:"a paper recycler"},
+  {item:"disc brake rotors",unit:"unit",units:"units",price:8.90,vols:[20000,55000,130000,280000],buyer:"a bicycle brand",seller:"a components machinist"},
+  {item:"solar microinverters",unit:"unit",units:"units",price:118.00,vols:[2000,5500,13000,28000],buyer:"a rooftop solar installer",seller:"a power electronics firm"},
+  {item:"hardwood flooring planks",unit:"carton",units:"cartons",price:74.50,vols:[3500,9000,21000,46000],buyer:"a homebuilding group",seller:"a timber mill"},
+  {item:"espresso machine gaskets",unit:"pack",units:"packs",price:33.00,vols:[3000,8000,19000,42000],buyer:"an appliance service network",seller:"a rubber moulder"}
+];
+const BUYER_CO=["Northwind","Cobalt Row","Harrow & Vale","Meridian","Fairweather","Bright Harbor","Kestrel","Ironwood","Tallgrass","Lumen","Redpoint"];
+const SELLER_CO=["Castellan","Orsini","Pelham Works","Brightside","Aldergate","Voss & Sons","Quarry Lane","Marchetti","Stonefield","Halcyon"];
+const SUFFIX=["Industries","Supply Co.","Group","Manufacturing","Partners","Works"];
+
+/* ======================================================================
+   3. The scenario: five issues, two secret scoresheets, two walk-aways.
+
+   Both sides top out at exactly 100. Price is a pure tug of war -- every
+   point one side gains, the other loses. The other four issues are
+   weighted very differently for each side, and that asymmetry is the
+   entire game: it means packages exist that are better for BOTH of you
+   than the obvious compromise.
+   ====================================================================== */
+const money=n=>n>=1000?"$"+n.toLocaleString(undefined,{maximumFractionDigits:0})
+                     :"$"+n.toFixed(2);
+const commas=n=>n.toLocaleString();
+
+function ladder(top,steps){const out=[];for(let i=0;i<steps;i++)out.push(Math.round(top*(steps-1-i)/(steps-1)));return out}
+
+function splitWeight(total,parts,lo,hi,rng){
+  const cuts=[];for(let i=0;i<parts;i++)cuts.push(rng.int(lo,hi));
+  let drift=total-cuts.reduce((a,b)=>a+b,0),guard=0;
+  while(drift!==0&&guard++<800){
+    const i=rng.int(0,parts-1),step=drift>0?1:-1;
+    if(cuts[i]+step>=lo&&cuts[i]+step<=hi){cuts[i]+=step;drift-=step}
+  }
+  return cuts;
+}
+
+function buildScenario(seed){
+  const rng=rngFrom(seed);
+  const product=rng.pick(CATALOG);
+  const buyerCo=rng.pick(BUYER_CO)+" "+rng.pick(SUFFIX);
+  const sellerCo=rng.pick(SELLER_CO)+" "+rng.pick(SUFFIX);
+
+  const priceW=rng.pick([28,30,32]);
+  const buyerVol=rng.int(3,7), sellerVol=rng.int(30,38);
+  const soft=rng.shuffle(splitWeight(100-priceW-buyerVol,3,14,32,rng));
+  const theirSoft=rng.shuffle(splitWeight(100-priceW-sellerVol,3,3,17,rng));
+
+  const mult=[0.86,0.93,1.00,1.08,1.16];
+  const prices=mult.map(m=>product.price>=100?Math.round(product.price*m):Math.round(product.price*m*100)/100);
+  const priceBuyer=ladder(priceW,5);
+
+  const issues=[
+    {key:"price",label:"Price per "+product.unit,options:prices.map((p,i)=>(
+      {key:String(p),label:money(p),raw:p,you:priceBuyer[i],them:priceW-priceBuyer[i]}))},
+    {key:"volume",label:"Volume commitment",options:product.vols.map((v,i)=>(
+      {key:String(v),label:commas(v)+" "+product.units,raw:v,
+       you:ladder(buyerVol,4)[i],them:ladder(sellerVol,4).slice().reverse()[i]}))},
+    softIssue("payment","Payment terms",["Net 90","Net 60","Net 30","Net 15"],soft[0],theirSoft[0]),
+    softIssue("delivery","Delivery window",["2 weeks","4 weeks","8 weeks","12 weeks"],soft[1],theirSoft[1]),
+    softIssue("exclusivity","Exclusivity",["Global, 2 yrs","Region, 2 yrs","Region, 1 yr","None"],soft[2],theirSoft[2])
+  ];
+
+  const sc={product,buyerCo,sellerCo,issues,
+    buyerRole:"Head of Procurement, "+buyerCo,
+    sellerRole:"VP of Sales, "+sellerCo, seed};
+  setWalkaways(sc,rng);
+  return sc;
+}
+function softIssue(key,label,labels,youTop,themTop){
+  const y=ladder(youTop,labels.length), t=ladder(themTop,labels.length).slice().reverse();
+  return{key,label,options:labels.map((l,i)=>({key:key+i,label:l,you:y[i],them:t[i]}))};
+}
+
+/* Every legal package. 5x4x4x4x4 = 1,280 of them, so we can simply
+   check all of them and never have to estimate anything. */
+function allPackages(sc){
+  if(sc._all)return sc._all;
+  const out=[];
+  const walk=(i,picks,you,them)=>{
+    if(i===sc.issues.length){out.push({picks:picks.slice(),you,them});return}
+    for(const o of sc.issues[i].options){picks.push(o.key);walk(i+1,picks,you+o.you,them+o.them);picks.pop()}
+  };
+  walk(0,[],0,0);
+  sc._all=out;return out;
+}
+const scoreOf=(sc,picks)=>{
+  let you=0,them=0;
+  sc.issues.forEach((iss,i)=>{const o=optionOf(iss,picks[i]);you+=o.you;them+=o.them});
+  return{you,them};
+};
+const optionOf=(issue,key)=>issue.options.find(o=>o.key===key);
+const stakeYou=iss=>Math.max(...iss.options.map(o=>o.you))-Math.min(...iss.options.map(o=>o.you));
+const stakeThem=iss=>Math.max(...iss.options.map(o=>o.them))-Math.min(...iss.options.map(o=>o.them));
+
+/* Walk-aways are chosen so a deal is always possible but never easy:
+   roughly 10-30% of packages should clear both floors. */
+function setWalkaways(sc,rng){
+  const all=allPackages(sc), tilt=rng.int(-3,3);
+  let chosen=[40,40];
+  for(let base=60;base>=25;base--){
+    const b=base+tilt,s=base-tilt;
+    const frac=all.filter(p=>p.you>=b&&p.them>=s).length/all.length;
+    if(frac>=0.10&&frac<=0.30){chosen=[b,s];break}
+    if(frac>0.30){chosen=[b,s];break}
+  }
+  sc.buyerWalk=chosen[0];sc.sellerWalk=chosen[1];
+}
+const viablePackages=sc=>allPackages(sc).filter(p=>p.you>=sc.buyerWalk&&p.them>=sc.sellerWalk);
+const maxJoint=sc=>Math.max(...allPackages(sc).map(p=>p.you+p.them));
+function frontier(sc){
+  if(sc._front)return sc._front;
+  const all=allPackages(sc).slice().sort((a,b)=>b.you-a.you||b.them-a.them);
+  const out=[];let best=-1;
+  for(const p of all){if(p.them>best){out.push(p);best=p.them}}
+  sc._front=out;return out;
+}
+const contractValue=(sc,picks)=>{
+  const price=optionOf(sc.issues[0],picks[0]).raw;
+  const vol=optionOf(sc.issues[1],picks[1]).raw;
+  return price*vol;
+};
+
+/* ======================================================================
+   4. Personalities. Each carries how they BEHAVE and how they TALK.
+   Appearance is drawn separately -- you cannot read a negotiator's
+   temperament off their face, here or anywhere else.
+   ====================================================================== */
+const PERSONAS=[
+{key:"shark",name:"The Shark",blurb:"Closes for a living and enjoys it. Takes everything you leave loose.",
+ tell:"Never volunteers information. Every silence is bait.",
+ open:95,rate:0.7,margin:10,patience:3,delight:84,honesty:0.25,rest:"smug",
+ lines:{
+  open:["Let's skip the part where you pretend to be shocked. Here's the paper.","I've got three of these today. You're the one I have the least time for.","I'll save us both an hour. This is the number. Convince me otherwise."],
+  insult:["Be serious. I've seen interns open better than that, and they were being funny.","That's not an offer, that's a cry for help.","You said that out loud. On purpose. Wild."],
+  below:["Under my floor. Not close, not cute, not happening.","No. And the fact you thought that might land tells me plenty.","You're negotiating against yourself and still losing."],
+  close:["Now you're talking like someone who's done this before. Almost.","That's within shouting distance. You've still got more in the tank.","Warmer. I can smell a deal. I don't like the smell yet."],
+  accept:["Done. For the record, you left money on this table. I'm not telling you where.","Signed. You did fine. Fine is what people say when they mean not great.","I'll take it. Don't ask me who won."],
+  thin:["It's thin and you know it's thin. My quarter closes Friday, so: fine.","I'm signing this out of spite for my own forecast. Congratulations."],
+  delight:["Sold. SOLD. Before you find a calculator.","Absolutely. Signed. Do you want a pen? I have a pen. Here's a pen.","That's the best thing anyone's said to me this quarter. Done."],
+  rage:["No. We're done. Nineteen years and I don't get spoken to like that.","Get out. Genuinely. Take your term sheet and go."],
+  walk:["Clock's dead and so is this. I'd rather run short than sign that.","No deal. I'll find someone who can count."],
+  pressed:["Because I said so, and because I have the capacity you need.","My reasoning is I don't need this deal as much as you do."],
+  threat:["Walk then. The door works. I've watched people use it.","Sure. Monday you explain to your board why you have no supplier."],
+  small:["We're not friends. We can be friendly. Different things.","Small talk is how people stall when they're losing. Are you losing?"],
+  goodbye:["You did well and I won't pretend otherwise. You worked out what I was protecting and made me pay for it."],
+  badbye:["Free lesson, since it costs me nothing now: you fought hardest on the one term where neither of us could win. I let you."]}},
+
+{key:"pro",name:"The Professional",blurb:"Courteous, prepared, genuinely trying to find a deal that works.",
+ tell:"Actually answers questions. Rewards you for asking good ones.",
+ open:90,rate:1.1,margin:18,patience:5,delight:88,honesty:0.85,rest:"neutral",
+ lines:{
+  open:["Thanks for the time. I'll open where I'd like to land and we work back from there.","Good to meet you. I've done my homework, so I'll be direct.","Here's my opening. I don't expect you to take it."],
+  insult:["I'll take that as an anchor rather than a proposal. Let's move past it.","That's below anything I could defend internally. By some way.","I understand the tactic. It costs us a round we don't have many of."],
+  below:["That doesn't clear my approval threshold. I'm not being coy.","Right shape, wrong level.","I can't sign that. Tell me which term you actually need and I'll build around it."],
+  close:["Workable in principle. Let me push on one thing and I think we're there.","Close enough that I'd like to land it today rather than trade paper again.","I could live with that shape. Give me a little on one term and I'll stop asking."],
+  accept:["That works. Good negotiation, genuinely. I'll get it to legal today.","Agreed. You handled that well and I don't say it to be nice.","Done. I'd do business with you again, which is the real compliment."],
+  thin:["Tighter than I'd like, but a deal beats a gap. Agreed.","I'll take it. We both know who did better, but I'd rather ship."],
+  delight:["I... yes. Absolutely yes. For the record, you didn't have to do that.","Signed. Free advice for next time: you had far more room than you used."],
+  rage:["No. I've been patient and you've spent it. I'm ending this.","I'll stop before I say something unprofessional. We're finished."],
+  walk:["Out of time and out of overlap. No hard feelings, but no deal.","I can't get there. Let's part cleanly rather than force something bad."],
+  pressed:["Fair question. My capacity is committed eight months out. That's what drives me.","The economics only work above a line, and I'd rather show you the line than hide it."],
+  threat:["That's your call. I'd rather you didn't, and I'll move if I can.","Understood. Before you do, tell me the one term that would change your mind."],
+  small:["Ha. Good. Right, where were we.","I appreciate a bit of human in the room. Now, terms."],
+  goodbye:["Genuinely well played. You asked the right question early and built around the answer. Most people never do either."],
+  badbye:["Can I offer something? You conceded on the terms you needed and held firm on the ones you didn't. That's backwards, and it's common."]}},
+
+{key:"burnout",name:"The Burnout",blurb:"Checked out three quarters ago. Concedes fast, or stops caring entirely.",
+ tell:"Gives ground quickly if you ask plainly. Tunes out during long speeches.",
+ open:86,rate:1.5,margin:25,patience:6,delight:80,honesty:0.7,rest:"bored",
+ lines:{
+  open:["Sure. Yeah. Here's the thing my boss told me to say. I don't love it either.","Right. Opening offer. I typed it this morning. Allegedly.","Cool cool cool. Numbers. Here. Whenever."],
+  insult:["Damn. Okay. That's a choice.","Yeah, no. I'm tired, not concussed.","That's crazy work. Anyway."],
+  below:["Nah, that doesn't clear. Not by a lot. Not by a little either.","Can't. My floor's a floor. It's the one thing I still enforce.","Under. Try again but like, actually try."],
+  close:["Yeah that's basically fine. I'd take more but I'm not gonna fight you.","Eh. Close enough that I've stopped reading carefully.","Okay yeah, nearly there, and I have a 4pm."],
+  accept:["Yeah alright. Send it. I'm not re-reading that.","Sure. Done. I'm going to go stare at a wall.","Fine, signed, great, wonderful, I'm logging off."],
+  thin:["Whatever. Yes. It's Friday somewhere.","Sure. Not my money. Signed."],
+  delight:["Wait. Say that again. ...Okay yeah I'm awake now. Signed.","Bro. BRO. Yes. I'm putting this in the group chat."],
+  rage:["Okay, no. I don't get paid enough to be spoken to like that. I'm out.","You know what? No. Done. Genuinely done. Bye."],
+  walk:["Time's up and honestly I'm relieved. No deal.","Nah. Out of rounds, out of energy."],
+  pressed:["Honestly? I don't know. It's the number in the spreadsheet.","Someone above me has a target and I'd like them to stop emailing me."],
+  threat:["Okay. I mean, that'd be less work for me.","You could. Then we both go home. Not your worst pitch."],
+  small:["Yeah. Same. It's been a long year and it's March.","You ever think about how we're both doing this until we die? Anyway, terms."],
+  goodbye:["Yeah alright, that was decent. You didn't waffle. I respect not waffling."],
+  badbye:["Not being funny but I'd have caved on like three of those if you'd pushed. I was barely here."]}},
+
+{key:"hype",name:"The Hype Guy",blurb:"Enormously friendly. Also the slipperiest person in the room.",
+ tell:"The warmth is real and so is the squeeze. Don't mistake one for the other.",
+ open:93,rate:0.95,margin:14,patience:4,delight:85,honesty:0.4,rest:"pleased",
+ lines:{
+  open:["Okay okay okay, love this for us. Two serious people, one table. Here's my opener, don't cry.","First of all? Great energy. Second of all, here's a number that's gonna test it.","We are SO getting this done. Starting here. Purely as a vibe check."],
+  insult:["Bro. BRO. That's diabolical. I'm not mad, I'm impressed by the audacity.","That offer is doing negative aura farming. Respectfully, delete it.","Chat, is this real? You typed that with your hands?"],
+  below:["Love the ambition, hate the number. Under my floor, king.","So close to cooking and yet the kitchen is on fire.","That's mid and I say it with affection. Under my line."],
+  close:["OH. Now we're talking. That's got legs. Nearly got arms.","Okay that's a real offer and I'm going to be annoying about the last bit.","We are THIS close. One more thing and I stop yapping."],
+  accept:["YES. Let's go. Deal. Shaking your hand so hard right now.","Done deal! W for both of us. Mostly me, but a W is a W.","Signed, sealed, and I'm telling everyone we're best friends."],
+  thin:["Ugh. Fine. FINE. You wore me down and I'll think about it tonight.","Taking it. Not happy. Still taking it. That's growth."],
+  delight:["Oh my God. Oh my GOD. Signed. Don't move, don't think, sign here.","Most generous thing anyone's done for me since my mum. SOLD."],
+  rage:["Nope. I was nice to you. I was SO nice to you. We're done.","Okay the vibe is dead and you killed it. I'm walking."],
+  walk:["Ahh man. No deal. That one hurts, genuinely.","We ran out of clock. So unserious of us both."],
+  pressed:["Why? Because I like winning and I'm very charming about it.","Great question. Terrible answer: the number is the number, my guy."],
+  threat:["Don't say that. Don't SAY that. We were having a moment.","You'd walk? On me? After everything we've been through in eleven minutes?"],
+  small:["See THIS is what I'm talking about. Human connection. Now give me volume.","I love that for you. Genuinely. Anyway I still want your money."],
+  goodbye:["Okay real talk, that was clean. You clocked what I actually wanted and charged me for it. Respect."],
+  badbye:["Love you, but you got played by a guy being nice to you. That's the whole trick. That's the entire trick."]}},
+
+{key:"bureaucrat",name:"The Bureaucrat",blurb:"Hides behind process. Every concession needs a permission slip.",
+ tell:"'I can't approve that' often means 'I can, and I'd rather not.'",
+ open:91,rate:0.85,margin:16,patience:6,delight:86,honesty:0.5,rest:"neutral",
+ lines:{
+  open:["I've brought the standard terms. Deviations need sign-off, which is slow.","This is our approved opening position. I didn't write it. I do have to defend it.","Anything outside this framework goes to committee. Plan accordingly."],
+  insult:["I can't record that as a serious proposal. Shall we try again?","That falls outside every band I'm permitted to work in.","I'd have to escalate that, and I won't, because I'd be laughed at."],
+  below:["Below my delegated authority. I physically cannot sign it.","Non-compliant with our floor. I'm not being difficult, I'm supervised.","If you want that you want my director, and she likes you less than I do."],
+  close:["Within a band I could defend. Let me push once, then I'll stop.","I think I can get that through. One more concession makes the memo easier.","Nearly signable. Give me something to point at in the write-up."],
+  accept:["Within my authority. Approved. I'll circulate the paperwork.","Agreed. This will be a clean memo, which is the highest praise I give.","Signed. You made my internal justification very easy."],
+  thin:["At the very edge of what I can defend. I'll take the risk. Once.","Approved, reluctantly. I'll be writing 'commercially necessary' a lot."],
+  delight:["Approved. Immediately. I will hand-carry this to legal personally.","Comfortably inside every band I have. Signed. No further questions."],
+  rage:["I'm terminating this session. That was unacceptable and it will be minuted.","No. I'm ending the meeting. Take it up with my director."],
+  walk:["The window has closed. Recording this as no agreement reached.","We've exhausted the process. No deal. I'll file it."],
+  pressed:["Policy. I know that's unsatisfying. It's also true.","The approval matrix says so, and the matrix does not take meetings."],
+  threat:["Noted. It doesn't change my authority, but it is noted.","If you walk I file a no-deal report. I'd rather not."],
+  small:["Mm. Yes. Shall we return to the terms?","I'd love to chat, but I have a governance call at half past."],
+  goodbye:["Efficiently done. You found the terms I had discretion on and stayed there. Few people bother."],
+  badbye:["A note for next time: I said 'I can't approve that' about six times. On four of those I could have. You never tested it once."]}},
+
+{key:"volatile",name:"The Live Wire",blurb:"Charming at nine, hostile at nine-thirty. Test them carefully or not at all.",
+ tell:"Real leverage, no filter. Lowball once and you may not get a second round.",
+ open:94,rate:1.0,margin:8,patience:1,delight:83,honesty:0.5,rest:"neutral",
+ lines:{
+  open:["Right. I'm in a good mood. Let's see how long that lasts.","I like you already. Don't ruin it. Numbers.","Fair warning: two coffees, no lunch. Here's where we start."],
+  insult:["Are you SERIOUS? Look at my face. Is this a face that finds that funny?","Oh, we're doing THAT. Okay. Noted. Deeply noted.","You know what that is? Disrespect with a spreadsheet attached."],
+  below:["No. Under. Next.","That's under my line and you knew it when you said it.","Nope. And my patience is a resource you're burning."],
+  close:["Okay. Okay! That's more like it. Now don't get clever.","Nearly good. I'm nearly pleased. Both are fragile.","Right, that I can work with. Do NOT go backwards from here."],
+  accept:["YES. Good. Great. We could've done that twenty minutes ago.","Done! Shake on it before I reread it.","Deal. I like you again. Limited-time offer."],
+  thin:["Fine. FINE. Signing it and being weird about it for a week.","Taking it. Under protest. Loudly."],
+  delight:["HA! Yes! Sign it now, don't you dare reread that. HA!","Oh that's beautiful. That's genuinely beautiful. DONE."],
+  rage:["NO. Enough! That's it, we're finished, I'm done with this!","Absolutely NOT. Do not contact my office."],
+  walk:["Time. Gone. No deal. I'm not chasing this.","Out of road and out of patience. Nothing signed."],
+  pressed:["Because it's MY plant and MY capacity and I said so.","Fine: I have two other buyers and one of them is polite."],
+  threat:["Then WALK. Go on. I'll hold the door. I'll hold it open.","Threatening me. In my meeting. Bold. Do it then."],
+  small:["Ha! Yeah. You're alright. Don't make me regret saying that.","I do business, not chit-chat. But that was funny, I'll give you that."],
+  goodbye:["See? That's how you do it. You read me, you didn't poke me, and you still got paid."],
+  badbye:["You went in swinging at someone you'd known ninety seconds. Read the room first. The room was me."]}},
+
+{key:"oldhead",name:"The Old Head",blurb:"Thirty years in. Values the relationship, and will use that on you.",
+ tell:"The stories are real and they are also a clock-management tactic.",
+ open:89,rate:0.9,margin:20,patience:4,delight:87,honesty:0.75,rest:"pleased",
+ lines:{
+  open:["I've been doing this since before your company had a logo. Here's my number.","I told your predecessor the same thing: I open honest and I finish honest.","Sit down, have a coffee, then look at this and be upset in your own time."],
+  insult:["I've been lowballed by professionals. That wasn't even a good one.","In 1998 a man offered me less than that and I still think about him. Don't be him.","I'll pretend I didn't hear it. Last freebie you get."],
+  below:["Below my line. I've held it through two recessions, I'll hold it through you.","No. And I'll tell you plainly rather than waste your afternoon.","Doesn't clear. Come up and I'll meet you like a grown-up."],
+  close:["Now that's the offer of someone who's read the room.","I like that. One more thing, then I'll shut up and sign.","Respectable. A little more and we shake on it."],
+  accept:["Shake my hand. That's a deal, and I don't unshake hands.","Good. That's how it's supposed to go. You'll do well in this business.","Done. And I mean it: you negotiated that properly."],
+  thin:["It's lean. I've signed leaner. Go on then.","I'll take it, because a deal today beats a maybe in March."],
+  delight:["Well now. That's very generous. Suspiciously generous. Signed, quickly.","Hah! Taking that before you call your finance director."],
+  rage:["No. I've been in rooms with serious people my whole career and this isn't one. Good day.","That's enough. I don't need this at my age."],
+  walk:["Out of time. It happens. No hard feelings, no deal.","Not this one. Come back next year with a better mandate."],
+  pressed:["I've watched companies die taking the deal you're asking for.","Thirty years of data, and all of it says no."],
+  threat:["You'd be the fourth this year. Two came back. Do what you like.","Walk if you must. I'd rather you didn't, and I'd rather you knew that."],
+  small:["Ha! Good. You remind me of someone. He was trouble too.","First interesting thing anyone's said to me today. Now, terms."],
+  goodbye:["Properly done, and I don't say that often. You traded what was cheap for you and dear for me. That's the whole craft."],
+  badbye:["You negotiated like it was a fight. It's a trade. Different sport, different muscles."]}},
+
+{key:"quant",name:"The Quant",blurb:"Treats this as arithmetic. No warmth, no games, no mercy either.",
+ tell:"Completely consistent. Find the logic and you can predict every move.",
+ open:92,rate:1.0,margin:15,patience:8,delight:86,honesty:0.9,rest:"neutral",
+ lines:{
+  open:["My opening reflects my reservation value plus a negotiating margin. Both are real.","I've modelled this. I'll tell you now: I concede on a schedule.","I don't bluff, it's inefficient. This is high, and I will come down."],
+  insult:["That's more than twenty points below my floor. It isn't an offer, it's noise.","Rejected. The gap isn't bridgeable from there in the rounds remaining.","That proposal has a zero percent acceptance probability."],
+  below:["Below my reservation value. I'd take no deal over that, by definition.","Doesn't clear. The deficit is meaningful, not marginal.","No. Tell me which term you weight highest and I'll optimise around it."],
+  close:["Inside my acceptable band. I'll test whether you have more first.","Acceptable shape, suboptimal level. One adjustment and I sign.","Positive surplus for me. I'd like more of it. Predictably."],
+  accept:["Accepted. That clears my threshold. Efficient session.","Agreed. For what it's worth, you traded the right terms.","Signed. Your allocation was better than most people manage."],
+  thin:["Marginally above my floor. Positive is positive. Accepted.","The surplus is small but real, and no-deal is worth exactly zero."],
+  delight:["Accepted immediately. To be clear, you did not have to offer that.","That's a substantial overpayment. I'm taking it. Model your side next time."],
+  rage:["Terminating. Repeated non-serious proposals have negative expected value.","Enough. You've spent the rounds and the goodwill."],
+  walk:["Rounds exhausted, no overlap reached. Outcome: no deal.","We failed to find the zone. That's a modelling failure on somebody's part."],
+  pressed:["My floor is set by my next best alternative. It isn't a posture.","Below that line, no-deal dominates. That's the whole reasoning."],
+  threat:["Then you walk and we both take our fallback. I've priced that.","Noted. Walking is worth less to you than three of my current terms."],
+  small:["Noted. Returning to terms.","I'm poor at this part. I'm considerably better at the next part."],
+  goodbye:["Your allocation was close to optimal. You concentrated concessions on your low-weight terms, which is correct."],
+  badbye:["Your terms were misallocated. You optimised the smallest spread and conceded the largest. That is strictly dominated."]}}
+];
+
+/* ======================================================================
+   5. The person: a name, a face, a temperament -- each drawn separately.
+   ====================================================================== */
+const FIRST=["Dana","Marcus","Priya","Tomas","Aisha","Gunnar","Mei","Rafael","Ngozi","Katya","Idris","Siobhan","Hiroshi","Fatima","Bjorn","Lucia","Omar","Ingrid","Kwame","Rosa","Dmitri","Yuki","Amara","Sean","Leila","Andres","Nadia","Piotr","Sofia","Malik","Elena","Jun","Grace","Hassan","Freya","Diego","Anika","Theo","Zainab","Caleb","Mirembe","Lars","Imani","Valentina","Ravi","Noor","Otto","Chiamaka"];
+const LAST=["Okafor","Lindqvist","Ferreira","Nakamura","Osei","Whitfield","Bekele","Castellanos","Petrov","Haddad","O'Rourke","Tanaka","Mbeki","Novak","Delgado","Ferrante","Achebe","Sorensen","Rahman","Kowalski","Diallo","Marchetti","Yilmaz","Bergstrom","Aguilar","Chaudhry","Vasquez","Kaminski","Adeyemi","Moreau","Silva","Hoffman","Baptiste","Ivanova","Qureshi","Obi","Mwangi","Duarte"];
+
+const SKIN=["#F6D9C2","#EFC9A8","#DCA87C","#C68B5C","#AB6B41","#8C4F2D","#6C3A21","#4E2A17"];
+const HAIRC=["#15110F","#2B211C","#4A3222","#6B4423","#8C5A2B","#B5651D","#C9A227","#DCC894","#8E8B85","#CFCBC4"];
+const COAT=["#1F2A44","#2E2E33","#39434F","#4A1F26","#1F3A2E","#1E4148","#7A5A33","#1A1A1D","#4A4A50","#5B3A2E"];
+const SHIRT=["#F2EFE9","#E8EEF5","#F5EDE0","#DDE6EC"];
+const HAIRSTYLES=["short","buzz","crop","afro","curls","locs","braids","long","topknot","receding","bald","wavy"];
+const FACIAL=["clean","clean","clean","stubble","moustache","goatee","beard","fullbeard"];
+const EYEWEAR=["none","none","none","none","glasses","round","thick"];
+const EXTRAS=["none","none","none","none","cigar","cigar","toothpick","earpiece","vape"];
+const OUTFITS=[
+  {name:"suit and tie",cut:"tie"},{name:"charcoal suit",cut:"tie"},{name:"open-collar suit",cut:"open"},
+  {name:"polo shirt",cut:"polo"},{name:"hoodie",cut:"hoodie"},{name:"quarter-zip",cut:"zip"},
+  {name:"dress shirt, no jacket",cut:"open"},{name:"turtleneck",cut:"turtle"},
+  {name:"fleece vest over a shirt",cut:"vest"},{name:"loud patterned shirt",cut:"loud"},
+  {name:"waistcoat",cut:"vest"},{name:"crewneck sweater",cut:"turtle"}
+];
+
+function shade(hex,amt){
+  const n=parseInt(hex.slice(1),16);
+  const r=Math.max(0,Math.min(255,(n>>16)+amt));
+  const g=Math.max(0,Math.min(255,((n>>8)&255)+amt));
+  const b=Math.max(0,Math.min(255,(n&255)+amt));
+  return"#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0");
+}
+const luminance=hex=>{const n=parseInt(hex.slice(1),16);
+  return 0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255)};
+
+function makeCharacter(rng,company){
+  const outfit=rng.pick(OUTFITS);
+  const skin=rng.pick(SKIN);
+  let hair=rng.pick(HAIRC);
+  // Hair drawn in a tone close to the skin simply vanishes. Push it apart.
+  if(Math.abs(luminance(hair)-luminance(skin))<52)
+    hair=luminance(skin)>120?shade(hair,-70):shade(hair,80);
+  return{
+    name:rng.pick(FIRST)+" "+rng.pick(LAST),
+    title:"VP of Sales",company,
+    persona:rng.pick(PERSONAS),
+    look:{skin,hair,style:rng.pick(HAIRSTYLES),
+      facial:rng.pick(FACIAL),eyewear:rng.pick(EYEWEAR),extra:rng.pick(EXTRAS),
+      outfit:outfit.name,cut:outfit.cut,coat:rng.pick(COAT),shirt:rng.pick(SHIRT)}
+  };
+}
+function describeLook(l){
+  const bits=[l.outfit];
+  if(l.eyewear!=="none")bits.push({glasses:"wire glasses",round:"round glasses",thick:"heavy black frames"}[l.eyewear]);
+  if(l.facial!=="clean")bits.push({stubble:"a few days of stubble",moustache:"a moustache",goatee:"a goatee",beard:"a beard",fullbeard:"a full beard"}[l.facial]);
+  if(l.extra!=="none")bits.push({cigar:"an unlit cigar they keep rolling between their fingers",toothpick:"a toothpick they never remove",earpiece:"an earpiece they never take out",vape:"a vape they shouldn't be using indoors"}[l.extra]);
+  return bits.join(", ");
+}
+
+/* ----------------------------------------------------------------------
+   Drawing the face. Everything is parametric, so the same person can be
+   redrawn in any mood without redrawing anything else.
+   ---------------------------------------------------------------------- */
+const MOUTHS={
+  flat:'<path d="M 92 143 L 128 143" stroke="#7A4A45" stroke-width="3" fill="none" stroke-linecap="round"/>',
+  smile:'<path d="M 89 137 Q 110 155 131 137" stroke="#7A4A45" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+  grin:'<path d="M 87 136 Q 110 160 133 136 Z" fill="#5C2F2C"/><path d="M 91 138 Q 110 145 129 138 Z" fill="#F7F2E9"/>',
+  laugh:'<path d="M 85 134 Q 110 170 135 134 Z" fill="#5C2F2C"/><path d="M 89 136 Q 110 144 131 136 Z" fill="#F7F2E9"/>',
+  frown:'<path d="M 90 150 Q 110 132 130 150" stroke="#7A4A45" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+  snarl:'<path d="M 88 148 Q 110 128 132 148 Z" fill="#5C2F2C"/><path d="M 92 142 L 128 142 L 124 148 L 118 143 L 110 149 L 102 143 L 96 148 Z" fill="#F7F2E9"/>',
+  smirk:'<path d="M 91 147 Q 112 147 129 135" stroke="#7A4A45" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+  oh:'<ellipse cx="110" cy="143" rx="9" ry="12" fill="#5C2F2C"/>',
+  sleep:'<path d="M 100 143 Q 110 151 120 143" stroke="#7A4A45" stroke-width="3" fill="none" stroke-linecap="round"/>'
+};
+const MOODS={
+  neutral  :{brow:"flat",  eye:"open",   mouth:"flat",  fx:null},
+  thinking :{brow:"raised",eye:"side",   mouth:"smirk", fx:"think"},
+  pleased  :{brow:"raised",eye:"happy",  mouth:"smile", fx:null},
+  delighted:{brow:"raised",eye:"dollar", mouth:"grin",  fx:"cha"},
+  laughing :{brow:"raised",eye:"happy",  mouth:"laugh", fx:"ha"},
+  smug     :{brow:"raised",eye:"squint", mouth:"smirk", fx:null},
+  annoyed  :{brow:"angry", eye:"side",   mouth:"flat",  fx:null},
+  angry    :{brow:"angry", eye:"open",   mouth:"frown", fx:null},
+  furious  :{brow:"angry", eye:"wide",   mouth:"snarl", fx:"rage"},
+  bored    :{brow:"flat",  eye:"squint", mouth:"flat",  fx:null},
+  asleep   :{brow:"flat",  eye:"closed", mouth:"sleep", fx:"zzz"},
+  shocked  :{brow:"raised",eye:"wide",   mouth:"oh",    fx:"sweat"},
+  worried  :{brow:"worried",eye:"open",  mouth:"frown", fx:"sweat"}
+};
+const BROW_POSE={flat:{y:0,rot:0},raised:{y:-6,rot:0},angry:{y:-2,rot:15},worried:{y:-2,rot:-15}};
+
+function eyeSVG(kind,cx,side){
+  const cy=108, dark="#23201D";
+  if(kind==="happy")  return `<path d="M ${cx-11} ${cy+3} Q ${cx} ${cy-9} ${cx+11} ${cy+3}" stroke="${dark}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+  if(kind==="closed") return `<path d="M ${cx-11} ${cy} Q ${cx} ${cy+5} ${cx+11} ${cy}" stroke="${dark}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  if(kind==="squint") return `<ellipse cx="${cx}" cy="${cy}" rx="11" ry="3.4" fill="#F7F2E9"/><circle cx="${cx}" cy="${cy}" r="3.2" fill="${dark}"/>`;
+  if(kind==="dollar") return `<text x="${cx}" y="${cy+7}" text-anchor="middle" font-family="Zilla Slab,serif" font-size="21" font-weight="700" fill="#7FA860">$</text>`;
+  const rx=kind==="wide"?11.5:10.4, ry=kind==="wide"?10.5:7.8, r=kind==="wide"?4.2:4.8;
+  const off=kind==="side"?side*4:0;
+  return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#F7F2E9"/>`+
+         `<circle cx="${cx+off}" cy="${cy}" r="${r}" fill="${dark}"/>`+
+         `<circle cx="${cx+off-1.6}" cy="${cy-2}" r="1.5" fill="#fff" opacity=".85"/>`;
+}
+function hairSVG(l){
+  const c=l.hair, back=[], front=[];
+  const cap=(cy,ry,rx=54)=>`<ellipse cx="110" cy="${cy}" rx="${rx}" ry="${ry}" fill="${c}" clip-path="url(#headclip)"/>`;
+  switch(l.style){
+    case"bald":break;
+    case"buzz":front.push(cap(64,36));break;
+    case"crop":front.push(cap(66,38));break;
+    case"receding":
+      front.push(`<ellipse cx="78" cy="70" rx="22" ry="26" fill="${c}" clip-path="url(#headclip)"/>`,
+                 `<ellipse cx="142" cy="70" rx="22" ry="26" fill="${c}" clip-path="url(#headclip)"/>`);break;
+    case"afro":
+      back.push(`<circle cx="110" cy="88" r="72" fill="${c}"/>`);front.push(cap(72,44));break;
+    case"curls":
+      front.push(cap(70,41));
+      for(let i=0;i<7;i++)front.push(`<circle cx="${62+i*16}" cy="${64+(i%2?7:0)}" r="13" fill="${c}"/>`);
+      break;
+    case"locs":
+      front.push(cap(70,41));
+      for(let i=0;i<7;i++)back.push(`<rect x="${56+i*16}" y="60" width="9" height="${96+(i%3)*16}" rx="4.5" fill="${c}"/>`);
+      break;
+    case"braids":
+      front.push(cap(68,40));
+      for(let i=0;i<6;i++)back.push(`<rect x="${60+i*18}" y="58" width="8" height="${118+(i%2)*14}" rx="4" fill="${shade(c,i%2?10:-10)}"/>`);
+      break;
+    case"long":
+      back.push(`<rect x="50" y="76" width="120" height="132" rx="52" fill="${c}"/>`);front.push(cap(70,41));break;
+    case"topknot":
+      front.push(cap(70,40));back.push(`<circle cx="110" cy="32" r="18" fill="${c}"/>`);break;
+    case"wavy":
+      front.push(cap(68,40));
+      for(let i=0;i<5;i++)front.push(`<circle cx="${70+i*20}" cy="66" r="12" fill="${c}"/>`);
+      break;
+    default:front.push(cap(68,40));
+  }
+  return{back:back.join(""),front:front.join("")};
+}
+function facialSVG(l){
+  const c=l.hair,out=[];
+  if(l.facial==="stubble")out.push(`<ellipse cx="110" cy="146" rx="47" ry="32" fill="${c}" opacity=".3" clip-path="url(#headclip)"/>`);
+  if(l.facial==="moustache"||l.facial==="fullbeard"||l.facial==="goatee")
+    out.push(`<path d="M 92 133 Q 110 127 128 133 Q 110 138 92 133 Z" fill="${c}"/>`);
+  if(l.facial==="goatee")out.push(`<rect x="101" y="150" width="18" height="18" rx="7" fill="${c}"/>`);
+  if(l.facial==="beard"||l.facial==="fullbeard")
+    out.push(`<path d="M 62 112 Q 64 176 110 176 Q 156 176 158 112 L 158 140 Q 150 172 110 172 Q 70 172 62 140 Z" fill="${c}" clip-path="url(#headclip)"/>`,
+             `<ellipse cx="110" cy="156" rx="40" ry="24" fill="${c}" clip-path="url(#headclip)"/>`);
+  return out.join("");
+}
+function eyewearSVG(l){
+  if(l.eyewear==="none")return"";
+  const w=l.eyewear==="thick"?4:2.4, col=l.eyewear==="thick"?"#1B1816":"#4A453E";
+  const rx=l.eyewear==="round"?14:15, ry=l.eyewear==="round"?14:12;
+  const lens=cx=>l.eyewear==="round"
+    ?`<circle cx="${cx}" cy="108" r="${rx}" fill="rgba(240,248,255,.10)" stroke="${col}" stroke-width="${w}"/>`
+    :`<rect x="${cx-rx}" y="${108-ry}" width="${rx*2}" height="${ry*2}" rx="5" fill="rgba(240,248,255,.10)" stroke="${col}" stroke-width="${w}"/>`;
+  return lens(90)+lens(130)+
+    `<path d="M ${90+rx} 106 L ${130-rx} 106" stroke="${col}" stroke-width="${w}"/>`+
+    `<path d="M ${90-rx} 106 L 60 102" stroke="${col}" stroke-width="${w}"/>`+
+    `<path d="M ${130+rx} 106 L 160 102" stroke="${col}" stroke-width="${w}"/>`;
+}
+function bodySVG(l){
+  const {coat,shirt,cut}=l;
+  let s=`<path d="M 30 250 Q 34 200 72 188 L 148 188 Q 186 200 190 250 Z" fill="${coat}"/>`;
+  if(cut==="tie"||cut==="open"||cut==="vest"){
+    s+=`<path d="M 92 188 L 110 214 L 128 188 L 140 192 L 140 250 L 80 250 L 80 192 Z" fill="${shirt}"/>`;
+    s+=`<path d="M 92 188 L 110 214 L 96 250 L 74 250 L 74 190 Z" fill="${coat}"/>`;
+    s+=`<path d="M 128 188 L 110 214 L 124 250 L 146 250 L 146 190 Z" fill="${coat}"/>`;
+  }
+  if(cut==="tie")s+=`<path d="M 110 214 L 118 224 L 112 250 L 108 250 L 102 224 Z" fill="${shade(coat,-30)}"/>`;
+  if(cut==="vest")s+=`<path d="M 96 196 L 96 250 L 124 250 L 124 196 L 110 216 Z" fill="${shade(coat,26)}"/>`;
+  if(cut==="polo"){
+    s+=`<path d="M 96 188 L 110 206 L 124 188 L 132 192 L 124 206 L 110 214 L 96 206 L 88 192 Z" fill="${shade(coat,22)}"/>`;
+    s+=`<path d="M 108 206 L 112 206 L 112 232 L 108 232 Z" fill="${shade(coat,-22)}"/>`;
+  }
+  if(cut==="hoodie"){
+    s+=`<path d="M 66 192 Q 110 176 154 192 Q 150 216 110 218 Q 70 216 66 192 Z" fill="${shade(coat,18)}"/>`;
+    s+=`<path d="M 102 214 L 102 244 M 118 214 L 118 244" stroke="${shirt}" stroke-width="3.5" stroke-linecap="round"/>`;
+  }
+  if(cut==="zip"){
+    s+=`<path d="M 108 190 L 112 190 L 112 250 L 108 250 Z" fill="${shade(coat,30)}"/>`;
+    s+=`<circle cx="110" cy="206" r="4" fill="${shade(coat,45)}"/>`;
+  }
+  if(cut==="turtle")s+=`<path d="M 84 190 Q 110 176 136 190 L 136 204 Q 110 192 84 204 Z" fill="${shade(coat,16)}"/>`;
+  if(cut==="loud"){
+    for(let i=0;i<14;i++)s+=`<circle cx="${40+(i%5)*32}" cy="${200+Math.floor(i/5)*20}" r="5" fill="${shade(coat,40)}" opacity=".75"/>`;
+  }
+  return s;
+}
+function extraSVG(l,mood){
+  if(l.extra==="cigar"){
+    const smoke=(mood==="furious"||mood==="angry")?"":
+      `<path class="smoke" d="M 176 132 q 7 -10 0 -20 q -7 -10 0 -20" stroke="#B9B2A6" stroke-width="2.6" fill="none" opacity=".5" stroke-linecap="round"/>`;
+    return `<rect x="130" y="138" width="46" height="9" rx="3" fill="#6B4423" transform="rotate(-6 130 143)"/>`+
+           `<rect x="170" y="134" width="9" height="9" rx="3" fill="#E2622B" transform="rotate(-6 130 143)"/>`+smoke;
+  }
+  if(l.extra==="toothpick")return`<rect x="128" y="142" width="26" height="3" rx="1.5" fill="#E8D9B8" transform="rotate(-12 128 143)"/>`;
+  if(l.extra==="vape")return`<rect x="130" y="138" width="30" height="10" rx="4" fill="#4A4A50" transform="rotate(-6 130 143)"/>`+
+    `<path class="smoke" d="M 166 132 q 8 -12 0 -22" stroke="#B9B2A6" stroke-width="2.6" fill="none" opacity=".45" stroke-linecap="round"/>`;
+  if(l.extra==="earpiece")return`<circle cx="160" cy="114" r="7" fill="#3A3A3E"/><path d="M 160 120 Q 164 140 150 150" stroke="#3A3A3E" stroke-width="2.6" fill="none"/>`;
+  return"";
+}
+function fxSVG(kind){
+  if(kind==="rage")return`
+    <g stroke="#C2554A" stroke-width="4.5" stroke-linecap="round">
+      <path d="M 44 46 L 62 64 M 62 46 L 44 64"/><path d="M 176 46 L 194 64 M 194 46 L 176 64"/>
+    </g>`;
+  if(kind==="cha")return`
+    <g fill="#7FA860" font-family="Zilla Slab,serif" font-weight="700">
+      <text x="42" y="60" font-size="26">$</text><text x="182" y="48" font-size="22">$</text>
+      <text x="168" y="86" font-size="17">$</text>
+    </g>`;
+  if(kind==="ha")return`<g fill="#A79E8E" font-family="Zilla Slab,serif" font-size="19" font-style="italic"><text x="176" y="58">ha</text><text x="190" y="82" font-size="15">ha</text></g>`;
+  if(kind==="zzz")return`<g fill="#6F675B" font-family="Zilla Slab,serif" font-weight="600"><text x="176" y="56" font-size="22">z</text><text x="192" y="36" font-size="16">z</text></g>`;
+  if(kind==="sweat")return`<path d="M 168 74 q 7 12 0 17 q -7 -5 0 -17 Z" fill="#6FA8C9"/>`;
+  if(kind==="think")return`<text x="176" y="56" font-family="Zilla Slab,serif" font-size="26" fill="#6F675B">?</text>`;
+  return"";
+}
+function drawPerson(ch,mood){
+  const l=ch.look, m=MOODS[mood]||MOODS.neutral;
+  const pose=BROW_POSE[m.brow], hair=hairSVG(l);
+  const brow=(cx,dir)=>`<g transform="translate(${cx} ${88+pose.y}) rotate(${pose.rot*dir})">
+      <path d="M -14 0 Q 0 -5 14 0" stroke="${shade(l.hair,14)}" stroke-width="5.5" fill="none" stroke-linecap="round"/></g>`;
+  return `
+<svg viewBox="0 0 220 250" role="img" aria-label="${ch.name}, looking ${mood}">
+  <defs><clipPath id="headclip"><ellipse cx="110" cy="110" rx="52" ry="62"/></clipPath></defs>
+  ${hair.back}
+  <ellipse cx="58" cy="118" rx="9" ry="14" fill="${l.skin}"/>
+  <ellipse cx="162" cy="118" rx="9" ry="14" fill="${l.skin}"/>
+  <path d="M 94 158 L 126 158 L 126 194 L 94 194 Z" fill="${shade(l.skin,-26)}"/>
+  ${bodySVG(l)}
+  <ellipse cx="110" cy="110" rx="52" ry="62" fill="${l.skin}"/>
+  <ellipse cx="110" cy="110" rx="52" ry="62" fill="none" stroke="${shade(l.skin,-34)}" stroke-width="1.5"/>
+  ${hair.front}
+  ${brow(90,1)}${brow(130,-1)}
+  ${eyeSVG(m.eye,90,-1)}${eyeSVG(m.eye,130,1)}
+  <path d="M 110 112 Q 104 126 112 127" stroke="${shade(l.skin,-40)}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  ${MOUTHS[m.mouth]}
+  ${facialSVG(l)}
+  ${eyewearSVG(l)}
+  ${extraSVG(l,mood)}
+  ${fxSVG(m.fx)}
+</svg>`;
+}
+
+/* ======================================================================
+   6. The seller's decision making. The rules decide everything that
+   matters -- accept, refuse, storm out. Dialogue only supplies words.
+   ====================================================================== */
+function makeSeller(sc,persona,rounds,rng){
+  const all=allPackages(sc);
+  const importance={};sc.issues.forEach(i=>importance[i.key]=1);
+  return{
+    persona,rounds,rng,insults:0,lastPlayer:null,lastCounter:null,
+    target(round){
+      const floor=sc.sellerWalk+3;
+      if(rounds<=1)return floor;
+      let p=(round-1)/(rounds-1)*persona.rate;
+      p=Math.min(1,p);
+      return Math.round(persona.open-(persona.open-floor)*p);
+    },
+    /* How good the seller GUESSES a package is for the buyer. Options are
+       listed best-for-buyer first, so an early option scores high. */
+    guess(picks){
+      let total=0;
+      sc.issues.forEach((iss,i)=>{
+        const idx=iss.options.findIndex(o=>o.key===picks[i]);
+        total+=importance[iss.key]*((iss.options.length-1-idx)/(iss.options.length-1));
+      });
+      return total;
+    },
+    /* Watch what the buyer clings to. Terms they hold look important;
+       terms they give ground on look cheap, and get exploited. */
+    observe(picks){
+      sc.issues.forEach((iss,i)=>{
+        const idx=iss.options.findIndex(o=>o.key===picks[i]);
+        if(!this.lastPlayer){if(idx===0)importance[iss.key]+=0.4;return}
+        const was=iss.options.findIndex(o=>o.key===this.lastPlayer[i]);
+        if(idx>was)importance[iss.key]=Math.max(0.4,importance[iss.key]-0.6);
+        else if(idx===was&&idx<=1)importance[iss.key]+=0.8;
+      });
+      this.lastPlayer=picks.slice();
+    },
+    nudge(key,delta){importance[key]=Math.max(0.3,importance[key]+delta)},
+    /* The package worth at least `min` to the seller that it believes the
+       buyer will like most. This is what conceding cleverly looks like. */
+    pick(min,ceiling){
+      let pool=all.filter(p=>p.them>=min);
+      if(ceiling!=null){const t=pool.filter(p=>p.them<=ceiling);if(t.length)pool=t}
+      if(!pool.length)pool=[all.reduce((a,b)=>b.them>a.them?b:a)];
+      let best=pool[0],bestG=-1;
+      for(const p of pool){const g=this.guess(p.picks);if(g>bestG||(g===bestG&&p.them<best.them)){best=p;bestG=g}}
+      return best;
+    },
+    advance(target){
+      const ceiling=this.lastCounter?this.lastCounter.them:null;
+      let c=this.pick(target,ceiling);
+      if(this.lastCounter&&this.guess(c.picks)<this.guess(this.lastCounter.picks))c=this.lastCounter;
+      this.lastCounter=c;return c;
+    },
+    opening(){this.lastCounter=this.pick(persona.open,persona.open+6);return this.lastCounter},
+    insultLevel(them){
+      const gap=sc.sellerWalk-them;
+      if(gap<persona.margin)return 0;
+      return gap>=persona.margin*2?2:1;
+    },
+    respond(picks,round){
+      this.observe(picks);
+      const mine=scoreOf(sc,picks).them;
+      const target=this.target(round), final=round>=rounds;
+      if(mine>=persona.delight)return{kind:"accept",mood:"delight"};
+      const sev=this.insultLevel(mine);
+      if(sev){
+        this.insults+=sev;
+        if(this.insults>persona.patience)return{kind:"rage",mood:"rage"};
+        if(!final)return{kind:"counter",offer:this.advance(target),mood:"insult"};
+      }
+      if(mine>=target)return{kind:"accept",mood:"accept"};
+      if(final)return mine>=sc.sellerWalk?{kind:"accept",mood:"thin"}:{kind:"nodeal",mood:"walk"};
+      return{kind:"counter",offer:this.advance(target),mood:mine<sc.sellerWalk?"below":"close"};
+    },
+    /* How straight the answer is depends entirely on who you're asking. */
+    hint(){
+      const ranked=sc.issues.slice().sort((a,b)=>stakeThem(b)-stakeThem(a));
+      if(rng.chance(persona.honesty)){
+        return `${ranked[0].label} decides whether this is worth doing for me, with ${ranked[1].label.toLowerCase()} behind it. ${ranked[ranked.length-1].label} I have more room on than you'd think.`;
+      }
+      return `${ranked[1].label} is what I'm measured on this quarter, so that's where I'm least flexible. Everything else I can look at.`;
+    }
+  };
+}
+
+/* ======================================================================
+   7. Reading plain English. Simple, transparent keyword intent.
+   ====================================================================== */
+const INTENTS=[
+  ["priorities",[/\bwhat (do you|matters|are you|would you)\b/,/\bmost important\b/,/\bpriorit/,/\bcare (most )?about\b/,/\bwhat.*\bneed\b/,/\bwhich.*\bmatter/,/\bdriving\b/]],
+  ["why",[/\bwhy\b/,/\bjustify\b/,/\bexplain\b/,/\bhow come\b/,/\bon what basis\b/]],
+  ["threat",[/\bwalk (away|out)\b/,/\bleave the table\b/,/\bno deal\b/,/\banother supplier\b/,/\bcompetitor\b/,/\bgo elsewhere\b/,/\bfind someone else\b/]],
+  ["insult",[/\bridiculous\b/,/\bjoke\b/,/\binsult/,/\bpathetic\b/,/\bwaste of\b/,/\bclown\b/,/\bnonsense\b/,/\brobbery\b/,/\bripping me off\b/,/\bgreedy\b/,/\bjoker\b/]],
+  ["trade",[/\bif you\b.*\bi(')?ll\b/,/\bin (exchange|return)\b/,/\btrade\b/,/\bgive you\b/,/\bswap\b/,/\bi can (give|offer|do)\b/,/\bwould you take\b/,/\bhow about\b/]],
+  ["flexible",[/\bflexible\b/,/\bdon'?t (really )?care about\b/,/\bnot (that )?important to (me|us)\b/,/\bhappy to move\b/,/\bcan live with\b/,/\bopen to\b/]],
+  ["deadline",[/\bhurry\b/,/\bquick/,/\bclose (this|it) (out|today)\b/,/\bwrap (this )?up\b/,/\brunning out\b/]],
+  ["flatter",[/\brespect\b/,/\bappreciate\b/,/\bfair enough\b/,/\bpleasure\b/,/\bthank you\b/,/\bthanks\b/,/\bimpress/,/\bgood point\b/]],
+  ["small",[/\bhow are you\b/,/\bweekend\b/,/\bweather\b/,/\bcoffee\b/,/\bhello\b/,/\bhi\b/,/\bhey\b/,/\blunch\b/,/\bfamily\b/]]
+];
+const PRIORITY={threat:5,insult:5,trade:4,priorities:4,flexible:3,why:3,deadline:2,flatter:1,small:0};
+function classify(text){
+  const t=text.toLowerCase().trim();if(!t)return"none";
+  let best="none",bestScore=0;
+  for(const[name,pats]of INTENTS){
+    const hits=pats.filter(p=>p.test(t)).length;
+    if(hits&&(hits>bestScore||(hits===bestScore&&PRIORITY[name]>(PRIORITY[best]||-1)))){best=name;bestScore=hits}
+  }
+  return best;
+}
+const ISSUE_WORDS={price:["price","unit cost","per unit","cost","cheaper","expensive"],
+  volume:["volume","units","quantity","commit","order size","annual"],
+  payment:["payment","net ","terms","pay ","invoice","cash"],
+  delivery:["delivery","lead time","weeks","fast","ship","schedule"],
+  exclusivity:["exclusiv","compet","rights","lock"]};
+function namedIssues(text,sc){
+  const t=text.toLowerCase();
+  return sc.issues.filter(i=>(ISSUE_WORDS[i.key]||[]).some(w=>t.includes(w))).map(i=>i.key);
+}
+
+/* ======================================================================
+   8. Game state and screens.
+   ====================================================================== */
+const app=document.getElementById("app");
+const hudEl=document.getElementById("hud");
+const clockEl=document.getElementById("clock");
+const restartBtn=document.getElementById("restart");
+let G=null;
+
+const ROUNDS=8;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const line=(p,key,rng)=>rng.pick(p.lines[key]||["..."]);
+
+function newGame(seed){
+  const s=seed??Math.floor(Math.random()*900000)+1000;
+  const sc=buildScenario(s);
+  const rng=rngFrom(s^0x5f3a);
+  const ch=makeCharacter(rng,sc.sellerCo);
+  G={seed:s,sc,ch,rng,rounds:ROUNDS,round:1,
+     seller:makeSeller(sc,ch.persona,ROUNDS,rng),
+     theirs:null,draft:null,yours:null,mood:ch.persona.rest,
+     said:"",note:"",outcome:null,
+     log:{asked:false,insults:0,warmth:0,revealed:[],offers:[]}};
+  const opening=G.seller.opening();
+  G.theirs=opening.picks.slice();
+  G.draft=opening.picks.slice();
+  showBrief();
+}
+
+/* ---------------------------------------------------------------- brief */
+function showBrief(){
+  const {sc,ch}=G;
+  hudEl.hidden=true;clockEl.hidden=true;restartBtn.hidden=true;
+  const ranked=sc.issues.slice().sort((a,b)=>stakeYou(b)-stakeYou(a));
+  const top=Math.max(...ranked.map(stakeYou));
+  app.innerHTML=`
+  <div class="panel" style="margin-top:18px">
+    <div class="eyebrow">Confidential brief &mdash; ${esc(sc.buyerRole)}</div>
+    <h1 style="font-size:clamp(28px,5vw,40px);margin-bottom:10px">${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))} supply agreement</h1>
+    <p class="lede">You buy for <strong>${esc(sc.buyerCo)}</strong>, ${esc(sc.product.buyer)}.
+      Across the table is <strong>${esc(sc.sellerCo)}</strong>, ${esc(sc.product.seller)}.
+      You both score every term privately, and <strong>you are weighted differently</strong> &mdash;
+      so packages exist that beat the obvious compromise for both of you. Find them.</p>
+    <div class="split">
+      <div>
+        <div class="eyebrow">What the terms are worth to you</div>
+        <div class="prio">
+          ${ranked.map(i=>`<div class="prio-row">
+            <span>${esc(i.label)}</span>
+            <span class="prio-bar"><i style="width:${Math.round(stakeYou(i)/top*100)}%"></i></span>
+            <span>${stakeYou(i)}</span></div>`).join("")}
+        </div>
+        <p style="color:var(--ink-dim);font-size:13px;margin-top:12px">
+          A perfect sweep is 100. Guard the top of that list; the bottom of it is
+          what you have to sell.</p>
+      </div>
+      <div>
+        <div class="eyebrow">Your walk-away</div>
+        <div style="font-family:var(--display);font-size:56px;line-height:1;font-variant-numeric:tabular-nums">${sc.buyerWalk}</div>
+        <p style="color:var(--ink-dim);font-size:14px;margin-top:8px">
+          Sign for less than this and you did worse than not signing at all.
+          Walking away scores you exactly ${sc.buyerWalk}.</p>
+        <div class="eyebrow" style="margin-top:20px">The clock</div>
+        <p style="color:var(--ink-dim);font-size:14px;margin:0">
+          ${ROUNDS} rounds. Their demands fall as it runs down, so patience is
+          leverage &mdash; but run it out and you both get nothing.</p>
+      </div>
+    </div>
+    <div class="rule"></div>
+    <button class="btn primary" id="go" style="font-size:16px;padding:13px 22px">Take your seat</button>
+    <span style="color:var(--ink-faint);font-size:12px;margin-left:12px">deal #${G.seed}</span>
+  </div>`;
+  document.getElementById("go").onclick=()=>{
+    G.said=line(G.ch.persona,"open",G.rng);G.mood=G.ch.persona.rest;
+    showPlay();
+  };
+}
+
+/* ----------------------------------------------------------------- play */
+function showPlay(){
+  restartBtn.hidden=false;hudEl.hidden=false;clockEl.hidden=false;
+  app.innerHTML=`
+  <div class="table">
+    <div>
+      <div class="stage" id="stage">${drawPerson(G.ch,G.mood)}</div>
+      <div class="nameplate">
+        <strong id="pname">${esc(G.ch.name)}</strong>
+        <em>${esc(G.ch.title)}, ${esc(G.ch.company)}</em>
+      </div>
+      <div class="bubble" id="bubble"></div>
+      <div class="panel" style="margin-top:14px">
+        <div class="eyebrow" style="color:var(--them)">Their offer on the table</div>
+        <table class="sheet" id="theirsheet"></table>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:13px;color:var(--ink-dim)">
+          <span>Worth <b class="num" id="theirworth" style="color:var(--ink);font-size:17px">0</b> to you</span>
+          <span class="num" id="theirvalue"></span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="eyebrow">Your counter-offer &mdash; numbers are what each option is worth to you</div>
+        <div class="terms" id="terms"></div>
+        <div class="meter">
+          <div class="meter-top">
+            <span>This package is worth</span>
+            <b class="num" id="yourscore">0</b>
+          </div>
+          <div class="bar"><div class="fill" id="fill"></div><div class="floor" id="floor"></div></div>
+          <div class="meter-legend">
+            <span>walk away = <b class="num">${G.sc.buyerWalk}</b></span>
+            <span class="num" id="yourvalue"></span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="send">Send this offer</button>
+          <button class="btn" id="accept">Accept theirs</button>
+          <button class="btn ghost" id="copy">Copy their terms</button>
+        </div>
+        <div class="actions" style="margin-top:8px">
+          <button class="btn ghost" id="ask">Ask what matters to them</button>
+          <button class="btn ghost danger" id="walk">Walk away</button>
+        </div>
+        <div class="say">
+          <input id="sayinput" placeholder="Say something to them&hellip;" autocomplete="off">
+          <button class="btn" id="saybtn">Say it</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById("send").onclick=sendOffer;
+  document.getElementById("accept").onclick=acceptTheirs;
+  document.getElementById("copy").onclick=()=>{G.draft=G.theirs.slice();paint()};
+  document.getElementById("ask").onclick=askPriorities;
+  document.getElementById("walk").onclick=walkAway;
+  document.getElementById("saybtn").onclick=saySomething;
+  document.getElementById("sayinput").addEventListener("keydown",e=>{if(e.key==="Enter")saySomething()});
+  restartBtn.onclick=()=>newGame();
+  paint();
+}
+
+function paint(){
+  const {sc}=G;
+  // clock + hud
+  clockEl.innerHTML=Array.from({length:G.rounds},(_,i)=>
+    `<span class="tick ${i+1<G.round?"used":i+1===G.round?"now":""}"></span>`).join("");
+  hudEl.textContent=`Round ${G.round} of ${G.rounds}`;
+
+  // speech
+  const bub=document.getElementById("bubble");
+  if(bub)bub.innerHTML=`<p>${esc(G.said)}</p>`+(G.note?`<div class="note">${G.note}</div>`:"");
+  const stage=document.getElementById("stage");
+  if(stage)stage.innerHTML=drawPerson(G.ch,G.mood);
+
+  // their sheet
+  const ts=document.getElementById("theirsheet");
+  if(ts){
+    ts.innerHTML=sc.issues.map((iss,i)=>{
+      const o=optionOf(iss,G.theirs[i]);
+      return`<tr><td>${esc(iss.label)}</td><td style="color:var(--ink);text-align:left">${esc(o.label)}</td><td>${o.you}</td></tr>`;
+    }).join("");
+    const t=scoreOf(sc,G.theirs);
+    document.getElementById("theirworth").textContent=t.you;
+    document.getElementById("theirvalue").textContent=money(contractValue(sc,G.theirs))+"/yr";
+  }
+
+  // your builder
+  const terms=document.getElementById("terms");
+  if(terms){
+    terms.innerHTML=sc.issues.map((iss,i)=>`
+      <div class="term">
+        <div class="term-head">
+          <span class="term-name">${esc(iss.label)}</span>
+          <span class="stake">${stakeYou(iss)} pts at stake</span>
+        </div>
+        <div class="opts">
+          ${iss.options.map(o=>`
+            <button class="opt${o.key===G.theirs[i]?" theirs":""}" data-i="${i}" data-k="${esc(o.key)}"
+              aria-pressed="${o.key===G.draft[i]}">${esc(o.label)}<span class="pts">${o.you}</span></button>`).join("")}
+        </div>
+      </div>`).join("");
+    terms.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      G.draft[Number(b.dataset.i)]=b.dataset.k;paint();
+    });
+    const y=scoreOf(sc,G.draft);
+    document.getElementById("yourscore").textContent=y.you;
+    const fill=document.getElementById("fill");
+    fill.style.width=y.you+"%";
+    fill.classList.toggle("under",y.you<sc.buyerWalk);
+    document.getElementById("floor").style.left=sc.buyerWalk+"%";
+    document.getElementById("yourvalue").textContent=money(contractValue(sc,G.draft))+"/yr";
+  }
+}
+
+function react(mood,fx){
+  G.mood=mood;
+  const stage=document.getElementById("stage");
+  if(stage&&fx){stage.classList.remove("shake","pop");void stage.offsetWidth;stage.classList.add(fx)}
+}
+/* An in-page confirmation. The sandbox blocks native confirm(), and a real
+   dialog reads better than a browser chrome box anyway. */
+function ask(title,body,okLabel){
+  return new Promise(resolve=>{
+    const back=document.createElement("div");
+    back.className="modal-back";
+    back.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+      <h3>${esc(title)}</h3><p>${body}</p>
+      <div class="modal-actions">
+        <button class="btn" data-no>Go back</button>
+        <button class="btn primary" data-yes>${esc(okLabel)}</button>
+      </div></div>`;
+    document.body.appendChild(back);
+    const done=v=>{back.remove();document.removeEventListener("keydown",onKey);resolve(v)};
+    const onKey=e=>{if(e.key==="Escape")done(false)};
+    document.addEventListener("keydown",onKey);
+    back.querySelector("[data-yes]").onclick=()=>done(true);
+    back.querySelector("[data-no]").onclick=()=>done(false);
+    back.addEventListener("click",e=>{if(e.target===back)done(false)});
+    back.querySelector("[data-no]").focus();
+  });
+}
+function toast(msg){
+  const el=document.createElement("div");
+  el.className="toast";el.textContent=msg;document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3400);
+}
+
+/* --------------------------------------------------------- the actions */
+async function sendOffer(){
+  const {sc}=G, picks=G.draft.slice();
+  const y=scoreOf(sc,picks);
+  if(y.you<sc.buyerWalk){
+    const ok=await ask("That offer is below your own floor",
+      `This package is worth <b>${y.you}</b> to you. Your walk-away is <b>${sc.buyerWalk}</b>.
+       If they sign it, you have done worse than not signing at all.`,"Send it anyway");
+    if(!ok)return;
+  }
+
+  G.yours=picks;G.log.offers.push(picks);
+  const reply=G.seller.respond(picks,G.round);
+  const p=G.ch.persona;
+
+  if(reply.kind==="accept"){
+    const fleeced=reply.mood==="delight";
+    G.said=line(p,fleeced?"delight":reply.mood==="thin"?"thin":"accept",G.rng);
+    react(fleeced?"delighted":reply.mood==="thin"?"smug":"pleased","pop");
+    G.note=fleeced?"They could not sign it fast enough. That is never a good sign.":"";
+    paint();
+    return setTimeout(()=>finish("signed",picks,fleeced),950);
+  }
+  if(reply.kind==="rage"){
+    G.said=line(p,"rage",G.rng);react("furious","shake");
+    G.note="They shove the chair back, sweep the term sheet off the table and walk out.";
+    paint();
+    return setTimeout(()=>finish("raged",null,false),1400);
+  }
+  if(reply.kind==="nodeal"){
+    G.said=line(p,"walk",G.rng);react("angry","shake");G.note="";paint();
+    return setTimeout(()=>finish("theywalked",null,false),1200);
+  }
+
+  const moved=movedTerm(G.theirs,reply.offer.picks);
+  G.theirs=reply.offer.picks.slice();
+  G.said=line(p,reply.mood,G.rng);
+  react(reply.mood==="insult"?"angry":reply.mood==="close"?"thinking":"annoyed",null);
+  G.note=moved?`They moved on <b>${esc(moved)}</b>.`:"";
+  G.round++;
+  paint();
+  if(G.round>G.rounds){setTimeout(()=>finish("timeout",null,false),700)}
+}
+function movedTerm(before,after){
+  for(let i=0;i<before.length;i++)if(before[i]!==after[i])return G.sc.issues[i].label;
+  return null;
+}
+async function acceptTheirs(){
+  const {sc}=G, y=scoreOf(sc,G.theirs);
+  if(y.you<sc.buyerWalk){
+    const ok=await ask("That is worse than walking out",
+      `Their package is worth <b>${y.you}</b> to you. Walking away is worth <b>${sc.buyerWalk}</b>.
+       Signing this is the one move that is strictly worse than no deal.`,"Sign it anyway");
+    if(!ok)return;
+  }
+  finish("signed",G.theirs.slice(),false);
+}
+function askPriorities(){
+  G.log.asked=true;
+  G.said=G.seller.hint();react("thinking",null);
+  G.note="Asking cost you nothing and no round. Most people never do it once.";
+  paint();
+}
+async function walkAway(){
+  const y=scoreOf(G.sc,G.theirs).you;
+  const ok=await ask("Leave the table?",
+    `Walking away scores you <b>${G.sc.buyerWalk}</b>. Their current offer is worth <b>${y}</b>.
+     ${G.sc.buyerWalk>y?"Walking is the better of the two right now."
+                      :"Their offer already beats walking away."}`,"Walk away");
+  if(ok)finish("youwalked",null,false);
+}
+function saySomething(){
+  const input=document.getElementById("sayinput");
+  const text=input.value.trim();if(!text)return;
+  input.value="";
+  const p=G.ch.persona, kind=classify(text), named=namedIssues(text,G.sc);
+  const labels=named.map(k=>G.sc.issues.find(i=>i.key===k).label.toLowerCase()).join(", ");
+
+  if(kind==="priorities"){return askPriorities()}
+  let key="small",mood="pleased",note="";
+  switch(kind){
+    case"why":key="pressed";mood="smug";break;
+    case"threat":key="threat";mood="smug";note="Threats are cheap. They only work if they think you mean it.";break;
+    case"insult":
+      key="insult";mood="angry";G.seller.insults++;G.log.insults++;
+      note="That cost you goodwill. Some people have very little to spare.";break;
+    case"flatter":
+      key="small";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;
+      note="Warmth is free and it buys you patience.";break;
+    case"flexible":
+      key="small";mood="smug";
+      named.forEach(k=>{G.seller.nudge(k,-1.2);if(!G.log.revealed.includes(k))G.log.revealed.push(k)});
+      note=named.length?`You just told them you don't care about ${esc(labels)}. They will stop paying you for it.`
+                       :"You signalled flexibility without saying where. That is the safer version.";break;
+    case"trade":
+      key="close";mood="thinking";named.forEach(k=>G.seller.nudge(k,0.8));
+      note=named.length?`You flagged ${esc(labels)} as something you want. Now put it in an actual offer.`
+                       :"Naming a trade out loud is good. Now table it as an offer.";break;
+    case"deadline":key="small";mood="bored";break;
+    default:key="small";mood=p.rest;
+  }
+  G.said=line(p,key,G.rng);G.note=note;react(mood,null);paint();
+}
+
+/* ======================================================================
+   9. The debrief. Every number here is exact: the game knows all 1,280
+   packages and both hidden scoresheets.
+   ====================================================================== */
+function finish(kind,picks,fleeced){
+  G.outcome={kind,picks,fleeced};
+  showDebrief();
+}
+
+/* No SINGLE term can ever help both sides -- each issue is a straight tug
+   of war. Gains for both exist only in two-term swaps, which is the
+   entire lesson of the game. */
+function winWinTrades(sc,picks){
+  const base=scoreOf(sc,picks), out=[], seen=new Set();
+  for(let a=0;a<sc.issues.length;a++)for(let b=a+1;b<sc.issues.length;b++){
+    for(const oa of sc.issues[a].options){
+      if(oa.key===picks[a])continue;
+      for(const ob of sc.issues[b].options){
+        if(ob.key===picks[b])continue;
+        const alt=picks.slice();alt[a]=oa.key;alt[b]=ob.key;
+        const s=scoreOf(sc,alt);
+        if(s.you<base.you||s.them<base.them||(s.you===base.you&&s.them===base.them))continue;
+        const aDown=oa.you<=optionOf(sc.issues[a],picks[a]).you;
+        const give=aDown?a:b, take=aDown?b:a;
+        const giveOpt=aDown?oa:ob, takeOpt=aDown?ob:oa;
+        const tag=sc.issues[give].label+"|"+sc.issues[take].label;
+        if(seen.has(tag))continue;
+        out.push({tag,giveLabel:sc.issues[give].label,giveFrom:optionOf(sc.issues[give],picks[give]).label,giveTo:giveOpt.label,
+          takeLabel:sc.issues[take].label,takeFrom:optionOf(sc.issues[take],picks[take]).label,takeTo:takeOpt.label,
+          you:s.you-base.you,them:s.them-base.them});
+      }
+    }
+  }
+  out.sort((x,y)=>(y.you+y.them)-(x.you+x.them)||y.you-x.you);
+  const uniq=[];for(const t of out){if(seen.has(t.tag))continue;seen.add(t.tag);uniq.push(t)}
+  return uniq;
+}
+
+function buildReview(){
+  const {sc,outcome,log}=G;
+  const viable=viablePackages(sc);
+  const best=viable.length?viable.reduce((a,b)=>b.you>a.you?b:a):null;
+  const bestScore=best?best.you:sc.buyerWalk;
+  const dealt=!!outcome.picks;
+  const s=dealt?scoreOf(sc,outcome.picks):{you:sc.buyerWalk,them:sc.sellerWalk};
+  const available=Math.max(1,bestScore-sc.buyerWalk);
+  const capture=Math.max(0,Math.min(1,(s.you-sc.buyerWalk)/available));
+  const joint=s.you+s.them, mj=maxJoint(sc);
+  const efficiency=dealt?joint/mj:0;
+
+  let valueLeft=0;
+  if(dealt){
+    let bestSum=joint;
+    for(const p of allPackages(sc))
+      if(p.you>=s.you&&p.them>=s.them&&p.you+p.them>bestSum)bestSum=p.you+p.them;
+    valueLeft=bestSum-joint;
+  }
+
+  const rows=dealt?sc.issues.map((iss,i)=>{
+    const o=optionOf(iss,outcome.picks[i]);
+    const ys=stakeYou(iss),ts=stakeThem(iss);
+    const yShare=ys?o.you/ys:0, tShare=ts?o.them/ts:0;
+    return{label:iss.label,you:o.you,yourStake:ys,them:o.them,theirStake:ts,
+      winner:Math.abs(yShare-tShare)<0.2?"split":(yShare>tShare?"you":"them"),yShare};
+  }):[];
+
+  let grade="F",note="No deal. A signable package existed and neither of you found it.";
+  if(dealt){
+    const v=0.65*capture+0.35*efficiency;
+    const scale=[[0.90,"A+","Close to the best outcome available to you. Genuinely well negotiated."],
+      [0.80,"A","Strong. You found the trades and took most of what was gettable."],
+      [0.70,"B","Solid. You made real trades but left some on the table."],
+      [0.58,"C","Workable deal, ordinary negotiation. The value was there to take."],
+      [0.45,"D","You signed something worse than you needed to."]];
+    grade="F";note="This deal cost you most of what was available.";
+    for(const[cut,g,n]of scale)if(v>=cut){grade=g;note=n;break}
+  }
+  return{s,rows,capture,efficiency,joint,maxJoint:mj,valueLeft,grade,note,
+    best,bestScore,dealt,trades:dealt?winWinTrades(sc,outcome.picks).slice(0,3):[],viable};
+}
+
+function lessonsFor(rev){
+  const {sc,outcome,log}=G, out=[];
+  const add=(sev,title,detail)=>out.push({sev,title,detail});
+
+  if(rev.dealt&&rev.s.you<sc.buyerWalk)
+    add("critical","You signed a deal worse than no deal",
+      `This package is worth ${rev.s.you} to you. Walking away was worth ${sc.buyerWalk}. Your walk-away is not a guideline; it is the whole reason you have one.`);
+  if(outcome.fleeced)
+    add("critical","They accepted instantly, and that told you everything",
+      "When the other side signs without a single counter, you were never near their limit. An offer taken on the spot was too generous. Open worse next time.");
+  if(outcome.kind==="raged")
+    add("critical","You pushed them out of the room",
+      "Aggression is a tool, not a personality. You used it on someone with no tolerance for it and got nothing. Reading who you are dealing with comes before deciding how hard to push.");
+  if(!rev.dealt)
+    add("major","A deal existed and you did not find it",
+      `${rev.viable.length} packages would have been signed by both of you. The best was worth ${rev.bestScore} to you, against ${sc.buyerWalk} for walking. No deal is sometimes right; here it cost you ${rev.bestScore-sc.buyerWalk} points.`);
+
+  if(rev.rows.length){
+    const biggest=rev.rows.reduce((a,b)=>b.yourStake>a.yourStake?b:a);
+    const cheapest=rev.rows.reduce((a,b)=>b.yourStake<a.yourStake?b:a);
+    if(biggest.yShare<0.4)
+      add("major",`You lost ${biggest.label.toLowerCase()}, your biggest issue`,
+        `It was worth ${biggest.yourStake} points to you &mdash; more than any other term &mdash; and you came away with ${biggest.you}. Whatever else you trade, protect the top of your list.`);
+    if(cheapest.yShare>0.5&&cheapest.theirStake>cheapest.yourStake*2)
+      add("major",`You kept ${cheapest.label.toLowerCase()}, which you did not need`,
+        `That term was worth ${cheapest.yourStake} to you and ${cheapest.theirStake} to them. Handing it over costs you almost nothing and buys enormous goodwill. It is the most reliable trade in the game and you sat on it.`);
+    const middles=G.sc.issues.filter((iss,i)=>{
+      const idx=iss.options.findIndex(o=>o.key===outcome.picks[i]);
+      return idx>0&&idx<iss.options.length-1;
+    }).length;
+    if(middles>=3)
+      add("major","You split the difference on almost everything",
+        `${middles} of the five terms landed on a middle option. Meeting in the middle feels fair and is usually the worst deal available: it wins you nothing you care about and gives them nothing they care about.`);
+  }
+
+  if(rev.dealt&&rev.valueLeft>0)
+    add(rev.valueLeft>12?"major":"minor",`You left ${rev.valueLeft} points on the table`,
+      "That is value neither of you collected. A package existed that was better for BOTH of you, so this is not about who won &mdash; it is money you both set on fire.");
+  else if(rev.dealt)
+    add("good","Your deal was efficient",
+      "No package existed that would have been better for both of you. Whatever else happened, the two of you found the whole pie.");
+
+  if(!log.asked)
+    add("major","You never asked what mattered to them",
+      "It costs nothing, it costs no round, and most of them will tell you something true. You cannot trade efficiently while guessing what the other side values.");
+  else
+    add("good","You asked what they cared about",
+      "The highest-return question in any negotiation, and most people never ask it once.");
+
+  if(log.revealed.length){
+    const labels=log.revealed.map(k=>sc.issues.find(i=>i.key===k).label.toLowerCase()).join(", ");
+    add("major","You told them where you would bend",
+      `You volunteered that you were flexible on ${labels}. Flexibility is a thing you sell, not a thing you announce. Once they know you don't want it, they stop paying you for it.`);
+  }
+  if(log.insults>=2)
+    add("minor","You spent goodwill you did not need to spend",
+      "Rudeness is occasionally leverage and usually just expensive. It shortens their patience and buys you nothing structural.");
+  if(log.offers.length>=2){
+    const drop=scoreOf(sc,log.offers[0]).you-scoreOf(sc,log.offers[1]).you;
+    if(drop>15)add("minor","You conceded too much, too early",
+      `Your second offer was ${drop} points worse for you than your first. Big early concessions teach the other side that waiting works. Move in small steps and make them pay for each one.`);
+  }
+  if(log.offers.length&&scoreOf(sc,log.offers[0]).you<80)
+    add("minor","Your opening offer was too modest",
+      `You opened at ${scoreOf(sc,log.offers[0]).you} out of 100 for yourself. An opening is an anchor, not a prediction. Open high enough that you have somewhere to concede from.`);
+  if(outcome.kind==="signed"&&G.rounds-G.round>=2)
+    add("minor","You signed with rounds to spare",
+      `You used ${G.round} of ${G.rounds}. Their demands fall as the clock runs down. Unused rounds are unused leverage.`);
+  if(rev.dealt&&rev.capture>=0.8)
+    add("good","You took most of what was available",
+      `The most any buyer could have extracted here, given what they would sign, was ${rev.bestScore}. You got ${rev.s.you}.`);
+
+  const order={critical:0,major:1,minor:2,good:3};
+  out.sort((a,b)=>order[a.sev]-order[b.sev]);
+  return out;
+}
+
+function frontierSVG(rev){
+  const sc=G.sc, W=440,H=290,pad=34;
+  const x=v=>pad+(v/100)*(W-pad-14);
+  const y=v=>H-pad-(v/100)*(H-pad-16);
+  const dots=allPackages(sc).map(p=>`<circle cx="${x(p.you).toFixed(1)}" cy="${y(p.them).toFixed(1)}" r="1.5" fill="#3A342C"/>`).join("");
+  const front=frontier(sc).map(p=>`<circle cx="${x(p.you).toFixed(1)}" cy="${y(p.them).toFixed(1)}" r="2.8" fill="#6F675B"/>`).join("");
+  const bestMark=rev.best?`<circle cx="${x(rev.best.you)}" cy="${y(rev.best.them)}" r="6" fill="none" stroke="#C9873F" stroke-width="2.5"/>`:"";
+  const you=rev.dealt
+    ?`<circle cx="${x(rev.s.you)}" cy="${y(rev.s.them)}" r="7.5" fill="#4EA8A0" stroke="#171512" stroke-width="2.5"/>`
+    :`<g stroke="#C2554A" stroke-width="3.5" stroke-linecap="round"><path d="M ${x(sc.buyerWalk)-6} ${y(sc.sellerWalk)-6} L ${x(sc.buyerWalk)+6} ${y(sc.sellerWalk)+6}"/><path d="M ${x(sc.buyerWalk)+6} ${y(sc.sellerWalk)-6} L ${x(sc.buyerWalk)-6} ${y(sc.sellerWalk)+6}"/></g>`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img"
+      aria-label="Every possible deal plotted by your score and theirs, with yours marked">
+    <line x1="${pad}" y1="${H-pad}" x2="${W-10}" y2="${H-pad}" stroke="#3A342C"/>
+    <line x1="${pad}" y1="14" x2="${pad}" y2="${H-pad}" stroke="#3A342C"/>
+    <line x1="${x(sc.buyerWalk)}" y1="14" x2="${x(sc.buyerWalk)}" y2="${H-pad}" stroke="#4EA8A0" stroke-width="1" stroke-dasharray="4 4" opacity=".55"/>
+    <line x1="${pad}" y1="${y(sc.sellerWalk)}" x2="${W-10}" y2="${y(sc.sellerWalk)}" stroke="#C9873F" stroke-width="1" stroke-dasharray="4 4" opacity=".55"/>
+    ${dots}${front}${bestMark}${you}
+    <text x="${pad}" y="${H-12}" fill="#6F675B" font-size="11" font-family="Archivo,sans-serif">0</text>
+    <text x="${W-14}" y="${H-12}" fill="#6F675B" font-size="11" text-anchor="end" font-family="Archivo,sans-serif">your score 100</text>
+    <text x="${pad-8}" y="20" fill="#6F675B" font-size="11" text-anchor="end" font-family="Archivo,sans-serif">100</text>
+    <text x="14" y="${H/2}" fill="#6F675B" font-size="11" text-anchor="middle" font-family="Archivo,sans-serif" transform="rotate(-90 14 ${H/2})">their score</text>
+    <text x="${x(sc.buyerWalk)+5}" y="26" fill="#4EA8A0" font-size="10" font-family="Archivo,sans-serif">your floor</text>
+    <text x="${W-14}" y="${y(sc.sellerWalk)-6}" fill="#C9873F" font-size="10" text-anchor="end" font-family="Archivo,sans-serif">their floor</text>
+  </svg>`;
+}
+
+const HEADLINE={signed:"Deal signed.",youwalked:"You walked away. No deal.",
+  theywalked:"They walked away. No deal.",raged:"They lost their temper and walked out.",
+  timeout:"The clock ran out. No deal."};
+
+function showDebrief(){
+  const rev=buildReview(), lessons=lessonsFor(rev), sc=G.sc, p=G.ch.persona;
+  const good=["A+","A","B"].includes(rev.grade);
+  const farewell=line(p,good?"goodbye":"badbye",G.rng);
+  const gradeClass=good?"hi":(rev.grade==="C"||rev.grade==="D")?"mid":"lo";
+  hudEl.hidden=true;clockEl.hidden=true;restartBtn.hidden=false;
+
+  app.innerHTML=`
+  <div class="panel" style="margin-top:18px">
+    <div class="eyebrow">${esc(HEADLINE[G.outcome.kind]||"Session over")}</div>
+    <div class="verdict">
+      <div class="grade ${gradeClass}">${rev.grade}</div>
+      <div class="stats">
+        <div class="stat"><b>${rev.s.you}</b><span>your score</span></div>
+        <div class="stat"><b>${rev.s.them}</b><span>their score</span></div>
+        <div class="stat"><b>${Math.round(rev.capture*100)}%</b><span>value captured</span></div>
+        <div class="stat"><b>${rev.dealt?Math.round(rev.efficiency*100)+"%":"&mdash;"}</b><span>pie found</span></div>
+        <div class="stat"><b>${rev.dealt?rev.valueLeft:"&mdash;"}</b><span>left on table</span></div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:14px">${esc(rev.note)}</p>
+  </div>
+
+  <div class="table" style="align-items:start">
+    <div>
+      <div class="panel">
+        <div class="eyebrow">Who you were up against</div>
+        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:0 0 130px;max-width:130px">${drawPerson(G.ch,good?"pleased":"smug")}</div>
+          <div style="flex:1 1 180px;min-width:0">
+            <strong style="font-family:var(--display);font-size:18px">${esc(G.ch.name)}</strong>
+            <div style="color:var(--them);font-family:var(--display);font-size:15px">${esc(p.name)}</div>
+            <p style="color:var(--ink-dim);font-size:13px;margin:6px 0 0">${esc(p.blurb)}</p>
+            <p style="color:var(--ink-dim);font-size:13px;margin:6px 0 0"><em>Tell:</em> ${esc(p.tell)}</p>
+          </div>
+        </div>
+        <div class="bubble" style="margin-top:14px"><p>${esc(farewell)}</p></div>
+      </div>
+
+      <div class="panel">
+        <div class="eyebrow">Every deal that was possible</div>
+        ${frontierSVG(rev)}
+        <div class="legend">
+          <span><i style="background:#3A342C"></i>possible</span>
+          <span><i style="background:#6F675B"></i>efficient edge</span>
+          <span><i style="background:transparent;box-shadow:inset 0 0 0 2px #C9873F"></i>best you could have had</span>
+          <span><i style="background:#4EA8A0"></i>${rev.dealt?"your deal":"no deal"}</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      ${rev.rows.length?`<div class="panel">
+        <div class="eyebrow">Who won what</div>
+        <table class="scorecard">
+          <thead><tr><th>Term</th><th class="n" style="text-align:right">You</th><th class="n" style="text-align:right">Them</th><th></th></tr></thead>
+          <tbody>${rev.rows.map(r=>`<tr>
+            <td>${esc(r.label)}</td>
+            <td class="n" style="color:var(--you)">${r.you}<span style="color:var(--ink-faint)">/${r.yourStake}</span></td>
+            <td class="n" style="color:var(--them)">${r.them}<span style="color:var(--ink-faint)">/${r.theirStake}</span></td>
+            <td><span class="won ${r.winner}">${r.winner==="you"?"you took it":r.winner==="them"?"they took it":"split"}</span></td>
+          </tr>`).join("")}</tbody>
+        </table>
+        <p style="color:var(--ink-dim);font-size:13px;margin:10px 0 0">
+          Read the denominators, not the scores. A term worth 5 to you and 35 to them
+          is one you should be selling, not winning.</p>
+      </div>`:""}
+
+      ${rev.trades.length?`<div class="panel">
+        <div class="eyebrow">Trades that would have helped both of you</div>
+        <p style="color:var(--ink-dim);font-size:13px;margin:0 0 12px">
+          No single term can do this &mdash; each one is a straight tug of war.
+          Give ground on one, take it on another, and you both come out ahead.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+        ${rev.trades.map(t=>`<div class="trade">
+          <div class="line"><span class="tag give">Give</span><span>${esc(t.giveLabel)}: <s>${esc(t.giveFrom)}</s> &rarr; ${esc(t.giveTo)}</span></div>
+          <div class="line"><span class="tag take">Take</span><span>${esc(t.takeLabel)}: <s>${esc(t.takeFrom)}</s> &rarr; ${esc(t.takeTo)}</span></div>
+          <div class="gain">you +${t.you}, them +${t.them}</div>
+        </div>`).join("")}
+        </div>
+      </div>`:""}
+
+      <div class="panel">
+        <div class="eyebrow">What to do differently</div>
+        ${lessons.map(l=>`<div class="lesson ${l.sev}">
+          <div class="mark">${l.sev==="critical"?"!!":l.sev==="major"?"!":l.sev==="good"?"+":"&ndash;"}</div>
+          <div><h4>${l.title}</h4><p>${l.detail}</p></div>
+        </div>`).join("")}
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <button class="btn primary" id="again">New deal, new person</button>
+    <button class="btn" id="replay">Replay this exact deal</button>
+    <span style="color:var(--ink-faint);font-size:12px">deal #${G.seed} &mdash; same product, same hidden scores, same opponent</span>
+  </div>`;
+
+  document.getElementById("again").onclick=()=>newGame();
+  document.getElementById("replay").onclick=()=>newGame(G.seed);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ======================================================================
+   10. Boot. Survives a republish with the game in progress.
+   ====================================================================== */
+function start(saved){
+  if(saved&&saved.seed)newGame(saved.seed);else newGame();
+}
+try{
+  window.claude?.hot?.snapshot?.(()=>({seed:G?G.seed:null}));
+}catch(e){}
+if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{});
+</script>
