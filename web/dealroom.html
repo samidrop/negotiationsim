@@ -2,10 +2,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&family=Archivo:wght@400;500;600;700&display=swap">
 <style>
   :root{
-    --ground:#171512; --panel:#211E1A; --raised:#2B2721; --edge:#3A342C;
+    --ground:#12100E; --panel:#1C1916; --raised:#262219; --edge:#3A342C; --edge-lit:#544C40;
     --ink:#EDE6D9; --ink-dim:#A79E8E; --ink-faint:#6F675B;
-    --you:#4EA8A0; --you-dim:#2C5E5A;
-    --them:#C9873F; --them-dim:#6B4922;
+    --you:#4EA8A0; --you-deep:#255B57; --them:#C9873F; --them-deep:#6B4922;
     --bad:#C2554A; --good:#7FA860;
     --display:"Zilla Slab",Georgia,serif;
     --body:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -15,155 +14,155 @@
   html,body{height:100%}
   body{
     margin:0;background:var(--ground);color:var(--ink);
-    font-family:var(--body);font-size:15px;line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 48px}
-  h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:14px 40px}
+  h1,h2,h3,h4{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
   .num{font-variant-numeric:tabular-nums}
   button{font-family:var(--body);font:inherit;cursor:pointer}
-  button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--you);outline-offset:2px}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--you);outline-offset:2px}
 
-  /* ---------- top bar ---------- */
-  .topbar{
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-    padding:10px 14px;background:var(--panel);border:1px solid var(--edge);border-radius:10px;
-  }
-  .brandmark{font-family:var(--display);font-weight:700;letter-spacing:.02em;font-size:17px}
+  /* ---------------- top bar ---------------- */
+  .topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .brandmark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.02em}
   .brandmark span{color:var(--them)}
   .topbar .spacer{flex:1}
-  .chip{
-    font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-dim);
-    border:1px solid var(--edge);border-radius:99px;padding:3px 10px;white-space:nowrap;
-  }
-  .clock{display:flex;gap:4px;align-items:center}
-  .tick{width:9px;height:9px;border-radius:2px;background:var(--edge);transition:background .3s}
-  .tick.used{background:var(--them)}
-  .tick.now{background:var(--ink);box-shadow:0 0 0 2px rgba(237,230,217,.2)}
-
-  /* ---------- layout ---------- */
-  .table{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;margin-top:18px;align-items:start}
-  @media (max-width:860px){.table{grid-template-columns:minmax(0,1fr)}}
-  .panel{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:16px}
-  .panel + .panel{margin-top:14px}
-  .eyebrow{
-    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);
-    margin-bottom:10px;
-  }
-
-  /* ---------- character ---------- */
-  .stage{
-    position:relative;display:flex;justify-content:center;
-    background:
-      radial-gradient(120% 80% at 50% 8%, rgba(201,135,63,.10), transparent 62%),
-      linear-gradient(180deg,#1C1915,#141210);
-    border:1px solid var(--edge);border-radius:12px;padding:6px 0 0;overflow:hidden;
-  }
-  .stage svg{width:min(100%,280px);height:auto;display:block}
-  .stage.shake{animation:shake .5s}
-  .stage.pop{animation:pop .5s}
-  @keyframes shake{
-    10%,90%{transform:translateX(-3px)}30%,70%{transform:translateX(6px)}
-    50%{transform:translateX(-7px)}
-  }
-  @keyframes pop{40%{transform:scale(1.035)}}
-  .nameplate{
-    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-    padding:10px 14px;border-top:1px solid var(--edge);background:var(--panel);flex-wrap:wrap;
-  }
-  .nameplate strong{font-family:var(--display);font-size:17px;font-weight:600}
-  .nameplate em{font-style:normal;color:var(--ink-faint);font-size:12px}
-
-  .bubble{
-    position:relative;margin-top:14px;background:var(--raised);border:1px solid var(--edge);
-    border-radius:12px;padding:14px 16px;font-size:16px;
-  }
-  .bubble::before{
-    content:"";position:absolute;top:-8px;left:26px;width:14px;height:14px;
-    background:var(--raised);border-left:1px solid var(--edge);border-top:1px solid var(--edge);
-    transform:rotate(45deg);
-  }
-  .bubble p{margin:0;animation:fade .35s ease-out}
-  .bubble .note{margin-top:8px;font-size:13px;color:var(--ink-dim);border-top:1px dashed var(--edge);padding-top:8px}
-  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-  /* ---------- term sheets ---------- */
-  .terms{display:flex;flex-direction:column;gap:12px}
-  .term{display:grid;grid-template-columns:1fr;gap:6px}
-  .term-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .term-name{font-family:var(--display);font-size:15px;font-weight:600}
-  .stake{font-size:11px;color:var(--ink-faint);letter-spacing:.04em;white-space:nowrap}
-  .opts{display:flex;gap:6px;flex-wrap:wrap}
-  .opt{
-    flex:1 1 auto;min-width:0;background:var(--raised);color:var(--ink-dim);
-    border:1px solid var(--edge);border-radius:8px;padding:7px 8px;text-align:center;
-    font-size:13px;transition:background .15s,color .15s,border-color .15s;
-  }
-  .opt:hover{border-color:var(--you-dim);color:var(--ink)}
-  .opt .pts{display:block;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
-  .opt[aria-pressed="true"]{background:var(--you-dim);border-color:var(--you);color:#fff}
-  .opt[aria-pressed="true"] .pts{color:rgba(255,255,255,.8)}
-  .opt.theirs{box-shadow:inset 0 -3px 0 var(--them)}
-
-  .sheet{width:100%;border-collapse:collapse;font-size:14px}
-  .sheet td{padding:5px 0;border-bottom:1px solid rgba(58,52,44,.6)}
-  .sheet td:first-child{color:var(--ink-dim);width:44%}
-  .sheet td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-faint);width:44px}
-  .sheet tr:last-child td{border-bottom:0}
-
-  /* ---------- meter ---------- */
-  .meter{margin-top:14px}
-  .meter-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:6px}
-  .meter-top b{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
-  .bar{position:relative;height:16px;background:var(--raised);border:1px solid var(--edge);border-radius:6px;overflow:hidden}
-  .fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--you-dim),var(--you));transition:width .4s ease}
-  .fill.under{background:linear-gradient(90deg,#5A2A25,var(--bad))}
-  .floor{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);box-shadow:0 0 0 1px var(--ground)}
-  .meter-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);margin-top:5px}
-
-  /* ---------- actions ---------- */
-  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
   .btn{
     border:1px solid var(--edge);background:var(--raised);color:var(--ink);
-    border-radius:9px;padding:10px 14px;font-size:14px;font-weight:500;transition:.15s;
+    border-radius:9px;padding:10px 15px;font-size:14px;font-weight:500;transition:.15s;
   }
-  .btn:hover{border-color:var(--ink-faint)}
+  .btn:hover{border-color:var(--edge-lit)}
   .btn.primary{background:var(--you);border-color:var(--you);color:#08201F;font-weight:700}
-  .btn.primary:hover{filter:brightness(1.1)}
-  .btn.primary[disabled]{background:var(--raised);border-color:var(--edge);color:var(--ink-faint);cursor:not-allowed;filter:none}
+  .btn.primary:hover{filter:brightness(1.12)}
   .btn.ghost{background:transparent}
+  .btn.small{padding:7px 12px;font-size:13px}
   .btn.danger:hover{border-color:var(--bad);color:var(--bad)}
-  .btn.wide{flex:1 1 100%}
 
-  .say{display:flex;gap:8px;margin-top:10px}
-  .say input{
+  /* ---------------- the scene ---------------- */
+  .scene{
+    position:relative;border:1px solid var(--edge);border-radius:14px 14px 0 0;
+    overflow:hidden;background:#0D0B0A;line-height:0;
+  }
+  .scene svg{width:100%;height:auto;display:block}
+  .scene::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 38%,transparent 42%,rgba(8,7,6,.62) 100%);
+  }
+  .scene.shake{animation:shake .55s}
+  .scene.pop{animation:pop .5s}
+  @keyframes shake{10%,90%{transform:translateX(-4px)}30%,70%{transform:translateX(8px)}50%{transform:translateX(-9px)}}
+  @keyframes pop{45%{transform:scale(1.012)}}
+
+  /* ---------------- dialogue box ---------------- */
+  .dialogue{
+    border:1px solid var(--edge);border-top:0;background:
+      linear-gradient(180deg,rgba(38,34,25,.95),rgba(28,25,22,.98));
+    padding:14px 18px 16px;min-height:132px;position:relative;
+  }
+  .dl-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+  .dl-name{font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:.01em}
+  .dl-role{font-size:12px;color:var(--ink-faint)}
+  .dl-head .spacer{flex:1}
+  .dl-round{
+    font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);
+    border:1px solid var(--edge);border-radius:99px;padding:3px 10px;white-space:nowrap;
+  }
+  .dl-text{margin:0;font-size:17px;line-height:1.55;min-height:3.1em}
+  .dl-text::after{content:"▌";color:var(--them);opacity:0;margin-left:2px}
+  .dl-text.typing::after{opacity:1;animation:blink .8s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .dl-note{
+    margin-top:10px;padding-top:9px;border-top:1px dashed var(--edge);
+    font-size:13px;color:var(--ink-dim);
+  }
+  .dl-note b{color:var(--ink)}
+
+  /* ---------------- action bar ---------------- */
+  .actions{
+    display:flex;gap:8px;flex-wrap:wrap;border:1px solid var(--edge);border-top:0;
+    border-radius:0 0 14px 14px;background:var(--panel);padding:12px 14px;
+  }
+  .actions .spacer{flex:1}
+  .say-row{display:flex;gap:8px;width:100%;margin-top:4px}
+  .say-row input{
     flex:1;min-width:0;background:var(--raised);border:1px solid var(--edge);color:var(--ink);
     border-radius:9px;padding:10px 12px;font-size:14px;
   }
-  .say input::placeholder{color:var(--ink-faint)}
+  .say-row input::placeholder{color:var(--ink-faint)}
 
-  /* ---------- brief / debrief ---------- */
+  /* ---------------- term sheet drawer ---------------- */
+  .backdrop{position:fixed;inset:0;background:rgba(8,7,6,.66);z-index:60;animation:fade .2s}
+  .drawer{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:70;
+    width:min(100%,1040px);max-height:min(86vh,860px);overflow:auto;
+    background:var(--panel);border:1px solid var(--edge);border-bottom:0;
+    border-radius:16px 16px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -18px 60px rgba(0,0,0,.6);animation:rise .28s cubic-bezier(.2,.8,.3,1);
+  }
+  @keyframes rise{from{transform:translate(-50%,100%)}to{transform:translate(-50%,0)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .grip{width:44px;height:4px;border-radius:99px;background:var(--edge-lit);margin:0 auto 14px}
+  .drawer-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:16px;align-items:start}
+  @media (max-width:760px){.cols{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--raised);border:1px solid var(--edge);border-radius:11px;padding:13px 14px}
+
+  .sheet{width:100%;border-collapse:collapse;font-size:14px}
+  .sheet td{padding:5px 0;border-bottom:1px solid rgba(58,52,44,.55)}
+  .sheet td:first-child{color:var(--ink-dim)}
+  .sheet td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-faint);width:38px}
+  .sheet tr:last-child td{border-bottom:0}
+
+  .terms{display:flex;flex-direction:column;gap:12px}
+  .term-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:5px}
+  .term-name{font-family:var(--display);font-size:15px;font-weight:600}
+  .stake{font-size:11px;color:var(--ink-faint);white-space:nowrap}
+  .opts{display:flex;gap:6px;flex-wrap:wrap}
+  .opt{
+    flex:1 1 0;min-width:78px;background:#1F1C17;color:var(--ink-dim);
+    border:1px solid var(--edge);border-radius:8px;padding:7px 6px;text-align:center;
+    font-size:13px;transition:.14s;
+  }
+  .opt:hover{border-color:var(--you-deep);color:var(--ink)}
+  .opt .pts{display:block;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+  .opt[aria-pressed="true"]{background:var(--you-deep);border-color:var(--you);color:#fff}
+  .opt[aria-pressed="true"] .pts{color:rgba(255,255,255,.82)}
+  .opt.theirs{box-shadow:inset 0 -3px 0 var(--them)}
+
+  .meter{margin-top:14px}
+  .meter-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:6px}
+  .meter-top b{font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums}
+  .bar{position:relative;height:16px;background:#1F1C17;border:1px solid var(--edge);border-radius:6px;overflow:hidden}
+  .fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--you-deep),var(--you));transition:width .35s ease}
+  .fill.under{background:linear-gradient(90deg,#4A231F,var(--bad))}
+  .floor{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+  .meter-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);margin-top:5px}
+
+  /* ---------------- brief + debrief ---------------- */
+  .panel{background:var(--panel);border:1px solid var(--edge);border-radius:13px;padding:18px}
+  .panel + .panel{margin-top:14px}
   .lede{font-size:17px;color:var(--ink-dim);max-width:62ch}
   .lede strong{color:var(--ink);font-weight:600}
-  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
-  .rule{height:1px;background:var(--edge);margin:22px 0}
-  .prio{display:flex;flex-direction:column;gap:8px;margin-top:4px}
-  .prio-row{display:grid;grid-template-columns:1fr 120px 42px;gap:10px;align-items:center;font-size:14px}
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:16px}
+  .rule{height:1px;background:var(--edge);margin:20px 0}
+  .prio-row{display:grid;grid-template-columns:1fr 110px 34px;gap:10px;align-items:center;font-size:14px;margin-bottom:8px}
   .prio-bar{height:9px;background:var(--raised);border-radius:99px;overflow:hidden}
   .prio-bar i{display:block;height:100%;background:var(--you);border-radius:99px}
   .prio-row span:last-child{text-align:right;color:var(--ink-faint);font-variant-numeric:tabular-nums}
 
-  .verdict{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .verdict{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
   .grade{
-    font-family:var(--display);font-size:56px;font-weight:700;line-height:1;
-    width:96px;height:96px;display:grid;place-items:center;border-radius:14px;
+    font-family:var(--display);font-size:54px;font-weight:700;line-height:1;
+    width:94px;height:94px;display:grid;place-items:center;border-radius:14px;
     background:var(--raised);border:2px solid var(--edge);
   }
   .grade.hi{color:var(--good);border-color:var(--good)}
   .grade.mid{color:var(--them);border-color:var(--them)}
   .grade.lo{color:var(--bad);border-color:var(--bad)}
-  .stats{display:flex;gap:22px;flex-wrap:wrap}
-  .stat b{display:block;font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums}
+  .stats{display:flex;gap:20px;flex-wrap:wrap}
+  .stat b{display:block;font-family:var(--display);font-size:25px;font-variant-numeric:tabular-nums}
   .stat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
 
   .scorecard{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
@@ -171,51 +170,38 @@
     text-align:left;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
     color:var(--ink-faint);font-weight:500;padding:0 8px 7px 0;border-bottom:1px solid var(--edge);
   }
-  .scorecard td{padding:9px 8px 9px 0;border-bottom:1px solid rgba(58,52,44,.55);vertical-align:middle}
+  .scorecard td{padding:9px 8px 9px 0;border-bottom:1px solid rgba(58,52,44,.5)}
   .scorecard td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .won{font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:99px;white-space:nowrap}
+  .won{font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;white-space:nowrap}
   .won.you{background:rgba(78,168,160,.16);color:var(--you)}
   .won.them{background:rgba(201,135,63,.16);color:var(--them)}
   .won.split{background:var(--raised);color:var(--ink-faint)}
 
   .trade{border:1px solid var(--edge);border-radius:10px;padding:12px 14px;background:var(--raised)}
-  .trade .line{display:flex;gap:8px;align-items:baseline;font-size:14px;margin-bottom:4px}
-  .trade .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;width:38px;flex:none}
-  .trade .tag.give{color:var(--them)}
-  .trade .tag.take{color:var(--you)}
-  .trade s{color:var(--ink-faint);text-decoration-color:var(--ink-faint)}
+  .trade .line{display:flex;gap:9px;align-items:baseline;font-size:14px;margin-bottom:4px}
+  .trade .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;width:36px;flex:none}
+  .trade .tag.give{color:var(--them)} .trade .tag.take{color:var(--you)}
+  .trade s{color:var(--ink-faint)}
   .trade .gain{font-size:12px;color:var(--good);margin-top:6px;font-variant-numeric:tabular-nums}
 
-  .lesson{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid rgba(58,52,44,.55)}
+  .lesson{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid rgba(58,52,44,.5)}
   .lesson:last-child{border-bottom:0}
   .lesson .mark{font-family:var(--display);font-weight:700;font-size:16px;text-align:center}
-  .lesson h4{margin:0 0 3px;font-family:var(--display);font-size:15px;font-weight:600}
+  .lesson h4{margin:0 0 3px;font-size:15px}
   .lesson p{margin:0;color:var(--ink-dim);font-size:14px}
-  .lesson.critical .mark{color:var(--bad)} .lesson.critical h4{color:var(--bad)}
-  .lesson.major .mark{color:var(--them)} .lesson.major h4{color:var(--them)}
+  .lesson.critical .mark,.lesson.critical h4{color:var(--bad)}
+  .lesson.major .mark,.lesson.major h4{color:var(--them)}
   .lesson.minor .mark{color:var(--ink-dim)}
-  .lesson.good .mark{color:var(--good)} .lesson.good h4{color:var(--good)}
-
+  .lesson.good .mark,.lesson.good h4{color:var(--good)}
   .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-dim);margin-top:8px}
   .legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:5px;vertical-align:middle}
 
-  .modal-back{
-    position:fixed;inset:0;background:rgba(10,9,8,.72);z-index:100;
-    display:grid;place-items:center;padding:20px;animation:fade .18s ease-out;
-  }
-  .modal{
-    background:var(--panel);border:1px solid var(--edge);border-radius:14px;
-    padding:22px;max-width:min(94vw,440px);box-shadow:0 20px 60px rgba(0,0,0,.6);
-  }
+  .modal-back{position:fixed;inset:0;background:rgba(8,7,6,.74);z-index:100;display:grid;place-items:center;padding:20px;animation:fade .18s}
+  .modal{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:22px;max-width:min(94vw,440px);box-shadow:0 20px 60px rgba(0,0,0,.6)}
   .modal h3{font-size:19px;margin-bottom:8px}
   .modal p{margin:0;color:var(--ink-dim);font-size:14px}
   .modal p b{color:var(--ink)}
   .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
-  .toast{
-    position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));
-    background:var(--raised);border:1px solid var(--edge);border-radius:10px;padding:10px 16px;
-    font-size:14px;z-index:50;box-shadow:0 8px 28px rgba(0,0,0,.5);max-width:min(92vw,420px);
-  }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -223,9 +209,7 @@
   <div class="topbar">
     <div class="brandmark">The Deal<span>&nbsp;Room</span></div>
     <div class="spacer"></div>
-    <div id="hud" class="chip" hidden></div>
-    <div id="clock" class="clock" hidden></div>
-    <button id="restart" class="btn ghost" hidden>New deal</button>
+    <button id="restart" class="btn ghost small" hidden>New deal</button>
   </div>
   <div id="app"></div>
 </div>
@@ -240,9 +224,9 @@ function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a
 function rngFrom(seed){const r=mulberry32(seed);return{
   next:r,
   int:(lo,hi)=>lo+Math.floor(r()*(hi-lo+1)),
-  pick:arr=>arr[Math.floor(r()*arr.length)],
+  pick:a=>a[Math.floor(r()*a.length)],
   chance:p=>r()<p,
-  shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 }}
 
 /* ======================================================================
@@ -267,69 +251,47 @@ const SELLER_CO=["Castellan","Orsini","Pelham Works","Brightside","Aldergate","V
 const SUFFIX=["Industries","Supply Co.","Group","Manufacturing","Partners","Works"];
 
 /* ======================================================================
-   3. The scenario: five issues, two secret scoresheets, two walk-aways.
-
-   Both sides top out at exactly 100. Price is a pure tug of war -- every
-   point one side gains, the other loses. The other four issues are
-   weighted very differently for each side, and that asymmetry is the
-   entire game: it means packages exist that are better for BOTH of you
-   than the obvious compromise.
+   3. The scenario. Both sides top out at 100. Price is a pure tug of war;
+   the other four issues are weighted very differently for each side, and
+   that asymmetry is the whole game.
    ====================================================================== */
-const money=n=>n>=1000?"$"+n.toLocaleString(undefined,{maximumFractionDigits:0})
-                     :"$"+n.toFixed(2);
+const money=n=>n>=1000?"$"+n.toLocaleString(undefined,{maximumFractionDigits:0}):"$"+n.toFixed(2);
 const commas=n=>n.toLocaleString();
-
-function ladder(top,steps){const out=[];for(let i=0;i<steps;i++)out.push(Math.round(top*(steps-1-i)/(steps-1)));return out}
-
+function ladder(top,steps){const o=[];for(let i=0;i<steps;i++)o.push(Math.round(top*(steps-1-i)/(steps-1)));return o}
 function splitWeight(total,parts,lo,hi,rng){
-  const cuts=[];for(let i=0;i<parts;i++)cuts.push(rng.int(lo,hi));
-  let drift=total-cuts.reduce((a,b)=>a+b,0),guard=0;
-  while(drift!==0&&guard++<800){
-    const i=rng.int(0,parts-1),step=drift>0?1:-1;
-    if(cuts[i]+step>=lo&&cuts[i]+step<=hi){cuts[i]+=step;drift-=step}
-  }
-  return cuts;
-}
-
-function buildScenario(seed){
-  const rng=rngFrom(seed);
-  const product=rng.pick(CATALOG);
-  const buyerCo=rng.pick(BUYER_CO)+" "+rng.pick(SUFFIX);
-  const sellerCo=rng.pick(SELLER_CO)+" "+rng.pick(SUFFIX);
-
-  const priceW=rng.pick([28,30,32]);
-  const buyerVol=rng.int(3,7), sellerVol=rng.int(30,38);
-  const soft=rng.shuffle(splitWeight(100-priceW-buyerVol,3,14,32,rng));
-  const theirSoft=rng.shuffle(splitWeight(100-priceW-sellerVol,3,3,17,rng));
-
-  const mult=[0.86,0.93,1.00,1.08,1.16];
-  const prices=mult.map(m=>product.price>=100?Math.round(product.price*m):Math.round(product.price*m*100)/100);
-  const priceBuyer=ladder(priceW,5);
-
-  const issues=[
-    {key:"price",label:"Price per "+product.unit,options:prices.map((p,i)=>(
-      {key:String(p),label:money(p),raw:p,you:priceBuyer[i],them:priceW-priceBuyer[i]}))},
-    {key:"volume",label:"Volume commitment",options:product.vols.map((v,i)=>(
-      {key:String(v),label:commas(v)+" "+product.units,raw:v,
-       you:ladder(buyerVol,4)[i],them:ladder(sellerVol,4).slice().reverse()[i]}))},
-    softIssue("payment","Payment terms",["Net 90","Net 60","Net 30","Net 15"],soft[0],theirSoft[0]),
-    softIssue("delivery","Delivery window",["2 weeks","4 weeks","8 weeks","12 weeks"],soft[1],theirSoft[1]),
-    softIssue("exclusivity","Exclusivity",["Global, 2 yrs","Region, 2 yrs","Region, 1 yr","None"],soft[2],theirSoft[2])
-  ];
-
-  const sc={product,buyerCo,sellerCo,issues,
-    buyerRole:"Head of Procurement, "+buyerCo,
-    sellerRole:"VP of Sales, "+sellerCo, seed};
-  setWalkaways(sc,rng);
-  return sc;
+  const c=[];for(let i=0;i<parts;i++)c.push(rng.int(lo,hi));
+  let drift=total-c.reduce((a,b)=>a+b,0),guard=0;
+  while(drift!==0&&guard++<800){const i=rng.int(0,parts-1),s=drift>0?1:-1;
+    if(c[i]+s>=lo&&c[i]+s<=hi){c[i]+=s;drift-=s}}
+  return c;
 }
 function softIssue(key,label,labels,youTop,themTop){
   const y=ladder(youTop,labels.length), t=ladder(themTop,labels.length).slice().reverse();
   return{key,label,options:labels.map((l,i)=>({key:key+i,label:l,you:y[i],them:t[i]}))};
 }
-
-/* Every legal package. 5x4x4x4x4 = 1,280 of them, so we can simply
-   check all of them and never have to estimate anything. */
+function buildScenario(seed){
+  const rng=rngFrom(seed), product=rng.pick(CATALOG);
+  const buyerCo=rng.pick(BUYER_CO)+" "+rng.pick(SUFFIX);
+  const sellerCo=rng.pick(SELLER_CO)+" "+rng.pick(SUFFIX);
+  const priceW=rng.pick([28,30,32]), buyerVol=rng.int(3,7), sellerVol=rng.int(30,38);
+  const soft=rng.shuffle(splitWeight(100-priceW-buyerVol,3,14,32,rng));
+  const theirSoft=rng.shuffle(splitWeight(100-priceW-sellerVol,3,3,17,rng));
+  const mult=[0.86,0.93,1.00,1.08,1.16];
+  const prices=mult.map(m=>product.price>=100?Math.round(product.price*m):Math.round(product.price*m*100)/100);
+  const pb=ladder(priceW,5);
+  const issues=[
+    {key:"price",label:"Price per "+product.unit,options:prices.map((p,i)=>({key:String(p),label:money(p),raw:p,you:pb[i],them:priceW-pb[i]}))},
+    {key:"volume",label:"Volume commitment",options:product.vols.map((v,i)=>({key:String(v),label:commas(v)+" "+product.units,raw:v,
+      you:ladder(buyerVol,4)[i],them:ladder(sellerVol,4).slice().reverse()[i]}))},
+    softIssue("payment","Payment terms",["Net 90","Net 60","Net 30","Net 15"],soft[0],theirSoft[0]),
+    softIssue("delivery","Delivery window",["2 weeks","4 weeks","8 weeks","12 weeks"],soft[1],theirSoft[1]),
+    softIssue("exclusivity","Exclusivity",["Global, 2 yrs","Region, 2 yrs","Region, 1 yr","None"],soft[2],theirSoft[2])
+  ];
+  const sc={product,buyerCo,sellerCo,issues,seed,
+    buyerRole:"Head of Procurement, "+buyerCo, sellerRole:"VP of Sales, "+sellerCo};
+  setWalkaways(sc,rng);
+  return sc;
+}
 function allPackages(sc){
   if(sc._all)return sc._all;
   const out=[];
@@ -337,23 +299,14 @@ function allPackages(sc){
     if(i===sc.issues.length){out.push({picks:picks.slice(),you,them});return}
     for(const o of sc.issues[i].options){picks.push(o.key);walk(i+1,picks,you+o.you,them+o.them);picks.pop()}
   };
-  walk(0,[],0,0);
-  sc._all=out;return out;
+  walk(0,[],0,0);sc._all=out;return out;
 }
-const scoreOf=(sc,picks)=>{
-  let you=0,them=0;
-  sc.issues.forEach((iss,i)=>{const o=optionOf(iss,picks[i]);you+=o.you;them+=o.them});
-  return{you,them};
-};
-const optionOf=(issue,key)=>issue.options.find(o=>o.key===key);
-const stakeYou=iss=>Math.max(...iss.options.map(o=>o.you))-Math.min(...iss.options.map(o=>o.you));
-const stakeThem=iss=>Math.max(...iss.options.map(o=>o.them))-Math.min(...iss.options.map(o=>o.them));
-
-/* Walk-aways are chosen so a deal is always possible but never easy:
-   roughly 10-30% of packages should clear both floors. */
+const optionOf=(iss,k)=>iss.options.find(o=>o.key===k);
+const scoreOf=(sc,picks)=>{let you=0,them=0;sc.issues.forEach((iss,i)=>{const o=optionOf(iss,picks[i]);you+=o.you;them+=o.them});return{you,them}};
+const stakeYou=i=>Math.max(...i.options.map(o=>o.you))-Math.min(...i.options.map(o=>o.you));
+const stakeThem=i=>Math.max(...i.options.map(o=>o.them))-Math.min(...i.options.map(o=>o.them));
 function setWalkaways(sc,rng){
-  const all=allPackages(sc), tilt=rng.int(-3,3);
-  let chosen=[40,40];
+  const all=allPackages(sc), tilt=rng.int(-3,3);let chosen=[40,40];
   for(let base=60;base>=25;base--){
     const b=base+tilt,s=base-tilt;
     const frac=all.filter(p=>p.you>=b&&p.them>=s).length/all.length;
@@ -368,23 +321,25 @@ function frontier(sc){
   if(sc._front)return sc._front;
   const all=allPackages(sc).slice().sort((a,b)=>b.you-a.you||b.them-a.them);
   const out=[];let best=-1;
-  for(const p of all){if(p.them>best){out.push(p);best=p.them}}
+  for(const p of all)if(p.them>best){out.push(p);best=p.them}
   sc._front=out;return out;
 }
-const contractValue=(sc,picks)=>{
-  const price=optionOf(sc.issues[0],picks[0]).raw;
-  const vol=optionOf(sc.issues[1],picks[1]).raw;
-  return price*vol;
-};
+const contractValue=(sc,p)=>optionOf(sc.issues[0],p[0]).raw*optionOf(sc.issues[1],p[1]).raw;
 
 /* ======================================================================
-   4. Personalities. Each carries how they BEHAVE and how they TALK.
-   Appearance is drawn separately -- you cannot read a negotiator's
-   temperament off their face, here or anywhere else.
+   4. Personalities -- how they behave, how they talk, how they dress,
+   and the room they do it in.
+
+   Dress and office ARE tells here: they are things a person chooses, and
+   a real negotiator reads them. Skin tone, name and face are drawn
+   separately and mean nothing, because they are not tells -- they are
+   just people.
    ====================================================================== */
 const PERSONAS=[
 {key:"shark",name:"The Shark",blurb:"Closes for a living and enjoys it. Takes everything you leave loose.",
  tell:"Never volunteers information. Every silence is bait.",
+ look:"Immaculate. Three-piece, cufflinks, not a hair out of place.",
+ room:"corner",style:"predator",
  open:95,rate:0.7,margin:10,patience:3,delight:84,honesty:0.25,rest:"smug",
  lines:{
   open:["Let's skip the part where you pretend to be shocked. Here's the paper.","I've got three of these today. You're the one I have the least time for.","I'll save us both an hour. This is the number. Convince me otherwise."],
@@ -404,6 +359,8 @@ const PERSONAS=[
 
 {key:"pro",name:"The Professional",blurb:"Courteous, prepared, genuinely trying to find a deal that works.",
  tell:"Actually answers questions. Rewards you for asking good ones.",
+ look:"Well-cut but unshowy. Blazer, open collar, no theatre.",
+ room:"corporate",style:"tailored",
  open:90,rate:1.1,margin:18,patience:5,delight:88,honesty:0.85,rest:"neutral",
  lines:{
   open:["Thanks for the time. I'll open where I'd like to land and we work back from there.","Good to meet you. I've done my homework, so I'll be direct.","Here's my opening. I don't expect you to take it."],
@@ -423,6 +380,8 @@ const PERSONAS=[
 
 {key:"burnout",name:"The Burnout",blurb:"Checked out three quarters ago. Concedes fast, or stops caring entirely.",
  tell:"Gives ground quickly if you ask plainly. Tunes out during long speeches.",
+ look:"Hoodie over a shirt he slept in. Lanyard on backwards.",
+ room:"grind",style:"rumpled",
  open:86,rate:1.5,margin:25,patience:6,delight:80,honesty:0.7,rest:"bored",
  lines:{
   open:["Sure. Yeah. Here's the thing my boss told me to say. I don't love it either.","Right. Opening offer. I typed it this morning. Allegedly.","Cool cool cool. Numbers. Here. Whenever."],
@@ -442,6 +401,8 @@ const PERSONAS=[
 
 {key:"hype",name:"The Hype Guy",blurb:"Enormously friendly. Also the slipperiest person in the room.",
  tell:"The warmth is real and so is the squeeze. Don't mistake one for the other.",
+ look:"Quarter-zip, fresh fade, a chain he wants you to notice.",
+ room:"startup",style:"flashy",
  open:93,rate:0.95,margin:14,patience:4,delight:85,honesty:0.4,rest:"pleased",
  lines:{
   open:["Okay okay okay, love this for us. Two serious people, one table. Here's my opener, don't cry.","First of all? Great energy. Second of all, here's a number that's gonna test it.","We are SO getting this done. Starting here. Purely as a vibe check."],
@@ -461,6 +422,8 @@ const PERSONAS=[
 
 {key:"bureaucrat",name:"The Bureaucrat",blurb:"Hides behind process. Every concession needs a permission slip.",
  tell:"'I can't approve that' often means 'I can, and I'd rather not.'",
+ look:"Grey suit off the rack, ID badge, pen in the top pocket.",
+ room:"institutional",style:"issued",
  open:91,rate:0.85,margin:16,patience:6,delight:86,honesty:0.5,rest:"neutral",
  lines:{
   open:["I've brought the standard terms. Deviations need sign-off, which is slow.","This is our approved opening position. I didn't write it. I do have to defend it.","Anything outside this framework goes to committee. Plan accordingly."],
@@ -478,8 +441,10 @@ const PERSONAS=[
   goodbye:["Efficiently done. You found the terms I had discretion on and stayed there. Few people bother."],
   badbye:["A note for next time: I said 'I can't approve that' about six times. On four of those I could have. You never tested it once."]}},
 
-{key:"volatile",name:"The Live Wire",blurb:"Charming at nine, hostile at nine-thirty. Test them carefully or not at all.",
+{key:"volatile",name:"The Live Wire",blurb:"Charming at nine, hostile at nine-thirty. Test carefully or not at all.",
  tell:"Real leverage, no filter. Lowball once and you may not get a second round.",
+ look:"Sleeves rolled past the ink. No tie, never had one.",
+ room:"workshop",style:"edgy",
  open:94,rate:1.0,margin:8,patience:1,delight:83,honesty:0.5,rest:"neutral",
  lines:{
   open:["Right. I'm in a good mood. Let's see how long that lasts.","I like you already. Don't ruin it. Numbers.","Fair warning: two coffees, no lunch. Here's where we start."],
@@ -499,6 +464,8 @@ const PERSONAS=[
 
 {key:"oldhead",name:"The Old Head",blurb:"Thirty years in. Values the relationship, and will use that on you.",
  tell:"The stories are real and they are also a clock-management tactic.",
+ look:"Waistcoat, pocket square, a watch older than you.",
+ room:"legacy",style:"heritage",
  open:89,rate:0.9,margin:20,patience:4,delight:87,honesty:0.75,rest:"pleased",
  lines:{
   open:["I've been doing this since before your company had a logo. Here's my number.","I told your predecessor the same thing: I open honest and I finish honest.","Sit down, have a coffee, then look at this and be upset in your own time."],
@@ -518,6 +485,8 @@ const PERSONAS=[
 
 {key:"quant",name:"The Quant",blurb:"Treats this as arithmetic. No warmth, no games, no mercy either.",
  tell:"Completely consistent. Find the logic and you can predict every move.",
+ look:"Plain shirt, plain glasses, no accessories of any kind.",
+ room:"minimal",style:"plain",
  open:92,rate:1.0,margin:15,patience:8,delight:86,honesty:0.9,rest:"neutral",
  lines:{
   open:["My opening reflects my reservation value plus a negotiating margin. Both are real.","I've modelled this. I'll tell you now: I concede on a schedule.","I don't bluff, it's inefficient. This is high, and I will come down."],
@@ -537,276 +506,546 @@ const PERSONAS=[
 ];
 
 /* ======================================================================
-   5. The person: a name, a face, a temperament -- each drawn separately.
+   5. The person. Face and skin are random; wardrobe is chosen by who
+   they are, which is exactly how it works in a real meeting.
    ====================================================================== */
 const FIRST=["Dana","Marcus","Priya","Tomas","Aisha","Gunnar","Mei","Rafael","Ngozi","Katya","Idris","Siobhan","Hiroshi","Fatima","Bjorn","Lucia","Omar","Ingrid","Kwame","Rosa","Dmitri","Yuki","Amara","Sean","Leila","Andres","Nadia","Piotr","Sofia","Malik","Elena","Jun","Grace","Hassan","Freya","Diego","Anika","Theo","Zainab","Caleb","Mirembe","Lars","Imani","Valentina","Ravi","Noor","Otto","Chiamaka"];
 const LAST=["Okafor","Lindqvist","Ferreira","Nakamura","Osei","Whitfield","Bekele","Castellanos","Petrov","Haddad","O'Rourke","Tanaka","Mbeki","Novak","Delgado","Ferrante","Achebe","Sorensen","Rahman","Kowalski","Diallo","Marchetti","Yilmaz","Bergstrom","Aguilar","Chaudhry","Vasquez","Kaminski","Adeyemi","Moreau","Silva","Hoffman","Baptiste","Ivanova","Qureshi","Obi","Mwangi","Duarte"];
-
 const SKIN=["#F6D9C2","#EFC9A8","#DCA87C","#C68B5C","#AB6B41","#8C4F2D","#6C3A21","#4E2A17"];
 const HAIRC=["#15110F","#2B211C","#4A3222","#6B4423","#8C5A2B","#B5651D","#C9A227","#DCC894","#8E8B85","#CFCBC4"];
-const COAT=["#1F2A44","#2E2E33","#39434F","#4A1F26","#1F3A2E","#1E4148","#7A5A33","#1A1A1D","#4A4A50","#5B3A2E"];
-const SHIRT=["#F2EFE9","#E8EEF5","#F5EDE0","#DDE6EC"];
-const HAIRSTYLES=["short","buzz","crop","afro","curls","locs","braids","long","topknot","receding","bald","wavy"];
-const FACIAL=["clean","clean","clean","stubble","moustache","goatee","beard","fullbeard"];
-const EYEWEAR=["none","none","none","none","glasses","round","thick"];
-const EXTRAS=["none","none","none","none","cigar","cigar","toothpick","earpiece","vape"];
-const OUTFITS=[
-  {name:"suit and tie",cut:"tie"},{name:"charcoal suit",cut:"tie"},{name:"open-collar suit",cut:"open"},
-  {name:"polo shirt",cut:"polo"},{name:"hoodie",cut:"hoodie"},{name:"quarter-zip",cut:"zip"},
-  {name:"dress shirt, no jacket",cut:"open"},{name:"turtleneck",cut:"turtle"},
-  {name:"fleece vest over a shirt",cut:"vest"},{name:"loud patterned shirt",cut:"loud"},
-  {name:"waistcoat",cut:"vest"},{name:"crewneck sweater",cut:"turtle"}
-];
 
+/* Wardrobe packs. Each is a style the PERSON chose, so it reads as a tell. */
+const WARDROBE={
+  predator:{cuts:["threepiece","suit"],coats:["#161A24","#1E212A","#101014","#232833"],shirts:["#F4F1EA","#EAF0F6"],
+    hairs:["slick","fade","crop"],facial:["clean","clean","stubble"],
+    props:["cufflinks","tiebar","pocketsquare"],eyewear:["none","none","thin"]},
+  tailored:{cuts:["suit","blazer"],coats:["#26303C","#2F3A33","#343036","#3A3340"],shirts:["#F4F1EA","#E7EFF6","#F3EEE4"],
+    hairs:["short","crop","wavy","bun"],facial:["clean","clean","stubble","beard"],
+    props:["watch","none"],eyewear:["none","none","thin","round"]},
+  rumpled:{cuts:["hoodie","untucked"],coats:["#3A3A40","#2E3238","#44403A","#333B3A"],shirts:["#D8D4CB","#C9CFD4"],
+    hairs:["messy","long","bun","buzz"],facial:["stubble","stubble","beard","clean"],
+    props:["lanyardback","none"],eyewear:["none","thick","none"]},
+  flashy:{cuts:["quarterzip","opencollar"],coats:["#1F3B45","#2C2A42","#3E2A2A","#123326"],shirts:["#F6F3EC","#1A1A1D"],
+    hairs:["fade","curls","waves","buzz"],facial:["clean","clean","goatee","stubble"],
+    props:["chain","stud","watch"],eyewear:["none","none","tint"]},
+  issued:{cuts:["suit","untucked"],coats:["#4A4B50","#3E4147","#55534C","#474C52"],shirts:["#EFEFEA","#DDE5EC"],
+    hairs:["short","parted","receding","crop"],facial:["clean","moustache","clean"],
+    props:["badge","penpocket"],eyewear:["thin","thick","round"]},
+  edgy:{cuts:["rolled","opencollar"],coats:["#3C4A3F","#4A3A32","#2C3742","#4A4238"],shirts:["#E4E0D6","#2A2A2C"],
+    hairs:["buzz","undercut","long","messy"],facial:["stubble","beard","goatee","clean"],
+    props:["tattoo","tattoo","stud","chain"],eyewear:["none","none","none","tint"]},
+  heritage:{cuts:["waistcoat","threepiece"],coats:["#3E2F24","#2E3A33","#40303A","#33302A"],shirts:["#F5F0E2","#EDE6D2"],
+    hairs:["parted","receding","grey","short"],facial:["moustache","clean","beard"],
+    props:["pocketsquare","watch","tiebar"],eyewear:["round","thin","none"]},
+  plain:{cuts:["opencollar","untucked"],coats:["#35373C","#40423F","#2F3338","#3C3A36"],shirts:["#F1F0EC","#E4E8EA"],
+    hairs:["short","messy","crop","bun"],facial:["clean","clean","stubble"],
+    props:["none","none"],eyewear:["thin","round","thick","none"]}
+};
+const luminance=h=>{const n=parseInt(h.slice(1),16);return 0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255)};
 function shade(hex,amt){
   const n=parseInt(hex.slice(1),16);
-  const r=Math.max(0,Math.min(255,(n>>16)+amt));
-  const g=Math.max(0,Math.min(255,((n>>8)&255)+amt));
-  const b=Math.max(0,Math.min(255,(n&255)+amt));
+  const r=Math.max(0,Math.min(255,(n>>16)+amt)), g=Math.max(0,Math.min(255,((n>>8)&255)+amt)), b=Math.max(0,Math.min(255,(n&255)+amt));
   return"#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0");
 }
-const luminance=hex=>{const n=parseInt(hex.slice(1),16);
-  return 0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255)};
-
 function makeCharacter(rng,company){
-  const outfit=rng.pick(OUTFITS);
+  const persona=rng.pick(PERSONAS), w=WARDROBE[persona.style];
   const skin=rng.pick(SKIN);
   let hair=rng.pick(HAIRC);
-  // Hair drawn in a tone close to the skin simply vanishes. Push it apart.
-  if(Math.abs(luminance(hair)-luminance(skin))<52)
-    hair=luminance(skin)>120?shade(hair,-70):shade(hair,80);
+  if(Math.abs(luminance(hair)-luminance(skin))<52){         // hair must not vanish into the face
+    const clear=HAIRC.filter(h=>Math.abs(luminance(h)-luminance(skin))>=62);
+    hair=clear.length?rng.pick(clear):(luminance(skin)>120?"#15110F":"#DCC894");
+  }
+  if(persona.style==="heritage"&&rng.chance(0.6))hair=rng.pick(["#8E8B85","#CFCBC4","#B8B4AC"]);
   return{
     name:rng.pick(FIRST)+" "+rng.pick(LAST),
-    title:"VP of Sales",company,
-    persona:rng.pick(PERSONAS),
-    look:{skin,hair,style:rng.pick(HAIRSTYLES),
-      facial:rng.pick(FACIAL),eyewear:rng.pick(EYEWEAR),extra:rng.pick(EXTRAS),
-      outfit:outfit.name,cut:outfit.cut,coat:rng.pick(COAT),shirt:rng.pick(SHIRT)}
+    title:"VP of Sales",company,persona,
+    look:{skin,hair,cut:rng.pick(w.cuts),coat:rng.pick(w.coats),shirt:rng.pick(w.shirts),
+      hairstyle:rng.pick(w.hairs),facial:rng.pick(w.facial),eyewear:rng.pick(w.eyewear),
+      prop:rng.pick(w.props),
+      jaw:rng.pick(["round","square","narrow"])}
   };
-}
-function describeLook(l){
-  const bits=[l.outfit];
-  if(l.eyewear!=="none")bits.push({glasses:"wire glasses",round:"round glasses",thick:"heavy black frames"}[l.eyewear]);
-  if(l.facial!=="clean")bits.push({stubble:"a few days of stubble",moustache:"a moustache",goatee:"a goatee",beard:"a beard",fullbeard:"a full beard"}[l.facial]);
-  if(l.extra!=="none")bits.push({cigar:"an unlit cigar they keep rolling between their fingers",toothpick:"a toothpick they never remove",earpiece:"an earpiece they never take out",vape:"a vape they shouldn't be using indoors"}[l.extra]);
-  return bits.join(", ");
 }
 
 /* ----------------------------------------------------------------------
-   Drawing the face. Everything is parametric, so the same person can be
-   redrawn in any mood without redrawing anything else.
+   Drawing the person. Canonical 220 x 300 box: head, neck, shoulders and
+   the top of the chest. The desk crops the rest.
    ---------------------------------------------------------------------- */
+const HEAD_PATHS={
+  round :"M 110 32 C 138 32 158 55 158 90 C 158 120 149 143 132 152 C 125 157 118 160 110 160 C 102 160 95 157 88 152 C 71 143 62 120 62 90 C 62 55 82 32 110 32 Z",
+  square:"M 110 32 C 140 32 160 54 160 88 C 160 118 152 140 138 150 C 130 157 120 160 110 160 C 100 160 90 157 82 150 C 68 140 60 118 60 88 C 60 54 80 32 110 32 Z",
+  narrow:"M 110 32 C 135 32 154 56 154 90 C 154 122 144 145 128 153 C 122 158 116 161 110 161 C 104 161 98 158 92 153 C 76 145 66 122 66 90 C 66 56 85 32 110 32 Z"
+};
 const MOUTHS={
-  flat:'<path d="M 92 143 L 128 143" stroke="#7A4A45" stroke-width="3" fill="none" stroke-linecap="round"/>',
-  smile:'<path d="M 89 137 Q 110 155 131 137" stroke="#7A4A45" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
-  grin:'<path d="M 87 136 Q 110 160 133 136 Z" fill="#5C2F2C"/><path d="M 91 138 Q 110 145 129 138 Z" fill="#F7F2E9"/>',
-  laugh:'<path d="M 85 134 Q 110 170 135 134 Z" fill="#5C2F2C"/><path d="M 89 136 Q 110 144 131 136 Z" fill="#F7F2E9"/>',
-  frown:'<path d="M 90 150 Q 110 132 130 150" stroke="#7A4A45" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
-  snarl:'<path d="M 88 148 Q 110 128 132 148 Z" fill="#5C2F2C"/><path d="M 92 142 L 128 142 L 124 148 L 118 143 L 110 149 L 102 143 L 96 148 Z" fill="#F7F2E9"/>',
-  smirk:'<path d="M 91 147 Q 112 147 129 135" stroke="#7A4A45" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
-  oh:'<ellipse cx="110" cy="143" rx="9" ry="12" fill="#5C2F2C"/>',
-  sleep:'<path d="M 100 143 Q 110 151 120 143" stroke="#7A4A45" stroke-width="3" fill="none" stroke-linecap="round"/>'
+  flat :'<path d="M 94 130 L 126 130" stroke="INK" stroke-width="3" fill="none" stroke-linecap="round"/>',
+  smile:'<path d="M 92 125 Q 110 141 128 125" stroke="INK" stroke-width="3.4" fill="none" stroke-linecap="round"/>',
+  grin :'<path d="M 90 124 Q 110 146 130 124 Z" fill="#4C2825"/><path d="M 94 126 Q 110 132 126 126 Z" fill="#F7F2E9"/>',
+  laugh:'<path d="M 89 122 Q 110 154 131 122 Z" fill="#4C2825"/><path d="M 93 124 Q 110 131 127 124 Z" fill="#F7F2E9"/>',
+  frown:'<path d="M 92 136 Q 110 120 128 136" stroke="INK" stroke-width="3.4" fill="none" stroke-linecap="round"/>',
+  snarl:'<path d="M 91 134 Q 110 116 129 134 Z" fill="#4C2825"/><path d="M 95 128 L 125 128 L 121 134 L 116 129 L 110 135 L 104 129 L 99 134 Z" fill="#F7F2E9"/>',
+  smirk:'<path d="M 93 133 Q 112 133 127 123" stroke="INK" stroke-width="3.4" fill="none" stroke-linecap="round"/>',
+  oh   :'<ellipse cx="110" cy="131" rx="8" ry="11" fill="#4C2825"/>',
+  sleep:'<path d="M 102 131 Q 110 138 118 131" stroke="INK" stroke-width="3" fill="none" stroke-linecap="round"/>'
 };
 const MOODS={
-  neutral  :{brow:"flat",  eye:"open",   mouth:"flat",  fx:null},
-  thinking :{brow:"raised",eye:"side",   mouth:"smirk", fx:"think"},
-  pleased  :{brow:"raised",eye:"happy",  mouth:"smile", fx:null},
-  delighted:{brow:"raised",eye:"dollar", mouth:"grin",  fx:"cha"},
-  laughing :{brow:"raised",eye:"happy",  mouth:"laugh", fx:"ha"},
-  smug     :{brow:"raised",eye:"squint", mouth:"smirk", fx:null},
-  annoyed  :{brow:"angry", eye:"side",   mouth:"flat",  fx:null},
-  angry    :{brow:"angry", eye:"open",   mouth:"frown", fx:null},
-  furious  :{brow:"angry", eye:"wide",   mouth:"snarl", fx:"rage"},
-  bored    :{brow:"flat",  eye:"squint", mouth:"flat",  fx:null},
-  asleep   :{brow:"flat",  eye:"closed", mouth:"sleep", fx:"zzz"},
-  shocked  :{brow:"raised",eye:"wide",   mouth:"oh",    fx:"sweat"},
-  worried  :{brow:"worried",eye:"open",  mouth:"frown", fx:"sweat"}
+  neutral:{brow:"flat",eye:"open",mouth:"flat",fx:null},
+  thinking:{brow:"raised",eye:"side",mouth:"smirk",fx:"think"},
+  pleased:{brow:"raised",eye:"happy",mouth:"smile",fx:null},
+  delighted:{brow:"raised",eye:"dollar",mouth:"grin",fx:"cha"},
+  laughing:{brow:"raised",eye:"happy",mouth:"laugh",fx:"ha"},
+  smug:{brow:"raised",eye:"squint",mouth:"smirk",fx:null},
+  annoyed:{brow:"angry",eye:"side",mouth:"flat",fx:null},
+  angry:{brow:"angry",eye:"open",mouth:"frown",fx:null},
+  furious:{brow:"angry",eye:"wide",mouth:"snarl",fx:"rage"},
+  bored:{brow:"flat",eye:"squint",mouth:"flat",fx:null},
+  asleep:{brow:"flat",eye:"closed",mouth:"sleep",fx:"zzz"},
+  shocked:{brow:"raised",eye:"wide",mouth:"oh",fx:"sweat"},
+  worried:{brow:"worried",eye:"open",mouth:"frown",fx:"sweat"}
 };
-const BROW_POSE={flat:{y:0,rot:0},raised:{y:-6,rot:0},angry:{y:-2,rot:15},worried:{y:-2,rot:-15}};
+const BROWS={flat:{y:0,rot:0},raised:{y:-7,rot:0},angry:{y:-2,rot:16},worried:{y:-2,rot:-16}};
 
 function eyeSVG(kind,cx,side){
-  const cy=108, dark="#23201D";
-  if(kind==="happy")  return `<path d="M ${cx-11} ${cy+3} Q ${cx} ${cy-9} ${cx+11} ${cy+3}" stroke="${dark}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
-  if(kind==="closed") return `<path d="M ${cx-11} ${cy} Q ${cx} ${cy+5} ${cx+11} ${cy}" stroke="${dark}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-  if(kind==="squint") return `<ellipse cx="${cx}" cy="${cy}" rx="11" ry="3.4" fill="#F7F2E9"/><circle cx="${cx}" cy="${cy}" r="3.2" fill="${dark}"/>`;
-  if(kind==="dollar") return `<text x="${cx}" y="${cy+7}" text-anchor="middle" font-family="Zilla Slab,serif" font-size="21" font-weight="700" fill="#7FA860">$</text>`;
-  const rx=kind==="wide"?11.5:10.4, ry=kind==="wide"?10.5:7.8, r=kind==="wide"?4.2:4.8;
-  const off=kind==="side"?side*4:0;
+  const cy=96, dark="#221F1C";
+  if(kind==="happy") return `<path d="M ${cx-11} ${cy+3} Q ${cx} ${cy-8} ${cx+11} ${cy+3}" stroke="${dark}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
+  if(kind==="closed")return `<path d="M ${cx-11} ${cy} Q ${cx} ${cy+5} ${cx+11} ${cy}" stroke="${dark}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  if(kind==="squint")return `<ellipse cx="${cx}" cy="${cy}" rx="10.5" ry="3.2" fill="#F7F2E9"/><circle cx="${cx}" cy="${cy}" r="3" fill="${dark}"/>`;
+  if(kind==="dollar")return `<text x="${cx}" y="${cy+7}" text-anchor="middle" font-family="Zilla Slab,serif" font-size="20" font-weight="700" fill="#7FA860">$</text>`;
+  const rx=kind==="wide"?11:10, ry=kind==="wide"?10:7.4, r=kind==="wide"?4:4.6, off=kind==="side"?side*3.6:0;
   return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#F7F2E9"/>`+
-         `<circle cx="${cx+off}" cy="${cy}" r="${r}" fill="${dark}"/>`+
-         `<circle cx="${cx+off-1.6}" cy="${cy-2}" r="1.5" fill="#fff" opacity=".85"/>`;
+    `<ellipse cx="${cx}" cy="${cy-ry*0.55}" rx="${rx}" ry="${ry*0.5}" fill="#DCD3C4" opacity=".55"/>`+
+    `<circle cx="${cx+off}" cy="${cy}" r="${r}" fill="${dark}"/>`+
+    `<circle cx="${cx+off-1.5}" cy="${cy-1.8}" r="1.4" fill="#fff" opacity=".9"/>`;
 }
 function hairSVG(l){
-  const c=l.hair, back=[], front=[];
-  const cap=(cy,ry,rx=54)=>`<ellipse cx="110" cy="${cy}" rx="${rx}" ry="${ry}" fill="${c}" clip-path="url(#headclip)"/>`;
-  switch(l.style){
-    case"bald":break;
-    case"buzz":front.push(cap(64,36));break;
-    case"crop":front.push(cap(66,38));break;
+  const c=l.hair, hi=shade(c,26), back=[], front=[];
+  const cap=(cy,ry,rx)=>`<ellipse cx="110" cy="${cy}" rx="${rx||52}" ry="${ry}" fill="${c}" clip-path="url(#hc)"/>`;
+  switch(l.hairstyle){
+    case"buzz":front.push(cap(62,34));break;
+    case"crop":front.push(cap(60,36));break;
+    case"short":front.push(cap(58,38));break;
+    case"fade":
+      front.push(cap(56,36));
+      front.push(`<rect x="58" y="86" width="104" height="14" fill="${shade(c,-18)}" opacity=".5" clip-path="url(#hc)"/>`);break;
+    case"undercut":
+      front.push(cap(54,34));
+      front.push(`<rect x="58" y="80" width="104" height="22" fill="${shade(c,-30)}" clip-path="url(#hc)"/>`);break;
+    case"slick":
+      front.push(cap(58,37));
+      for(let i=0;i<5;i++)front.push(`<path d="M ${74+i*18} 40 Q ${80+i*18} 62 ${72+i*18} 76" stroke="${hi}" stroke-width="2" fill="none" opacity=".55" clip-path="url(#hc)"/>`);break;
+    case"parted":
+      front.push(cap(58,37));
+      front.push(`<path d="M 126 26 L 120 82" stroke="${shade(c,-40)}" stroke-width="3.5" clip-path="url(#hc)"/>`);break;
     case"receding":
-      front.push(`<ellipse cx="78" cy="70" rx="22" ry="26" fill="${c}" clip-path="url(#headclip)"/>`,
-                 `<ellipse cx="142" cy="70" rx="22" ry="26" fill="${c}" clip-path="url(#headclip)"/>`);break;
-    case"afro":
-      back.push(`<circle cx="110" cy="88" r="72" fill="${c}"/>`);front.push(cap(72,44));break;
+      front.push(`<ellipse cx="76" cy="62" rx="22" ry="26" fill="${c}" clip-path="url(#hc)"/>`,
+                 `<ellipse cx="144" cy="62" rx="22" ry="26" fill="${c}" clip-path="url(#hc)"/>`);break;
+    case"grey":
+      front.push(cap(58,37));
+      front.push(`<ellipse cx="110" cy="52" rx="44" ry="20" fill="${shade(c,30)}" opacity=".5" clip-path="url(#hc)"/>`);break;
     case"curls":
-      front.push(cap(70,41));
-      for(let i=0;i<7;i++)front.push(`<circle cx="${62+i*16}" cy="${64+(i%2?7:0)}" r="13" fill="${c}"/>`);
-      break;
-    case"locs":
-      front.push(cap(70,41));
-      for(let i=0;i<7;i++)back.push(`<rect x="${56+i*16}" y="60" width="9" height="${96+(i%3)*16}" rx="4.5" fill="${c}"/>`);
-      break;
-    case"braids":
-      front.push(cap(68,40));
-      for(let i=0;i<6;i++)back.push(`<rect x="${60+i*18}" y="58" width="8" height="${118+(i%2)*14}" rx="4" fill="${shade(c,i%2?10:-10)}"/>`);
-      break;
+      front.push(cap(60,38));
+      for(let i=0;i<8;i++)front.push(`<circle cx="${64+i*13}" cy="${i%2?52:58}" r="12" fill="${i%2?hi:c}"/>`);break;
+    case"waves":
+      front.push(cap(58,37));
+      for(let i=0;i<4;i++)front.push(`<path d="M 66 ${52+i*9} Q 110 ${44+i*9} 154 ${52+i*9}" stroke="${hi}" stroke-width="2.4" fill="none" opacity=".5" clip-path="url(#hc)"/>`);break;
+    case"messy":
+      front.push(cap(58,38));
+      for(let i=0;i<6;i++)front.push(`<path d="M ${72+i*14} 40 l ${i%2?7:-7} -13" stroke="${c}" stroke-width="6" stroke-linecap="round" fill="none"/>`);break;
     case"long":
-      back.push(`<rect x="50" y="76" width="120" height="132" rx="52" fill="${c}"/>`);front.push(cap(70,41));break;
-    case"topknot":
-      front.push(cap(70,40));back.push(`<circle cx="110" cy="32" r="18" fill="${c}"/>`);break;
-    case"wavy":
-      front.push(cap(68,40));
-      for(let i=0;i<5;i++)front.push(`<circle cx="${70+i*20}" cy="66" r="12" fill="${c}"/>`);
-      break;
-    default:front.push(cap(68,40));
+      back.push(`<path d="M 56 70 Q 50 190 78 214 L 142 214 Q 170 190 164 70 Z" fill="${c}"/>`);
+      front.push(cap(60,38));break;
+    case"bun":
+      back.push(`<circle cx="110" cy="26" r="17" fill="${c}"/>`);front.push(cap(58,37));break;
+    default:front.push(cap(58,38));
   }
   return{back:back.join(""),front:front.join("")};
 }
 function facialSVG(l){
-  const c=l.hair,out=[];
-  if(l.facial==="stubble")out.push(`<ellipse cx="110" cy="146" rx="47" ry="32" fill="${c}" opacity=".3" clip-path="url(#headclip)"/>`);
-  if(l.facial==="moustache"||l.facial==="fullbeard"||l.facial==="goatee")
-    out.push(`<path d="M 92 133 Q 110 127 128 133 Q 110 138 92 133 Z" fill="${c}"/>`);
-  if(l.facial==="goatee")out.push(`<rect x="101" y="150" width="18" height="18" rx="7" fill="${c}"/>`);
-  if(l.facial==="beard"||l.facial==="fullbeard")
-    out.push(`<path d="M 62 112 Q 64 176 110 176 Q 156 176 158 112 L 158 140 Q 150 172 110 172 Q 70 172 62 140 Z" fill="${c}" clip-path="url(#headclip)"/>`,
-             `<ellipse cx="110" cy="156" rx="40" ry="24" fill="${c}" clip-path="url(#headclip)"/>`);
+  const c=shade(l.hair,-6);
+  const out=[];
+  if(l.facial==="stubble")out.push(`<path d="M 62 104 Q 64 152 110 160 Q 156 152 158 104 L 158 128 Q 150 162 110 164 Q 70 162 62 128 Z" fill="${c}" opacity=".26" clip-path="url(#hc)"/>`);
+  if(l.facial==="moustache")out.push(`<path d="M 94 124 Q 110 118 126 124 Q 110 130 94 124 Z" fill="${c}"/>`);
+  if(l.facial==="goatee")out.push(`<path d="M 94 124 Q 110 118 126 124 Q 110 130 94 124 Z" fill="${c}"/>`,
+    `<path d="M 100 138 Q 110 134 120 138 Q 118 154 110 156 Q 102 154 100 138 Z" fill="${c}"/>`);
+  if(l.facial==="beard")out.push(
+    `<path d="M 62 100 Q 62 150 110 162 Q 158 150 158 100 L 158 132 Q 150 164 110 166 Q 70 164 62 132 Z" fill="${c}" clip-path="url(#hc)"/>`,
+    `<ellipse cx="110" cy="146" rx="34" ry="20" fill="${c}" clip-path="url(#hc)"/>`,
+    `<path d="M 94 124 Q 110 118 126 124 Q 110 130 94 124 Z" fill="${c}"/>`);
   return out.join("");
 }
 function eyewearSVG(l){
   if(l.eyewear==="none")return"";
-  const w=l.eyewear==="thick"?4:2.4, col=l.eyewear==="thick"?"#1B1816":"#4A453E";
-  const rx=l.eyewear==="round"?14:15, ry=l.eyewear==="round"?14:12;
+  const thick=l.eyewear==="thick", tint=l.eyewear==="tint";
+  const w=thick?4:2.2, col=thick?"#17140F":(tint?"#1A1A1D":"#4E483F");
+  const lensFill=tint?"rgba(20,20,22,.78)":"rgba(226,240,250,.12)";
   const lens=cx=>l.eyewear==="round"
-    ?`<circle cx="${cx}" cy="108" r="${rx}" fill="rgba(240,248,255,.10)" stroke="${col}" stroke-width="${w}"/>`
-    :`<rect x="${cx-rx}" y="${108-ry}" width="${rx*2}" height="${ry*2}" rx="5" fill="rgba(240,248,255,.10)" stroke="${col}" stroke-width="${w}"/>`;
+    ?`<circle cx="${cx}" cy="96" r="13.5" fill="${lensFill}" stroke="${col}" stroke-width="${w}"/>`
+    :`<rect x="${cx-14.5}" y="84" width="29" height="23" rx="5" fill="${lensFill}" stroke="${col}" stroke-width="${w}"/>`;
   return lens(90)+lens(130)+
-    `<path d="M ${90+rx} 106 L ${130-rx} 106" stroke="${col}" stroke-width="${w}"/>`+
-    `<path d="M ${90-rx} 106 L 60 102" stroke="${col}" stroke-width="${w}"/>`+
-    `<path d="M ${130+rx} 106 L 160 102" stroke="${col}" stroke-width="${w}"/>`;
+    `<path d="M 104 95 L 116 95" stroke="${col}" stroke-width="${w}"/>`+
+    `<path d="M 75 94 L 62 91" stroke="${col}" stroke-width="${w}"/>`+
+    `<path d="M 145 94 L 158 91" stroke="${col}" stroke-width="${w}"/>`;
 }
-function bodySVG(l){
-  const {coat,shirt,cut}=l;
-  let s=`<path d="M 30 250 Q 34 200 72 188 L 148 188 Q 186 200 190 250 Z" fill="${coat}"/>`;
-  if(cut==="tie"||cut==="open"||cut==="vest"){
-    s+=`<path d="M 92 188 L 110 214 L 128 188 L 140 192 L 140 250 L 80 250 L 80 192 Z" fill="${shirt}"/>`;
-    s+=`<path d="M 92 188 L 110 214 L 96 250 L 74 250 L 74 190 Z" fill="${coat}"/>`;
-    s+=`<path d="M 128 188 L 110 214 L 124 250 L 146 250 L 146 190 Z" fill="${coat}"/>`;
-  }
-  if(cut==="tie")s+=`<path d="M 110 214 L 118 224 L 112 250 L 108 250 L 102 224 Z" fill="${shade(coat,-30)}"/>`;
-  if(cut==="vest")s+=`<path d="M 96 196 L 96 250 L 124 250 L 124 196 L 110 216 Z" fill="${shade(coat,26)}"/>`;
-  if(cut==="polo"){
-    s+=`<path d="M 96 188 L 110 206 L 124 188 L 132 192 L 124 206 L 110 214 L 96 206 L 88 192 Z" fill="${shade(coat,22)}"/>`;
-    s+=`<path d="M 108 206 L 112 206 L 112 232 L 108 232 Z" fill="${shade(coat,-22)}"/>`;
-  }
-  if(cut==="hoodie"){
-    s+=`<path d="M 66 192 Q 110 176 154 192 Q 150 216 110 218 Q 70 216 66 192 Z" fill="${shade(coat,18)}"/>`;
-    s+=`<path d="M 102 214 L 102 244 M 118 214 L 118 244" stroke="${shirt}" stroke-width="3.5" stroke-linecap="round"/>`;
-  }
-  if(cut==="zip"){
-    s+=`<path d="M 108 190 L 112 190 L 112 250 L 108 250 Z" fill="${shade(coat,30)}"/>`;
-    s+=`<circle cx="110" cy="206" r="4" fill="${shade(coat,45)}"/>`;
-  }
-  if(cut==="turtle")s+=`<path d="M 84 190 Q 110 176 136 190 L 136 204 Q 110 192 84 204 Z" fill="${shade(coat,16)}"/>`;
-  if(cut==="loud"){
-    for(let i=0;i<14;i++)s+=`<circle cx="${40+(i%5)*32}" cy="${200+Math.floor(i/5)*20}" r="5" fill="${shade(coat,40)}" opacity=".75"/>`;
+/* Clothing. The cut is chosen by personality, so it reads as a signal.
+   The desk crops this figure at about y=220, so every piece of tailoring
+   that is meant to be seen -- collar, lapels, knot, zip -- sits above it. */
+function torsoSVG(l){
+  const {coat,shirt,cut}=l, dk=shade(coat,-26), lt=shade(coat,22), tie=shade(coat,-46);
+  let s=`<path d="M 110 166 C 68 168 26 188 16 228 L 16 300 L 204 300 L 204 228 C 194 188 152 168 110 166 Z" fill="${coat}"/>`
+      + `<path d="M 110 166 C 68 168 26 188 16 228 L 16 300 L 70 300 L 70 194 Z" fill="${dk}" opacity=".42"/>`;
+  const jacket=(cut==="suit"||cut==="threepiece"||cut==="blazer"||cut==="waistcoat");
+
+  if(jacket){
+    s+=`<path d="M 97 167 L 110 194 L 123 167 L 131 173 L 131 300 L 89 300 L 89 173 Z" fill="${shirt}"/>`;
+    s+=`<path d="M 97 167 L 110 194 L 97 300 L 56 300 L 56 175 Z" fill="${coat}"/>`;
+    s+=`<path d="M 123 167 L 110 194 L 123 300 L 164 300 L 164 175 Z" fill="${coat}"/>`;
+    s+=`<path d="M 97 167 L 110 194 L 101 236 L 88 176 Z" fill="${lt}" opacity=".5"/>`;
+    s+=`<path d="M 123 167 L 110 194 L 119 236 L 132 176 Z" fill="${lt}" opacity=".5"/>`;
+    if(cut==="threepiece"||cut==="waistcoat")
+      s+=`<path d="M 99 196 L 110 208 L 121 196 L 127 204 L 127 300 L 93 300 L 93 204 Z" fill="${shade(coat,16)}"/>`,
+      s+=`<g fill="${shade(coat,-30)}"><circle cx="110" cy="224" r="2.6"/><circle cx="110" cy="240" r="2.6"/></g>`;
+    if(cut==="suit"||cut==="blazer"){
+      s+=`<path d="M 101 191 L 119 191 L 122 205 L 98 205 Z" fill="${tie}"/>`;           // knot
+      s+=`<path d="M 99 205 L 121 205 L 115 300 L 105 300 Z" fill="${shade(coat,-38)}"/>`; // blade
+      s+=`<path d="M 101 191 L 110 197 L 119 191" fill="none" stroke="${shade(coat,-58)}" stroke-width="1.6"/>`;
+    }
+  } else if(cut==="opencollar"||cut==="untucked"||cut==="rolled"){
+    s+=`<path d="M 94 166 L 110 196 L 126 166 L 140 174 L 140 300 L 80 300 L 80 174 Z" fill="${shirt}"/>`;
+    s+=`<path d="M 94 166 L 110 196 L 98 210 L 84 174 Z" fill="${shade(shirt,-24)}"/>`;
+    s+=`<path d="M 126 166 L 110 196 L 122 210 L 136 174 Z" fill="${shade(shirt,-24)}"/>`;
+    s+=`<g fill="${shade(shirt,-30)}"><circle cx="110" cy="224" r="2.4"/><circle cx="110" cy="246" r="2.4"/></g>`;
+  } else if(cut==="quarterzip"){
+    s+=`<path d="M 96 167 L 110 190 L 124 167 L 132 172 L 118 200 L 102 200 L 88 172 Z" fill="${shirt}"/>`;
+    s+=`<path d="M 107 190 L 113 190 L 113 280 L 107 280 Z" fill="${shade(coat,36)}"/>`;
+    s+=`<rect x="105" y="196" width="10" height="13" rx="3" fill="${shade(coat,50)}"/>`;
+    s+=`<path d="M 92 168 Q 110 182 128 168" fill="none" stroke="${shade(coat,30)}" stroke-width="3"/>`;
+  } else if(cut==="hoodie"){
+    s+=`<path d="M 66 172 Q 110 154 154 172 Q 150 202 110 206 Q 70 202 66 172 Z" fill="${shade(coat,18)}"/>`;
+    s+=`<path d="M 100 202 L 99 250 M 120 202 L 121 250" stroke="${shirt}" stroke-width="4" stroke-linecap="round"/>`;
+    s+=`<circle cx="99" cy="202" r="3" fill="${shade(coat,-30)}"/><circle cx="121" cy="202" r="3" fill="${shade(coat,-30)}"/>`;
+    s+=`<path d="M 78 248 Q 110 258 142 248 L 142 270 Q 110 278 78 270 Z" fill="${shade(coat,-14)}"/>`;
   }
   return s;
 }
-function extraSVG(l,mood){
-  if(l.extra==="cigar"){
-    const smoke=(mood==="furious"||mood==="angry")?"":
-      `<path class="smoke" d="M 176 132 q 7 -10 0 -20 q -7 -10 0 -20" stroke="#B9B2A6" stroke-width="2.6" fill="none" opacity=".5" stroke-linecap="round"/>`;
-    return `<rect x="130" y="138" width="46" height="9" rx="3" fill="#6B4423" transform="rotate(-6 130 143)"/>`+
-           `<rect x="170" y="134" width="9" height="9" rx="3" fill="#E2622B" transform="rotate(-6 130 143)"/>`+smoke;
+function propSVG(l,scene){
+  const {prop,coat,skin}=l;
+  switch(prop){
+    case"chain":  return `<path d="M 97 194 Q 110 214 123 194" stroke="#D9BE62" stroke-width="3.6" fill="none"/><circle cx="110" cy="211" r="4.2" fill="#D9BE62"/>`;
+    case"tiebar": return `<rect x="101" y="228" width="20" height="4" rx="2" fill="#D9BE62"/>`;
+    case"pocketsquare":return `<path d="M 134 212 l 18 0 l -4 -12 l -6 6 l -5 -7 Z" fill="#C2554A"/>`;
+    case"cufflinks":return `<circle cx="34" cy="264" r="4" fill="#D9BE62"/><circle cx="186" cy="264" r="4" fill="#D9BE62"/>`;
+    case"badge":  return `<path d="M 96 172 Q 110 196 124 172" stroke="#5A6B7A" stroke-width="3" fill="none"/><rect x="128" y="206" width="20" height="27" rx="3" fill="#E9E6DE" stroke="#8E8B85"/><rect x="131" y="210" width="9" height="11" fill="#A9B7C4"/>`;
+    case"penpocket":return `<rect x="134" y="206" width="4" height="16" rx="2" fill="#2F6BB5"/><rect x="141" y="206" width="4" height="16" rx="2" fill="#C2554A"/>`;
+    case"lanyardback":return `<path d="M 94 170 Q 110 196 126 170" stroke="#5A6B7A" stroke-width="4" fill="none"/><rect x="101" y="194" width="18" height="13" rx="2" fill="#D9D4C8"/>`;
+    case"stud":   return `<circle cx="61" cy="106" r="3.2" fill="#D9BE62"/>`;
+    case"watch":  return `<rect x="26" y="258" width="16" height="10" rx="3" fill="#8E8B85"/>`;
+    case"tattoo": return `<g opacity=".5" fill="none" stroke="${shade(skin,-62)}" stroke-width="2.6" stroke-linecap="round">
+        <path d="M 132 174 q 7 9 2 18 q -5 9 2 15"/><path d="M 141 179 q 5 8 1 14"/></g>`;
+    default:return"";
   }
-  if(l.extra==="toothpick")return`<rect x="128" y="142" width="26" height="3" rx="1.5" fill="#E8D9B8" transform="rotate(-12 128 143)"/>`;
-  if(l.extra==="vape")return`<rect x="130" y="138" width="30" height="10" rx="4" fill="#4A4A50" transform="rotate(-6 130 143)"/>`+
-    `<path class="smoke" d="M 166 132 q 8 -12 0 -22" stroke="#B9B2A6" stroke-width="2.6" fill="none" opacity=".45" stroke-linecap="round"/>`;
-  if(l.extra==="earpiece")return`<circle cx="160" cy="114" r="7" fill="#3A3A3E"/><path d="M 160 120 Q 164 140 150 150" stroke="#3A3A3E" stroke-width="2.6" fill="none"/>`;
-  return"";
 }
 function fxSVG(kind){
-  if(kind==="rage")return`
-    <g stroke="#C2554A" stroke-width="4.5" stroke-linecap="round">
-      <path d="M 44 46 L 62 64 M 62 46 L 44 64"/><path d="M 176 46 L 194 64 M 194 46 L 176 64"/>
-    </g>`;
-  if(kind==="cha")return`
-    <g fill="#7FA860" font-family="Zilla Slab,serif" font-weight="700">
-      <text x="42" y="60" font-size="26">$</text><text x="182" y="48" font-size="22">$</text>
-      <text x="168" y="86" font-size="17">$</text>
-    </g>`;
-  if(kind==="ha")return`<g fill="#A79E8E" font-family="Zilla Slab,serif" font-size="19" font-style="italic"><text x="176" y="58">ha</text><text x="190" y="82" font-size="15">ha</text></g>`;
-  if(kind==="zzz")return`<g fill="#6F675B" font-family="Zilla Slab,serif" font-weight="600"><text x="176" y="56" font-size="22">z</text><text x="192" y="36" font-size="16">z</text></g>`;
-  if(kind==="sweat")return`<path d="M 168 74 q 7 12 0 17 q -7 -5 0 -17 Z" fill="#6FA8C9"/>`;
-  if(kind==="think")return`<text x="176" y="56" font-family="Zilla Slab,serif" font-size="26" fill="#6F675B">?</text>`;
+  if(kind==="rage")return`<g stroke="#C2554A" stroke-width="5" stroke-linecap="round"><path d="M 24 32 L 44 52 M 44 32 L 24 52"/><path d="M 176 32 L 196 52 M 196 32 L 176 52"/></g>`;
+  if(kind==="cha")return`<g fill="#7FA860" font-family="Zilla Slab,serif" font-weight="700"><text x="22" y="52" font-size="26">$</text><text x="176" y="40" font-size="22">$</text><text x="188" y="80" font-size="17">$</text></g>`;
+  if(kind==="ha")return`<g fill="#A79E8E" font-family="Zilla Slab,serif" font-size="19" font-style="italic"><text x="172" y="48">ha</text><text x="188" y="72" font-size="15">ha</text></g>`;
+  if(kind==="zzz")return`<g fill="#8A8172" font-family="Zilla Slab,serif" font-weight="600"><text x="172" y="46" font-size="23">z</text><text x="190" y="26" font-size="16">z</text></g>`;
+  if(kind==="sweat")return`<path d="M 164 62 q 7 12 0 17 q -7 -5 0 -17 Z" fill="#6FA8C9"/>`;
+  if(kind==="think")return`<text x="172" y="46" font-family="Zilla Slab,serif" font-size="26" fill="#8A8172">?</text>`;
   return"";
 }
-function drawPerson(ch,mood){
-  const l=ch.look, m=MOODS[mood]||MOODS.neutral;
-  const pose=BROW_POSE[m.brow], hair=hairSVG(l);
-  const brow=(cx,dir)=>`<g transform="translate(${cx} ${88+pose.y}) rotate(${pose.rot*dir})">
-      <path d="M -14 0 Q 0 -5 14 0" stroke="${shade(l.hair,14)}" stroke-width="5.5" fill="none" stroke-linecap="round"/></g>`;
+function personSVG(ch,mood){
+  const l=ch.look, m=MOODS[mood]||MOODS.neutral, pose=BROWS[m.brow], hair=hairSVG(l);
+  const head=HEAD_PATHS[l.jaw]||HEAD_PATHS.round;
+  const lip=shade(l.skin,-78);
+  const brow=(cx,dir)=>`<g transform="translate(${cx} ${78+pose.y}) rotate(${pose.rot*dir})">
+    <path d="M -14 0 Q 0 -5 14 0" stroke="${shade(l.hair,10)}" stroke-width="5.5" fill="none" stroke-linecap="round"/></g>`;
   return `
-<svg viewBox="0 0 220 250" role="img" aria-label="${ch.name}, looking ${mood}">
-  <defs><clipPath id="headclip"><ellipse cx="110" cy="110" rx="52" ry="62"/></clipPath></defs>
+  <defs><clipPath id="hc"><path d="${head}"/></clipPath></defs>
   ${hair.back}
-  <ellipse cx="58" cy="118" rx="9" ry="14" fill="${l.skin}"/>
-  <ellipse cx="162" cy="118" rx="9" ry="14" fill="${l.skin}"/>
-  <path d="M 94 158 L 126 158 L 126 194 L 94 194 Z" fill="${shade(l.skin,-26)}"/>
-  ${bodySVG(l)}
-  <ellipse cx="110" cy="110" rx="52" ry="62" fill="${l.skin}"/>
-  <ellipse cx="110" cy="110" rx="52" ry="62" fill="none" stroke="${shade(l.skin,-34)}" stroke-width="1.5"/>
+  <path d="M 94 140 L 126 140 L 126 180 L 94 180 Z" fill="${shade(l.skin,-30)}"/>
+  <path d="M 94 140 L 126 140 L 126 152 Q 110 162 94 152 Z" fill="${shade(l.skin,-52)}"/>
+  ${torsoSVG(l)}
+  <ellipse cx="60" cy="102" rx="9" ry="13" fill="${l.skin}"/>
+  <ellipse cx="160" cy="102" rx="9" ry="13" fill="${l.skin}"/>
+  <path d="${head}" fill="${l.skin}"/>
+  <path d="M 110 32 C 82 32 62 55 62 90 C 62 120 71 143 88 152 C 95 157 102 160 110 160 Z" fill="${shade(l.skin,-16)}" opacity=".35"/>
   ${hair.front}
   ${brow(90,1)}${brow(130,-1)}
   ${eyeSVG(m.eye,90,-1)}${eyeSVG(m.eye,130,1)}
-  <path d="M 110 112 Q 104 126 112 127" stroke="${shade(l.skin,-40)}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-  ${MOUTHS[m.mouth]}
+  <path d="M 110 100 Q 103 116 112 118" stroke="${shade(l.skin,-44)}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  ${MOUTHS[m.mouth].replace(/INK/g,lip)}
   ${facialSVG(l)}
   ${eyewearSVG(l)}
-  ${extraSVG(l,mood)}
-  ${fxSVG(m.fx)}
-</svg>`;
+  ${propSVG(l)}
+  ${fxSVG(m.fx)}`;
 }
 
 /* ======================================================================
-   6. The seller's decision making. The rules decide everything that
-   matters -- accept, refuse, storm out. Dialogue only supplies words.
+   6. The office. Also a tell: where someone sits tells you how much they
+   need this deal.
+   ====================================================================== */
+const OFFICES={
+  corner:{wall:"#2B2A2E",trim:"#1D1C20",floor:"#1A191C",window:"skyline",light:"#E8C88A",
+    blurb:"A corner office, high up, with a view worth more than your contract."},
+  corporate:{wall:"#31353A",trim:"#23272B",floor:"#1C1F22",window:"glass",light:"#DCE6EE",
+    blurb:"Glass partitions, a tidy desk, a whiteboard wiped clean this morning."},
+  grind:{wall:"#34322B",trim:"#26241E",floor:"#1E1C17",window:"none",light:"#C8CCB8",
+    blurb:"A shared desk, stacked boxes, and a strip light that hums."},
+  startup:{wall:"#2A2622",trim:"#1F1C19",floor:"#191614",window:"brick",light:"#E1A45C",
+    blurb:"Exposed brick, a neon sign, and more plants than people."},
+  institutional:{wall:"#3A3A33",trim:"#2C2C26",floor:"#232320",window:"blinds",light:"#D7D9C6",
+    blurb:"Beige walls, grey cabinets, and a laminated notice about the fire door."},
+  workshop:{wall:"#2E3237",trim:"#212429",floor:"#1B1D20",window:"industrial",light:"#E0B070",
+    blurb:"A works office above the shop floor. You can hear the presses."},
+  legacy:{wall:"#33291F",trim:"#241C15",floor:"#1D1712",window:"sash",light:"#E5BC79",
+    blurb:"Wood panelling, old photographs, and a decanter that gets used."},
+  minimal:{wall:"#2C2E31",trim:"#212326",floor:"#1A1B1D",window:"glass",light:"#D5DEE4",
+    blurb:"One desk, two monitors, and nothing on the walls at all."}
+};
+const W=960,H=470,DESK_Y=372;
+
+function skylineSVG(rng,x,y,w,h,night){
+  let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${night?"#11151F":"#7E9AB3"}"/>`;
+  if(!night)s+=`<rect x="${x}" y="${y}" width="${w}" height="${h*0.55}" fill="#9CB4C9"/>`;
+  let cx=x;
+  while(cx<x+w){
+    const bw=rng.int(22,46), bh=rng.int(Math.round(h*0.3),Math.round(h*0.88));
+    const by=y+h-bh;
+    s+=`<rect x="${cx}" y="${by}" width="${bw}" height="${bh}" fill="${night?"#1B2130":"#5A7186"}"/>`;
+    for(let wy=by+6;wy<y+h-6;wy+=11)
+      for(let wx=cx+4;wx<cx+bw-5;wx+=9)
+        if(rng.chance(night?0.42:0.18))
+          s+=`<rect x="${wx}" y="${wy}" width="4" height="5" fill="${night?"#E8C88A":"#3E5265"}" opacity="${night?0.9:0.5}"/>`;
+    cx+=bw+rng.int(3,10);
+  }
+  return s;
+}
+function windowSVG(kind,rng,night){
+  if(kind==="none")return"";
+  const x=556,y=44,w=334,h=202;
+  const frame=`<rect x="${x-8}" y="${y-8}" width="${w+16}" height="${h+16}" rx="4" fill="#15130F"/>`;
+  let inner="";
+  if(kind==="skyline")inner=skylineSVG(rng,x,y,w,h,night);
+  else if(kind==="glass"){
+    inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${night?"#1A2029":"#8FA6B8"}"/>`+
+      skylineSVG(rng,x,y+h*0.35,w,h*0.65,night);
+  } else if(kind==="brick"){
+    inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${night?"#14171C":"#6E7F8E"}"/>`;
+    for(let i=0;i<5;i++)inner+=`<rect x="${x+20+i*62}" y="${y+40}" width="42" height="120" fill="${night?"#0F1216":"#5A6B79"}"/>`;
+  } else if(kind==="industrial"){
+    inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${night?"#171B20":"#7C8A96"}"/>`;
+    for(let i=1;i<6;i++)inner+=`<rect x="${x+i*(w/6)-2}" y="${y}" width="4" height="${h}" fill="#15130F"/>`;
+    for(let i=1;i<3;i++)inner+=`<rect x="${x}" y="${y+i*(h/3)-2}" width="${w}" height="4" fill="#15130F"/>`;
+  } else if(kind==="sash"){
+    inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${night?"#161A1F":"#88A08D"}"/>`;
+    inner+=`<rect x="${x+w/2-3}" y="${y}" width="6" height="${h}" fill="#241C15"/>`;
+    inner+=`<rect x="${x}" y="${y+h/2-3}" width="${w}" height="6" fill="#241C15"/>`;
+  } else if(kind==="blinds"){
+    inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${night?"#1A1D18":"#94A08A"}"/>`;
+    for(let i=0;i<14;i++)inner+=`<rect x="${x}" y="${y+i*15}" width="${w}" height="9" fill="#C9C7B4" opacity=".82"/>`;
+  }
+  const glow=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#winglow)" opacity=".5"/>`;
+  return frame+inner+glow+`<rect x="${x-8}" y="${y-8}" width="${w+16}" height="${h+16}" rx="4" fill="none" stroke="#0E0C0A" stroke-width="3"/>`;
+}
+/* Props. Each office picks from its own kit, so the room reads as a type. */
+const PROPS={
+  shelf:(x,y,rng)=>{
+    let s=`<rect x="${x}" y="${y}" width="150" height="8" fill="#241D16"/><rect x="${x}" y="${y-70}" width="150" height="8" fill="#241D16"/>`;
+    for(const row of [y-8,y-78]){
+      let bx=x+6;
+      while(bx<x+140){const bw=rng.int(7,14),bh=rng.int(40,58);
+        s+=`<rect x="${bx}" y="${row-bh}" width="${bw}" height="${bh}" fill="${rng.pick(["#6B3A2E","#2F4358","#4A4233","#5A2F3A","#33503F"])}"/>`;bx+=bw+2}
+    }
+    return s;
+  },
+  awards:(x,y,rng)=>{
+    let s="";
+    for(let i=0;i<3;i++){
+      const ax=x+i*52;
+      s+=`<rect x="${ax}" y="${y-54}" width="42" height="54" rx="2" fill="#241D16" stroke="#C9A227" stroke-width="2"/>`;
+      s+=`<rect x="${ax+7}" y="${y-46}" width="28" height="38" fill="#3A3128"/>`;
+      s+=`<circle cx="${ax+21}" cy="${y-30}" r="9" fill="#C9A227" opacity=".85"/>`;
+    }
+    return s;
+  },
+  trophy:(x,y)=>`<rect x="${x}" y="${y-8}" width="26" height="8" fill="#8A6B22"/>
+    <path d="M ${x+6} ${y-8} L ${x+20} ${y-8} L ${x+18} ${y-26} L ${x+8} ${y-26} Z" fill="#C9A227"/>
+    <path d="M ${x+8} ${y-26} q -10 -4 -8 -14 M ${x+18} ${y-26} q 10 -4 8 -14" stroke="#C9A227" stroke-width="2.5" fill="none"/>`,
+  plantHealthy:(x,y)=>`<path d="M ${x} ${y} l 30 0 l -4 30 l -22 0 Z" fill="#7A4630"/>
+    <g fill="#3F7A4A">${[0,1,2,3,4].map(i=>`<ellipse cx="${x+15+(i-2)*11}" cy="${y-22-Math.abs(i-2)*6}" rx="8" ry="20" transform="rotate(${(i-2)*22} ${x+15+(i-2)*11} ${y-22})"/>`).join("")}</g>`,
+  plantDying:(x,y)=>`<path d="M ${x} ${y} l 26 0 l -3 26 l -20 0 Z" fill="#6A5240"/>
+    <g fill="#6E6B33"><ellipse cx="${x+8}" cy="${y-14}" rx="5" ry="13" transform="rotate(-34 ${x+8} ${y-14})"/>
+    <ellipse cx="${x+18}" cy="${y-12}" rx="5" ry="12" transform="rotate(30 ${x+18} ${y-12})"/></g>`,
+  cabinet:(x,y)=>`<rect x="${x}" y="${y-120}" width="84" height="120" fill="#4A4C46"/>
+    ${[0,1,2].map(i=>`<rect x="${x+6}" y="${y-114+i*39}" width="72" height="34" fill="#3D3F3A"/>
+    <rect x="${x+34}" y="${y-100+i*39}" width="16" height="4" fill="#8E8B85"/>`).join("")}`,
+  boxes:(x,y,rng)=>{
+    let s="";const cols=rng.int(2,3);
+    for(let c=0;c<cols;c++){const stack=rng.int(1,3);
+      for(let i=0;i<stack;i++)
+        s+=`<rect x="${x+c*54}" y="${y-(i+1)*38}" width="50" height="36" fill="${i%2?"#8A6E4B":"#7A6142"}" stroke="#5E4B33"/>
+            <path d="M ${x+c*54+25} ${y-(i+1)*38} l 0 36" stroke="#5E4B33" stroke-width="2"/>`}
+    return s;
+  },
+  whiteboard:(x,y,rng)=>{
+    let s=`<rect x="${x}" y="${y-120}" width="210" height="120" rx="3" fill="#E6E4DC" stroke="#9A968C" stroke-width="3"/>`;
+    for(let i=0;i<5;i++)s+=`<rect x="${x+16}" y="${y-100+i*20}" width="${rng.int(50,170)}" height="4" rx="2" fill="#5A7186" opacity=".55"/>`;
+    return s;
+  },
+  neon:(x,y,rng)=>{
+    const c=rng.pick(["#E0567F","#4EA8A0","#C9873F"]);
+    return `<g stroke="${c}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".92">
+      <path d="M ${x} ${y} q 24 -34 48 0 q 24 34 48 0"/></g>
+      <ellipse cx="${x+72}" cy="${y-6}" rx="90" ry="36" fill="${c}" opacity=".10"/>`;
+  },
+  frames:(x,y,rng)=>{
+    let s="";
+    for(let i=0;i<3;i++)s+=`<rect x="${x+i*58}" y="${y-46}" width="46" height="46" fill="#241D16" stroke="#6B5432" stroke-width="3"/>
+      <rect x="${x+i*58+7}" y="${y-39}" width="32" height="32" fill="${rng.pick(["#5A6B79","#7A6B52","#4A5A4A"])}"/>`;
+    return s;
+  },
+  poster:(x,y,rng)=>`<rect x="${x}" y="${y-92}" width="70" height="92" fill="#2F3A44" stroke="#4A5A66"/>
+    <circle cx="${x+35}" cy="${y-58}" r="18" fill="#C9873F" opacity=".7"/>
+    <rect x="${x+12}" y="${y-28}" width="46" height="5" fill="#8E9AA4"/>
+    <rect x="${x+18}" y="${y-18}" width="34" height="4" fill="#6E7A84"/>`,
+  monitors:(x,y)=>`<rect x="${x}" y="${y-86}" width="118" height="74" rx="3" fill="#15171A" stroke="#3A3F44" stroke-width="3"/>
+    <rect x="${x+6}" y="${y-80}" width="106" height="62" fill="#1E2B33"/>
+    <rect x="${x+52}" y="${y-12}" width="14" height="12" fill="#2A2E33"/>
+    <rect x="${x+38}" y="${y}" width="42" height="5" rx="2" fill="#2A2E33"/>`,
+  clock:(x,y)=>`<circle cx="${x}" cy="${y}" r="21" fill="#E6E2D6" stroke="#4A453C" stroke-width="3"/>
+    <path d="M ${x} ${y} L ${x} ${y-13} M ${x} ${y} L ${x+9} ${y+5}" stroke="#2A2620" stroke-width="2.5" stroke-linecap="round"/>`,
+  notice:(x,y)=>`<rect x="${x}" y="${y-38}" width="30" height="38" fill="#F0EDE2" stroke="#B9B2A0"/>
+    <rect x="${x+4}" y="${y-32}" width="22" height="3" fill="#9A968C"/><rect x="${x+4}" y="${y-25}" width="18" height="3" fill="#9A968C"/>
+    <rect x="${x+4}" y="${y-18}" width="21" height="3" fill="#9A968C"/>`,
+  toolboard:(x,y)=>`<rect x="${x}" y="${y-100}" width="150" height="100" fill="#4A3F33" stroke="#2E271F" stroke-width="3"/>
+    <g stroke="#9AA0A6" stroke-width="5" stroke-linecap="round">
+      <path d="M ${x+22} ${y-84} l 0 40"/><path d="M ${x+48} ${y-84} l 0 52"/><path d="M ${x+74} ${y-84} l 0 34"/></g>
+    <rect x="${x+96}" y="${y-84}" width="38" height="24" rx="3" fill="#B5651D"/>`
+};
+const KITS={
+  corner:["awards","trophy","plantHealthy","shelf","frames"],
+  corporate:["whiteboard","plantHealthy","shelf","clock"],
+  grind:["boxes","plantDying","cabinet","notice","clock"],
+  startup:["neon","plantHealthy","poster","shelf"],
+  institutional:["cabinet","notice","clock","poster"],
+  workshop:["toolboard","boxes","clock","cabinet"],
+  legacy:["frames","shelf","trophy","plantHealthy"],
+  minimal:["monitors","whiteboard"]
+};
+function deskKitSVG(office,rng){
+  let s="";
+  const y=DESK_Y+4;
+  if(rng.chance(0.85))s+=`<rect x="200" y="${y-14}" width="90" height="14" rx="2" fill="#1C1814"/>
+    <rect x="206" y="${y-11}" width="78" height="8" fill="#C9A227" opacity=".7"/>`;   // nameplate
+  if(rng.chance(0.75))s+=`<path d="M 690 ${y-2} l 0 -18 l 26 0 l 0 18 Z" fill="#E6E2D6"/>
+    <path d="M 716 ${y-16} q 10 4 0 10" stroke="#E6E2D6" stroke-width="3" fill="none"/>`; // mug
+  if(rng.chance(0.7))s+=`<rect x="310" y="${y-10}" width="88" height="10" fill="#EDEAE0"/>
+    <rect x="316" y="${y-16}" width="80" height="8" fill="#F6F3EA"/>`;                  // papers
+  if(office==="legacy"&&rng.chance(0.7))
+    s+=`<ellipse cx="640" cy="${y-4}" rx="26" ry="8" fill="#3A2F22"/><ellipse cx="640" cy="${y-8}" rx="20" ry="6" fill="#241C15"/>`;
+  if(office==="minimal"||office==="corporate")
+    s+=`<path d="M 618 ${y-2} l 96 0 l -8 -34 l -80 0 Z" fill="#2A2E33"/><rect x="628" y="${y-34}" width="76" height="30" fill="#1E2B33"/>`;
+  return s;
+}
+function officeSVG(ch,seed){
+  const rng=rngFrom(seed^0x9e37);
+  const kind=ch.persona.room, o=OFFICES[kind];
+  const night=rng.chance(kind==="grind"||kind==="startup"?0.55:0.3);
+  const kit=rng.shuffle(KITS[kind]);
+  let props="";
+  // Two standing props on the left, one short prop to the right of the desk.
+  const SHORT=new Set(["plantHealthy","plantDying","trophy","clock","notice","frames","poster","neon"]);
+  const floor=DESK_Y-6, slots=[26,172];
+  let used=0;
+  for(const name of kit){
+    if(used>=2)break;
+    const x=slots[used];
+    if(name==="clock")props+=PROPS.clock(x+44,132);
+    else if(name==="neon")props+=PROPS.neon(x,170,rng);
+    else if(name==="frames")props+=PROPS.frames(x,206,rng);
+    else if(name==="poster")props+=PROPS.poster(x,238,rng);
+    else if(name==="notice")props+=PROPS.notice(x+26,176);
+    else if(name==="awards")props+=PROPS.awards(x,floor-120,rng);
+    else props+=PROPS[name](x,floor,rng);
+    used++;
+  }
+  const rightProp=kit.find(n=>SHORT.has(n)&&n!=="clock"&&n!=="neon");
+  if(rightProp==="plantHealthy")props+=PROPS.plantHealthy(712,floor);
+  else if(rightProp==="plantDying")props+=PROPS.plantDying(716,floor);
+  else if(rightProp==="trophy")props+=PROPS.trophy(720,floor);
+  else if(rightProp==="frames")props+=PROPS.frames(700,300,rng);
+  const deskTone=kind==="legacy"||kind==="corner"?"#4A3524":kind==="workshop"?"#3E4348":"#3A3A38";
+  return `
+  <defs>
+    <linearGradient id="winglow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${o.light}" stop-opacity=".30"/>
+      <stop offset="1" stop-color="${o.light}" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="wallg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${shade(o.wall,14)}"/><stop offset="1" stop-color="${shade(o.wall,-18)}"/>
+    </linearGradient>
+    <radialGradient id="keylight" cx="50%" cy="28%" r="62%">
+      <stop offset="0" stop-color="${o.light}" stop-opacity=".22"/>
+      <stop offset="1" stop-color="${o.light}" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#wallg)"/>
+  <rect y="${H-120}" width="${W}" height="120" fill="${o.floor}"/>
+  <rect y="${H-126}" width="${W}" height="8" fill="${o.trim}"/>
+  ${windowSVG(o.window,rng,night)}
+  ${props}
+  <rect width="${W}" height="${H}" fill="url(#keylight)"/>`;
+}
+function deskSVG(ch){
+  const kind=ch.persona.room;
+  const top=kind==="legacy"||kind==="corner"?"#5A4028":kind==="workshop"?"#4A5157":"#43433F";
+  return `<rect y="${DESK_Y}" width="${W}" height="${H-DESK_Y}" fill="${shade(top,-30)}"/>
+    <rect y="${DESK_Y}" width="${W}" height="16" fill="${top}"/>
+    <rect y="${DESK_Y+16}" width="${W}" height="5" fill="${shade(top,-52)}" opacity=".7"/>`;
+}
+/* Forearms and hands resting ON the desk top, drawn in front of it. */
+function handsSVG(ch,mood){
+  const {coat,skin}=ch.look, cuff=shade(coat,22), crease=shade(skin,-42);
+  const y=DESK_Y+20;
+  const clasped=mood==="furious"||mood==="angry";
+  const arm=(bx,hx)=>`<path d="M ${bx} ${H} L ${bx+96} ${H} L ${hx+38} ${y+12} L ${hx-38} ${y+12} Z" fill="${coat}"/>
+    <path d="M ${hx-38} ${y+12} L ${hx+38} ${y+12} L ${hx+34} ${y+24} L ${hx-34} ${y+24} Z" fill="${cuff}"/>`;
+  const hand=hx=>`<rect x="${hx-33}" y="${y-12}" width="66" height="28" rx="14" fill="${skin}"/>
+    <g stroke="${crease}" stroke-width="1.6" opacity=".45" stroke-linecap="round">
+      <path d="M ${hx-15} ${y-8} l 0 20"/><path d="M ${hx} ${y-9} l 0 22"/><path d="M ${hx+15} ${y-8} l 0 20"/></g>`;
+  const L=clasped?452:398, R=clasped?512:562;
+  return arm(180,L)+arm(684,R)+hand(L)+hand(R);
+}
+function sceneSVG(ch,mood,seed){
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(ch.name)} in their office, looking ${mood}">
+    ${officeSVG(ch,seed)}
+    <g transform="translate(312 44) scale(1.52)">${personSVG(ch,mood)}</g>
+    ${deskSVG(ch)}
+    ${handsSVG(ch,mood)}
+  </svg>`;
+}
+
+/* ======================================================================
+   7. The seller's decision making. The rules decide everything that
+   matters; dialogue only supplies the words.
    ====================================================================== */
 function makeSeller(sc,persona,rounds,rng){
-  const all=allPackages(sc);
-  const importance={};sc.issues.forEach(i=>importance[i.key]=1);
+  const all=allPackages(sc), importance={};
+  sc.issues.forEach(i=>importance[i.key]=1);
   return{
-    persona,rounds,rng,insults:0,lastPlayer:null,lastCounter:null,
+    persona,rounds,rng,insults:0,lastPlayer:null,lastCounter:null,importance,
     target(round){
       const floor=sc.sellerWalk+3;
       if(rounds<=1)return floor;
-      let p=(round-1)/(rounds-1)*persona.rate;
-      p=Math.min(1,p);
+      const p=Math.min(1,(round-1)/(rounds-1)*persona.rate);
       return Math.round(persona.open-(persona.open-floor)*p);
     },
-    /* How good the seller GUESSES a package is for the buyer. Options are
-       listed best-for-buyer first, so an early option scores high. */
     guess(picks){
-      let total=0;
+      let t=0;
       sc.issues.forEach((iss,i)=>{
         const idx=iss.options.findIndex(o=>o.key===picks[i]);
-        total+=importance[iss.key]*((iss.options.length-1-idx)/(iss.options.length-1));
+        t+=importance[iss.key]*((iss.options.length-1-idx)/(iss.options.length-1));
       });
-      return total;
+      return t;
     },
-    /* Watch what the buyer clings to. Terms they hold look important;
-       terms they give ground on look cheap, and get exploited. */
     observe(picks){
       sc.issues.forEach((iss,i)=>{
         const idx=iss.options.findIndex(o=>o.key===picks[i]);
@@ -817,15 +1056,13 @@ function makeSeller(sc,persona,rounds,rng){
       });
       this.lastPlayer=picks.slice();
     },
-    nudge(key,delta){importance[key]=Math.max(0.3,importance[key]+delta)},
-    /* The package worth at least `min` to the seller that it believes the
-       buyer will like most. This is what conceding cleverly looks like. */
+    nudge(k,d){importance[k]=Math.max(0.3,importance[k]+d)},
     pick(min,ceiling){
       let pool=all.filter(p=>p.them>=min);
       if(ceiling!=null){const t=pool.filter(p=>p.them<=ceiling);if(t.length)pool=t}
       if(!pool.length)pool=[all.reduce((a,b)=>b.them>a.them?b:a)];
-      let best=pool[0],bestG=-1;
-      for(const p of pool){const g=this.guess(p.picks);if(g>bestG||(g===bestG&&p.them<best.them)){best=p;bestG=g}}
+      let best=pool[0],bg=-1;
+      for(const p of pool){const g=this.guess(p.picks);if(g>bg||(g===bg&&p.them<best.them)){best=p;bg=g}}
       return best;
     },
     advance(target){
@@ -842,8 +1079,7 @@ function makeSeller(sc,persona,rounds,rng){
     },
     respond(picks,round){
       this.observe(picks);
-      const mine=scoreOf(sc,picks).them;
-      const target=this.target(round), final=round>=rounds;
+      const mine=scoreOf(sc,picks).them, target=this.target(round), final=round>=rounds;
       if(mine>=persona.delight)return{kind:"accept",mood:"delight"};
       const sev=this.insultLevel(mine);
       if(sev){
@@ -855,25 +1091,23 @@ function makeSeller(sc,persona,rounds,rng){
       if(final)return mine>=sc.sellerWalk?{kind:"accept",mood:"thin"}:{kind:"nodeal",mood:"walk"};
       return{kind:"counter",offer:this.advance(target),mood:mine<sc.sellerWalk?"below":"close"};
     },
-    /* How straight the answer is depends entirely on who you're asking. */
     hint(){
-      const ranked=sc.issues.slice().sort((a,b)=>stakeThem(b)-stakeThem(a));
-      if(rng.chance(persona.honesty)){
-        return `${ranked[0].label} decides whether this is worth doing for me, with ${ranked[1].label.toLowerCase()} behind it. ${ranked[ranked.length-1].label} I have more room on than you'd think.`;
-      }
-      return `${ranked[1].label} is what I'm measured on this quarter, so that's where I'm least flexible. Everything else I can look at.`;
+      const r=sc.issues.slice().sort((a,b)=>stakeThem(b)-stakeThem(a));
+      if(rng.chance(persona.honesty))
+        return `${r[0].label} decides whether this is worth doing for me, with ${r[1].label.toLowerCase()} behind it. ${r[r.length-1].label} I have more room on than you'd think.`;
+      return `${r[1].label} is what I'm measured on this quarter, so that's where I'm least flexible. Everything else I can look at.`;
     }
   };
 }
 
 /* ======================================================================
-   7. Reading plain English. Simple, transparent keyword intent.
+   8. Reading plain English.
    ====================================================================== */
 const INTENTS=[
   ["priorities",[/\bwhat (do you|matters|are you|would you)\b/,/\bmost important\b/,/\bpriorit/,/\bcare (most )?about\b/,/\bwhat.*\bneed\b/,/\bwhich.*\bmatter/,/\bdriving\b/]],
   ["why",[/\bwhy\b/,/\bjustify\b/,/\bexplain\b/,/\bhow come\b/,/\bon what basis\b/]],
   ["threat",[/\bwalk (away|out)\b/,/\bleave the table\b/,/\bno deal\b/,/\banother supplier\b/,/\bcompetitor\b/,/\bgo elsewhere\b/,/\bfind someone else\b/]],
-  ["insult",[/\bridiculous\b/,/\bjoke\b/,/\binsult/,/\bpathetic\b/,/\bwaste of\b/,/\bclown\b/,/\bnonsense\b/,/\brobbery\b/,/\bripping me off\b/,/\bgreedy\b/,/\bjoker\b/]],
+  ["insult",[/\bridiculous\b/,/\bjoke\b/,/\binsult/,/\bpathetic\b/,/\bwaste of\b/,/\bclown\b/,/\bnonsense\b/,/\brobbery\b/,/\bripping me off\b/,/\bgreedy\b/]],
   ["trade",[/\bif you\b.*\bi(')?ll\b/,/\bin (exchange|return)\b/,/\btrade\b/,/\bgive you\b/,/\bswap\b/,/\bi can (give|offer|do)\b/,/\bwould you take\b/,/\bhow about\b/]],
   ["flexible",[/\bflexible\b/,/\bdon'?t (really )?care about\b/,/\bnot (that )?important to (me|us)\b/,/\bhappy to move\b/,/\bcan live with\b/,/\bopen to\b/]],
   ["deadline",[/\bhurry\b/,/\bquick/,/\bclose (this|it) (out|today)\b/,/\bwrap (this )?up\b/,/\brunning out\b/]],
@@ -883,10 +1117,10 @@ const INTENTS=[
 const PRIORITY={threat:5,insult:5,trade:4,priorities:4,flexible:3,why:3,deadline:2,flatter:1,small:0};
 function classify(text){
   const t=text.toLowerCase().trim();if(!t)return"none";
-  let best="none",bestScore=0;
+  let best="none",bs=0;
   for(const[name,pats]of INTENTS){
     const hits=pats.filter(p=>p.test(t)).length;
-    if(hits&&(hits>bestScore||(hits===bestScore&&PRIORITY[name]>(PRIORITY[best]||-1)))){best=name;bestScore=hits}
+    if(hits&&(hits>bs||(hits===bs&&PRIORITY[name]>(PRIORITY[best]||-1)))){best=name;bs=hits}
   }
   return best;
 }
@@ -895,224 +1129,239 @@ const ISSUE_WORDS={price:["price","unit cost","per unit","cost","cheaper","expen
   payment:["payment","net ","terms","pay ","invoice","cash"],
   delivery:["delivery","lead time","weeks","fast","ship","schedule"],
   exclusivity:["exclusiv","compet","rights","lock"]};
-function namedIssues(text,sc){
-  const t=text.toLowerCase();
-  return sc.issues.filter(i=>(ISSUE_WORDS[i.key]||[]).some(w=>t.includes(w))).map(i=>i.key);
-}
+const namedIssues=(text,sc)=>{const t=text.toLowerCase();
+  return sc.issues.filter(i=>(ISSUE_WORDS[i.key]||[]).some(w=>t.includes(w))).map(i=>i.key)};
 
 /* ======================================================================
-   8. Game state and screens.
+   9. Game state and screens.
    ====================================================================== */
 const app=document.getElementById("app");
-const hudEl=document.getElementById("hud");
-const clockEl=document.getElementById("clock");
 const restartBtn=document.getElementById("restart");
-let G=null;
-
+let G=null, typing=null;
 const ROUNDS=8;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const line=(p,key,rng)=>rng.pick(p.lines[key]||["..."]);
+const pickLine=(p,k,rng)=>rng.pick(p.lines[k]||["..."]);
+const reduced=()=>window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function newGame(seed){
   const s=seed??Math.floor(Math.random()*900000)+1000;
-  const sc=buildScenario(s);
-  const rng=rngFrom(s^0x5f3a);
+  const sc=buildScenario(s), rng=rngFrom(s^0x5f3a);
   const ch=makeCharacter(rng,sc.sellerCo);
   G={seed:s,sc,ch,rng,rounds:ROUNDS,round:1,
      seller:makeSeller(sc,ch.persona,ROUNDS,rng),
      theirs:null,draft:null,yours:null,mood:ch.persona.rest,
-     said:"",note:"",outcome:null,
+     said:"",note:"",outcome:null,drawerOpen:false,
      log:{asked:false,insults:0,warmth:0,revealed:[],offers:[]}};
   const opening=G.seller.opening();
-  G.theirs=opening.picks.slice();
-  G.draft=opening.picks.slice();
+  G.theirs=opening.picks.slice();G.draft=opening.picks.slice();
   showBrief();
 }
 
-/* ---------------------------------------------------------------- brief */
+/* ------------------------------------------------------------- brief */
 function showBrief(){
-  const {sc,ch}=G;
-  hudEl.hidden=true;clockEl.hidden=true;restartBtn.hidden=true;
+  const {sc}=G;
+  restartBtn.hidden=true;
   const ranked=sc.issues.slice().sort((a,b)=>stakeYou(b)-stakeYou(a));
   const top=Math.max(...ranked.map(stakeYou));
   app.innerHTML=`
-  <div class="panel" style="margin-top:18px">
+  <div class="panel">
     <div class="eyebrow">Confidential brief &mdash; ${esc(sc.buyerRole)}</div>
-    <h1 style="font-size:clamp(28px,5vw,40px);margin-bottom:10px">${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))} supply agreement</h1>
+    <h1 style="font-size:clamp(27px,5vw,38px);margin:6px 0 10px">${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))} supply agreement</h1>
     <p class="lede">You buy for <strong>${esc(sc.buyerCo)}</strong>, ${esc(sc.product.buyer)}.
       Across the table is <strong>${esc(sc.sellerCo)}</strong>, ${esc(sc.product.seller)}.
-      You both score every term privately, and <strong>you are weighted differently</strong> &mdash;
+      You both score every term privately and <strong>you are weighted differently</strong> &mdash;
       so packages exist that beat the obvious compromise for both of you. Find them.</p>
     <div class="split">
       <div>
-        <div class="eyebrow">What the terms are worth to you</div>
-        <div class="prio">
-          ${ranked.map(i=>`<div class="prio-row">
-            <span>${esc(i.label)}</span>
-            <span class="prio-bar"><i style="width:${Math.round(stakeYou(i)/top*100)}%"></i></span>
-            <span>${stakeYou(i)}</span></div>`).join("")}
-        </div>
+        <div class="eyebrow" style="margin-bottom:10px">What the terms are worth to you</div>
+        ${ranked.map(i=>`<div class="prio-row">
+          <span>${esc(i.label)}</span>
+          <span class="prio-bar"><i style="width:${Math.round(stakeYou(i)/top*100)}%"></i></span>
+          <span>${stakeYou(i)}</span></div>`).join("")}
         <p style="color:var(--ink-dim);font-size:13px;margin-top:12px">
-          A perfect sweep is 100. Guard the top of that list; the bottom of it is
-          what you have to sell.</p>
+          A perfect sweep is 100. Guard the top of that list; the bottom is what you sell.</p>
       </div>
       <div>
         <div class="eyebrow">Your walk-away</div>
-        <div style="font-family:var(--display);font-size:56px;line-height:1;font-variant-numeric:tabular-nums">${sc.buyerWalk}</div>
-        <p style="color:var(--ink-dim);font-size:14px;margin-top:8px">
-          Sign for less than this and you did worse than not signing at all.
-          Walking away scores you exactly ${sc.buyerWalk}.</p>
-        <div class="eyebrow" style="margin-top:20px">The clock</div>
+        <div style="font-family:var(--display);font-size:54px;line-height:1;font-variant-numeric:tabular-nums">${sc.buyerWalk}</div>
+        <p style="color:var(--ink-dim);font-size:14px;margin-top:6px">
+          Sign for less and you did worse than not signing at all. Walking away scores exactly ${sc.buyerWalk}.</p>
+        <div class="eyebrow" style="margin-top:18px">The clock</div>
         <p style="color:var(--ink-dim);font-size:14px;margin:0">
-          ${ROUNDS} rounds. Their demands fall as it runs down, so patience is
-          leverage &mdash; but run it out and you both get nothing.</p>
+          ${ROUNDS} rounds. Their demands fall as it runs down &mdash; but run it out and you both get nothing.</p>
+        <div class="eyebrow" style="margin-top:18px">Read the room</div>
+        <p style="color:var(--ink-dim);font-size:14px;margin:0">
+          You are walking into their office. How they dress and where they sit
+          will tell you something true about them, if you look.</p>
       </div>
     </div>
     <div class="rule"></div>
-    <button class="btn primary" id="go" style="font-size:16px;padding:13px 22px">Take your seat</button>
+    <button class="btn primary" id="go" style="font-size:16px;padding:13px 22px">Walk into the room</button>
     <span style="color:var(--ink-faint);font-size:12px;margin-left:12px">deal #${G.seed}</span>
   </div>`;
   document.getElementById("go").onclick=()=>{
-    G.said=line(G.ch.persona,"open",G.rng);G.mood=G.ch.persona.rest;
+    G.mood=G.ch.persona.rest;
     showPlay();
+    speak(pickLine(G.ch.persona,"open",G.rng),G.ch.persona.rest,
+      `<b>The room:</b> ${esc(OFFICES[G.ch.persona.room].blurb)}`);
   };
 }
 
-/* ----------------------------------------------------------------- play */
+/* -------------------------------------------------------------- play */
 function showPlay(){
-  restartBtn.hidden=false;hudEl.hidden=false;clockEl.hidden=false;
+  restartBtn.hidden=false;
   app.innerHTML=`
-  <div class="table">
-    <div>
-      <div class="stage" id="stage">${drawPerson(G.ch,G.mood)}</div>
-      <div class="nameplate">
-        <strong id="pname">${esc(G.ch.name)}</strong>
-        <em>${esc(G.ch.title)}, ${esc(G.ch.company)}</em>
+    <div class="scene" id="scene">${sceneSVG(G.ch,G.mood,G.seed)}</div>
+    <div class="dialogue">
+      <div class="dl-head">
+        <span class="dl-name">${esc(G.ch.name)}</span>
+        <span class="dl-role">${esc(G.ch.title)}, ${esc(G.ch.company)}</span>
+        <span class="spacer"></span>
+        <span class="dl-round" id="round">Round 1 / ${G.rounds}</span>
       </div>
-      <div class="bubble" id="bubble"></div>
-      <div class="panel" style="margin-top:14px">
-        <div class="eyebrow" style="color:var(--them)">Their offer on the table</div>
-        <table class="sheet" id="theirsheet"></table>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:13px;color:var(--ink-dim)">
-          <span>Worth <b class="num" id="theirworth" style="color:var(--ink);font-size:17px">0</b> to you</span>
-          <span class="num" id="theirvalue"></span>
-        </div>
-      </div>
+      <p class="dl-text" id="dl"></p>
+      <div class="dl-note" id="note" hidden></div>
     </div>
-
-    <div>
-      <div class="panel">
-        <div class="eyebrow">Your counter-offer &mdash; numbers are what each option is worth to you</div>
-        <div class="terms" id="terms"></div>
-        <div class="meter">
-          <div class="meter-top">
-            <span>This package is worth</span>
-            <b class="num" id="yourscore">0</b>
-          </div>
-          <div class="bar"><div class="fill" id="fill"></div><div class="floor" id="floor"></div></div>
-          <div class="meter-legend">
-            <span>walk away = <b class="num">${G.sc.buyerWalk}</b></span>
-            <span class="num" id="yourvalue"></span>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn primary" id="send">Send this offer</button>
-          <button class="btn" id="accept">Accept theirs</button>
-          <button class="btn ghost" id="copy">Copy their terms</button>
-        </div>
-        <div class="actions" style="margin-top:8px">
-          <button class="btn ghost" id="ask">Ask what matters to them</button>
-          <button class="btn ghost danger" id="walk">Walk away</button>
-        </div>
-        <div class="say">
-          <input id="sayinput" placeholder="Say something to them&hellip;" autocomplete="off">
-          <button class="btn" id="saybtn">Say it</button>
-        </div>
+    <div class="actions">
+      <button class="btn primary" id="counter">Open the term sheet</button>
+      <button class="btn" id="accept">Accept their offer</button>
+      <button class="btn ghost" id="ask">Ask what matters</button>
+      <span class="spacer"></span>
+      <button class="btn ghost danger" id="walk">Walk away</button>
+      <div class="say-row">
+        <input id="sayinput" placeholder="Say something to them&hellip;" autocomplete="off">
+        <button class="btn" id="saybtn">Say it</button>
       </div>
-    </div>
-  </div>`;
-
-  document.getElementById("send").onclick=sendOffer;
+    </div>`;
+  document.getElementById("counter").onclick=openDrawer;
   document.getElementById("accept").onclick=acceptTheirs;
-  document.getElementById("copy").onclick=()=>{G.draft=G.theirs.slice();paint()};
   document.getElementById("ask").onclick=askPriorities;
   document.getElementById("walk").onclick=walkAway;
   document.getElementById("saybtn").onclick=saySomething;
   document.getElementById("sayinput").addEventListener("keydown",e=>{if(e.key==="Enter")saySomething()});
+  document.getElementById("scene").onclick=finishTyping;
   restartBtn.onclick=()=>newGame();
-  paint();
 }
 
-function paint(){
-  const {sc}=G;
-  // clock + hud
-  clockEl.innerHTML=Array.from({length:G.rounds},(_,i)=>
-    `<span class="tick ${i+1<G.round?"used":i+1===G.round?"now":""}"></span>`).join("");
-  hudEl.textContent=`Round ${G.round} of ${G.rounds}`;
-
-  // speech
-  const bub=document.getElementById("bubble");
-  if(bub)bub.innerHTML=`<p>${esc(G.said)}</p>`+(G.note?`<div class="note">${G.note}</div>`:"");
-  const stage=document.getElementById("stage");
-  if(stage)stage.innerHTML=drawPerson(G.ch,G.mood);
-
-  // their sheet
-  const ts=document.getElementById("theirsheet");
-  if(ts){
-    ts.innerHTML=sc.issues.map((iss,i)=>{
-      const o=optionOf(iss,G.theirs[i]);
-      return`<tr><td>${esc(iss.label)}</td><td style="color:var(--ink);text-align:left">${esc(o.label)}</td><td>${o.you}</td></tr>`;
-    }).join("");
-    const t=scoreOf(sc,G.theirs);
-    document.getElementById("theirworth").textContent=t.you;
-    document.getElementById("theirvalue").textContent=money(contractValue(sc,G.theirs))+"/yr";
-  }
-
-  // your builder
-  const terms=document.getElementById("terms");
-  if(terms){
-    terms.innerHTML=sc.issues.map((iss,i)=>`
-      <div class="term">
-        <div class="term-head">
-          <span class="term-name">${esc(iss.label)}</span>
-          <span class="stake">${stakeYou(iss)} pts at stake</span>
-        </div>
-        <div class="opts">
-          ${iss.options.map(o=>`
-            <button class="opt${o.key===G.theirs[i]?" theirs":""}" data-i="${i}" data-k="${esc(o.key)}"
-              aria-pressed="${o.key===G.draft[i]}">${esc(o.label)}<span class="pts">${o.you}</span></button>`).join("")}
-        </div>
-      </div>`).join("");
-    terms.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-      G.draft[Number(b.dataset.i)]=b.dataset.k;paint();
-    });
-    const y=scoreOf(sc,G.draft);
-    document.getElementById("yourscore").textContent=y.you;
-    const fill=document.getElementById("fill");
-    fill.style.width=y.you+"%";
-    fill.classList.toggle("under",y.you<sc.buyerWalk);
-    document.getElementById("floor").style.left=sc.buyerWalk+"%";
-    document.getElementById("yourvalue").textContent=money(contractValue(sc,G.draft))+"/yr";
-  }
+/* Dialogue types itself out, like a game. Click to skip. */
+function speak(text,mood,note){
+  G.said=text;G.note=note||"";
+  if(mood)G.mood=mood;
+  const scene=document.getElementById("scene");
+  if(scene)scene.innerHTML=sceneSVG(G.ch,G.mood,G.seed);
+  const dl=document.getElementById("dl"), n=document.getElementById("note");
+  const r=document.getElementById("round");
+  if(r)r.textContent=`Round ${Math.min(G.round,G.rounds)} / ${G.rounds}`;
+  if(n){n.innerHTML=G.note;n.hidden=!G.note}
+  if(!dl)return;
+  if(typing){clearInterval(typing);typing=null}
+  if(reduced()){dl.textContent='"'+text+'"';dl.classList.remove("typing");return}
+  const full='"'+text+'"';let i=0;
+  dl.textContent="";dl.classList.add("typing");
+  typing=setInterval(()=>{
+    i+=2;dl.textContent=full.slice(0,i);
+    if(i>=full.length){clearInterval(typing);typing=null;dl.classList.remove("typing")}
+  },16);
 }
-
+function finishTyping(){
+  if(!typing)return;
+  clearInterval(typing);typing=null;
+  const dl=document.getElementById("dl");
+  dl.textContent='"'+G.said+'"';dl.classList.remove("typing");
+}
 function react(mood,fx){
   G.mood=mood;
-  const stage=document.getElementById("stage");
-  if(stage&&fx){stage.classList.remove("shake","pop");void stage.offsetWidth;stage.classList.add(fx)}
+  const scene=document.getElementById("scene");
+  if(!scene)return;
+  scene.innerHTML=sceneSVG(G.ch,mood,G.seed);
+  if(fx&&!reduced()){scene.classList.remove("shake","pop");void scene.offsetWidth;scene.classList.add(fx)}
 }
-/* An in-page confirmation. The sandbox blocks native confirm(), and a real
-   dialog reads better than a browser chrome box anyway. */
+
+/* ------------------------------------------------------- term sheet */
+function openDrawer(){
+  if(document.getElementById("drawer"))return;
+  const back=document.createElement("div");back.className="backdrop";back.id="backdrop";
+  const d=document.createElement("div");d.className="drawer";d.id="drawer";
+  document.body.appendChild(back);document.body.appendChild(d);
+  back.onclick=closeDrawer;
+  renderDrawer();
+}
+function closeDrawer(){
+  document.getElementById("drawer")?.remove();
+  document.getElementById("backdrop")?.remove();
+}
+function renderDrawer(){
+  const d=document.getElementById("drawer");if(!d)return;
+  const {sc}=G, theirScore=scoreOf(sc,G.theirs), y=scoreOf(sc,G.draft);
+  d.innerHTML=`
+    <div class="grip"></div>
+    <div class="drawer-head">
+      <div><h3 style="font-size:19px">Term sheet</h3>
+        <div class="eyebrow" style="margin:2px 0 0">Round ${G.round} of ${G.rounds}</div></div>
+      <button class="btn ghost small" id="closedrawer">Close</button>
+    </div>
+    <div class="cols">
+      <div class="card">
+        <div class="eyebrow" style="color:var(--them)">Their offer</div>
+        <table class="sheet">${sc.issues.map((iss,i)=>{
+          const o=optionOf(iss,G.theirs[i]);
+          return`<tr><td>${esc(iss.label)}</td><td style="color:var(--ink)">${esc(o.label)}</td><td>${o.you}</td></tr>`;
+        }).join("")}</table>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:13px;color:var(--ink-dim)">
+          <span>Worth <b style="color:var(--ink)">${theirScore.you}</b> to you</span>
+          <span class="num">${money(contractValue(sc,G.theirs))}/yr</span>
+        </div>
+        <button class="btn ghost small" id="copyterms" style="margin-top:10px;width:100%">Start from their terms</button>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">Your counter &mdash; numbers are what each option is worth to you</div>
+        <div class="terms" id="terms"></div>
+        <div class="meter">
+          <div class="meter-top"><span>Your package is worth</span><b class="num" id="ys">${y.you}</b></div>
+          <div class="bar"><div class="fill${y.you<sc.buyerWalk?" under":""}" id="fill" style="width:${y.you}%"></div>
+            <div class="floor" style="left:${sc.buyerWalk}%"></div></div>
+          <div class="meter-legend"><span>walk away = <b class="num">${sc.buyerWalk}</b></span>
+            <span class="num" id="yv">${money(contractValue(sc,G.draft))}/yr</span></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+          <button class="btn primary" id="send" style="flex:1 1 auto">Send this offer</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("closedrawer").onclick=closeDrawer;
+  document.getElementById("copyterms").onclick=()=>{G.draft=G.theirs.slice();renderDrawer()};
+  document.getElementById("send").onclick=sendOffer;
+  paintTerms();
+}
+function paintTerms(){
+  const {sc}=G, terms=document.getElementById("terms");if(!terms)return;
+  terms.innerHTML=sc.issues.map((iss,i)=>`
+    <div>
+      <div class="term-head"><span class="term-name">${esc(iss.label)}</span>
+        <span class="stake">${stakeYou(iss)} pts at stake</span></div>
+      <div class="opts">${iss.options.map(o=>`
+        <button class="opt${o.key===G.theirs[i]?" theirs":""}" data-i="${i}" data-k="${esc(o.key)}"
+          aria-pressed="${o.key===G.draft[i]}">${esc(o.label)}<span class="pts">${o.you}</span></button>`).join("")}</div>
+    </div>`).join("");
+  terms.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    G.draft[Number(b.dataset.i)]=b.dataset.k;
+    paintTerms();
+    const y=scoreOf(sc,G.draft);
+    document.getElementById("ys").textContent=y.you;
+    const f=document.getElementById("fill");
+    f.style.width=y.you+"%";f.classList.toggle("under",y.you<sc.buyerWalk);
+    document.getElementById("yv").textContent=money(contractValue(sc,G.draft))+"/yr";
+  });
+}
+
+/* --------------------------------------------------------- dialogs */
 function ask(title,body,okLabel){
   return new Promise(resolve=>{
-    const back=document.createElement("div");
-    back.className="modal-back";
+    const back=document.createElement("div");back.className="modal-back";
     back.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}">
       <h3>${esc(title)}</h3><p>${body}</p>
-      <div class="modal-actions">
-        <button class="btn" data-no>Go back</button>
-        <button class="btn primary" data-yes>${esc(okLabel)}</button>
-      </div></div>`;
+      <div class="modal-actions"><button class="btn" data-no>Go back</button>
+        <button class="btn primary" data-yes>${esc(okLabel)}</button></div></div>`;
     document.body.appendChild(back);
     const done=v=>{back.remove();document.removeEventListener("keydown",onKey);resolve(v)};
     const onKey=e=>{if(e.key==="Escape")done(false)};
@@ -1123,59 +1372,49 @@ function ask(title,body,okLabel){
     back.querySelector("[data-no]").focus();
   });
 }
-function toast(msg){
-  const el=document.createElement("div");
-  el.className="toast";el.textContent=msg;document.body.appendChild(el);
-  setTimeout(()=>el.remove(),3400);
-}
 
-/* --------------------------------------------------------- the actions */
+/* --------------------------------------------------------- actions */
 async function sendOffer(){
-  const {sc}=G, picks=G.draft.slice();
-  const y=scoreOf(sc,picks);
+  const {sc}=G, picks=G.draft.slice(), y=scoreOf(sc,picks);
   if(y.you<sc.buyerWalk){
     const ok=await ask("That offer is below your own floor",
       `This package is worth <b>${y.you}</b> to you. Your walk-away is <b>${sc.buyerWalk}</b>.
        If they sign it, you have done worse than not signing at all.`,"Send it anyway");
     if(!ok)return;
   }
-
+  closeDrawer();
   G.yours=picks;G.log.offers.push(picks);
-  const reply=G.seller.respond(picks,G.round);
-  const p=G.ch.persona;
+  const reply=G.seller.respond(picks,G.round), p=G.ch.persona;
 
   if(reply.kind==="accept"){
     const fleeced=reply.mood==="delight";
-    G.said=line(p,fleeced?"delight":reply.mood==="thin"?"thin":"accept",G.rng);
     react(fleeced?"delighted":reply.mood==="thin"?"smug":"pleased","pop");
-    G.note=fleeced?"They could not sign it fast enough. That is never a good sign.":"";
-    paint();
-    return setTimeout(()=>finish("signed",picks,fleeced),950);
+    speak(pickLine(p,fleeced?"delight":reply.mood==="thin"?"thin":"accept",G.rng),null,
+      fleeced?"They could not sign it fast enough. That is never a good sign.":"");
+    return setTimeout(()=>finish("signed",picks,fleeced),2100);
   }
   if(reply.kind==="rage"){
-    G.said=line(p,"rage",G.rng);react("furious","shake");
-    G.note="They shove the chair back, sweep the term sheet off the table and walk out.";
-    paint();
-    return setTimeout(()=>finish("raged",null,false),1400);
+    react("furious","shake");
+    speak(pickLine(p,"rage",G.rng),null,
+      "They shove the chair back, sweep the term sheet off the desk and walk out.");
+    return setTimeout(()=>finish("raged",null,false),2600);
   }
   if(reply.kind==="nodeal"){
-    G.said=line(p,"walk",G.rng);react("angry","shake");G.note="";paint();
-    return setTimeout(()=>finish("theywalked",null,false),1200);
+    react("angry","shake");
+    speak(pickLine(p,"walk",G.rng),null,"");
+    return setTimeout(()=>finish("theywalked",null,false),2200);
   }
-
   const moved=movedTerm(G.theirs,reply.offer.picks);
-  G.theirs=reply.offer.picks.slice();
-  G.said=line(p,reply.mood,G.rng);
-  react(reply.mood==="insult"?"angry":reply.mood==="close"?"thinking":"annoyed",null);
-  G.note=moved?`They moved on <b>${esc(moved)}</b>.`:"";
-  G.round++;
-  paint();
-  if(G.round>G.rounds){setTimeout(()=>finish("timeout",null,false),700)}
+  G.theirs=reply.offer.picks.slice();G.round++;
+  const mood=reply.mood==="insult"?"angry":reply.mood==="close"?"thinking":"annoyed";
+  react(mood,null);
+  speak(pickLine(p,reply.mood,G.rng),null,
+    moved?`They moved on <b>${esc(moved)}</b>. Their offer is now worth <b>${scoreOf(sc,G.theirs).you}</b> to you.`
+         :`Their offer is worth <b>${scoreOf(sc,G.theirs).you}</b> to you.`);
+  if(G.round>G.rounds)setTimeout(()=>finish("timeout",null,false),2200);
 }
-function movedTerm(before,after){
-  for(let i=0;i<before.length;i++)if(before[i]!==after[i])return G.sc.issues[i].label;
-  return null;
-}
+function movedTerm(a,b){for(let i=0;i<a.length;i++)if(a[i]!==b[i])return G.sc.issues[i].label;return null}
+
 async function acceptTheirs(){
   const {sc}=G, y=scoreOf(sc,G.theirs);
   if(y.you<sc.buyerWalk){
@@ -1184,67 +1423,60 @@ async function acceptTheirs(){
        Signing this is the one move that is strictly worse than no deal.`,"Sign it anyway");
     if(!ok)return;
   }
+  closeDrawer();
   finish("signed",G.theirs.slice(),false);
 }
 function askPriorities(){
   G.log.asked=true;
-  G.said=G.seller.hint();react("thinking",null);
-  G.note="Asking cost you nothing and no round. Most people never do it once.";
-  paint();
+  react("thinking",null);
+  speak(G.seller.hint(),null,"Asking cost you nothing and no round. Most people never do it once.");
 }
 async function walkAway(){
   const y=scoreOf(G.sc,G.theirs).you;
   const ok=await ask("Leave the table?",
     `Walking away scores you <b>${G.sc.buyerWalk}</b>. Their current offer is worth <b>${y}</b>.
-     ${G.sc.buyerWalk>y?"Walking is the better of the two right now."
-                      :"Their offer already beats walking away."}`,"Walk away");
+     ${G.sc.buyerWalk>y?"Walking is the better of the two right now.":"Their offer already beats walking away."}`,"Walk away");
   if(ok)finish("youwalked",null,false);
 }
 function saySomething(){
-  const input=document.getElementById("sayinput");
-  const text=input.value.trim();if(!text)return;
+  const input=document.getElementById("sayinput"), text=input.value.trim();
+  if(!text)return;
   input.value="";
   const p=G.ch.persona, kind=classify(text), named=namedIssues(text,G.sc);
   const labels=named.map(k=>G.sc.issues.find(i=>i.key===k).label.toLowerCase()).join(", ");
-
-  if(kind==="priorities"){return askPriorities()}
-  let key="small",mood="pleased",note="";
+  if(kind==="priorities")return askPriorities();
+  let key="small",mood=p.rest,note="";
   switch(kind){
     case"why":key="pressed";mood="smug";break;
     case"threat":key="threat";mood="smug";note="Threats are cheap. They only work if they think you mean it.";break;
-    case"insult":
-      key="insult";mood="angry";G.seller.insults++;G.log.insults++;
+    case"insult":key="insult";mood="angry";G.seller.insults++;G.log.insults++;
       note="That cost you goodwill. Some people have very little to spare.";break;
-    case"flatter":
-      key="small";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;
+    case"flatter":key="small";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;
       note="Warmth is free and it buys you patience.";break;
-    case"flexible":
-      key="small";mood="smug";
+    case"flexible":key="small";mood="smug";
       named.forEach(k=>{G.seller.nudge(k,-1.2);if(!G.log.revealed.includes(k))G.log.revealed.push(k)});
       note=named.length?`You just told them you don't care about ${esc(labels)}. They will stop paying you for it.`
                        :"You signalled flexibility without saying where. That is the safer version.";break;
-    case"trade":
-      key="close";mood="thinking";named.forEach(k=>G.seller.nudge(k,0.8));
+    case"trade":key="close";mood="thinking";named.forEach(k=>G.seller.nudge(k,0.8));
       note=named.length?`You flagged ${esc(labels)} as something you want. Now put it in an actual offer.`
                        :"Naming a trade out loud is good. Now table it as an offer.";break;
     case"deadline":key="small";mood="bored";break;
-    default:key="small";mood=p.rest;
   }
-  G.said=line(p,key,G.rng);G.note=note;react(mood,null);paint();
+  react(mood,null);
+  speak(pickLine(p,key,G.rng),null,note);
 }
 
 /* ======================================================================
-   9. The debrief. Every number here is exact: the game knows all 1,280
-   packages and both hidden scoresheets.
+   10. The debrief.
    ====================================================================== */
 function finish(kind,picks,fleeced){
+  if(typing){clearInterval(typing);typing=null}
+  closeDrawer();
   G.outcome={kind,picks,fleeced};
   showDebrief();
 }
-
-/* No SINGLE term can ever help both sides -- each issue is a straight tug
-   of war. Gains for both exist only in two-term swaps, which is the
-   entire lesson of the game. */
+/* No SINGLE term can help both sides -- each issue is a straight tug of
+   war. Gains for both exist only in two-term swaps. */
 function winWinTrades(sc,picks){
   const base=scoreOf(sc,picks), out=[], seen=new Set();
   for(let a=0;a<sc.issues.length;a++)for(let b=a+1;b<sc.issues.length;b++){
@@ -1256,10 +1488,8 @@ function winWinTrades(sc,picks){
         const s=scoreOf(sc,alt);
         if(s.you<base.you||s.them<base.them||(s.you===base.you&&s.them===base.them))continue;
         const aDown=oa.you<=optionOf(sc.issues[a],picks[a]).you;
-        const give=aDown?a:b, take=aDown?b:a;
-        const giveOpt=aDown?oa:ob, takeOpt=aDown?ob:oa;
+        const give=aDown?a:b, take=aDown?b:a, giveOpt=aDown?oa:ob, takeOpt=aDown?ob:oa;
         const tag=sc.issues[give].label+"|"+sc.issues[take].label;
-        if(seen.has(tag))continue;
         out.push({tag,giveLabel:sc.issues[give].label,giveFrom:optionOf(sc.issues[give],picks[give]).label,giveTo:giveOpt.label,
           takeLabel:sc.issues[take].label,takeFrom:optionOf(sc.issues[take],picks[take]).label,takeTo:takeOpt.label,
           you:s.you-base.you,them:s.them-base.them});
@@ -1270,9 +1500,8 @@ function winWinTrades(sc,picks){
   const uniq=[];for(const t of out){if(seen.has(t.tag))continue;seen.add(t.tag);uniq.push(t)}
   return uniq;
 }
-
 function buildReview(){
-  const {sc,outcome,log}=G;
+  const {sc,outcome}=G;
   const viable=viablePackages(sc);
   const best=viable.length?viable.reduce((a,b)=>b.you>a.you?b:a):null;
   const bestScore=best?best.you:sc.buyerWalk;
@@ -1280,25 +1509,17 @@ function buildReview(){
   const s=dealt?scoreOf(sc,outcome.picks):{you:sc.buyerWalk,them:sc.sellerWalk};
   const available=Math.max(1,bestScore-sc.buyerWalk);
   const capture=Math.max(0,Math.min(1,(s.you-sc.buyerWalk)/available));
-  const joint=s.you+s.them, mj=maxJoint(sc);
-  const efficiency=dealt?joint/mj:0;
-
+  const joint=s.you+s.them, mj=maxJoint(sc), efficiency=dealt?joint/mj:0;
   let valueLeft=0;
-  if(dealt){
-    let bestSum=joint;
-    for(const p of allPackages(sc))
-      if(p.you>=s.you&&p.them>=s.them&&p.you+p.them>bestSum)bestSum=p.you+p.them;
-    valueLeft=bestSum-joint;
-  }
-
+  if(dealt){let bs=joint;
+    for(const p of allPackages(sc))if(p.you>=s.you&&p.them>=s.them&&p.you+p.them>bs)bs=p.you+p.them;
+    valueLeft=bs-joint;}
   const rows=dealt?sc.issues.map((iss,i)=>{
-    const o=optionOf(iss,outcome.picks[i]);
-    const ys=stakeYou(iss),ts=stakeThem(iss);
+    const o=optionOf(iss,outcome.picks[i]), ys=stakeYou(iss), ts=stakeThem(iss);
     const yShare=ys?o.you/ys:0, tShare=ts?o.them/ts:0;
     return{label:iss.label,you:o.you,yourStake:ys,them:o.them,theirStake:ts,
       winner:Math.abs(yShare-tShare)<0.2?"split":(yShare>tShare?"you":"them"),yShare};
   }):[];
-
   let grade="F",note="No deal. A signable package existed and neither of you found it.";
   if(dealt){
     const v=0.65*capture+0.35*efficiency;
@@ -1310,14 +1531,12 @@ function buildReview(){
     grade="F";note="This deal cost you most of what was available.";
     for(const[cut,g,n]of scale)if(v>=cut){grade=g;note=n;break}
   }
-  return{s,rows,capture,efficiency,joint,maxJoint:mj,valueLeft,grade,note,
-    best,bestScore,dealt,trades:dealt?winWinTrades(sc,outcome.picks).slice(0,3):[],viable};
+  return{s,rows,capture,efficiency,valueLeft,grade,note,best,bestScore,dealt,viable,
+    trades:dealt?winWinTrades(sc,outcome.picks).slice(0,3):[]};
 }
-
 function lessonsFor(rev){
   const {sc,outcome,log}=G, out=[];
   const add=(sev,title,detail)=>out.push({sev,title,detail});
-
   if(rev.dealt&&rev.s.you<sc.buyerWalk)
     add("critical","You signed a deal worse than no deal",
       `This package is worth ${rev.s.you} to you. Walking away was worth ${sc.buyerWalk}. Your walk-away is not a guideline; it is the whole reason you have one.`);
@@ -1330,7 +1549,6 @@ function lessonsFor(rev){
   if(!rev.dealt)
     add("major","A deal existed and you did not find it",
       `${rev.viable.length} packages would have been signed by both of you. The best was worth ${rev.bestScore} to you, against ${sc.buyerWalk} for walking. No deal is sometimes right; here it cost you ${rev.bestScore-sc.buyerWalk} points.`);
-
   if(rev.rows.length){
     const biggest=rev.rows.reduce((a,b)=>b.yourStake>a.yourStake?b:a);
     const cheapest=rev.rows.reduce((a,b)=>b.yourStake<a.yourStake?b:a);
@@ -1340,29 +1558,24 @@ function lessonsFor(rev){
     if(cheapest.yShare>0.5&&cheapest.theirStake>cheapest.yourStake*2)
       add("major",`You kept ${cheapest.label.toLowerCase()}, which you did not need`,
         `That term was worth ${cheapest.yourStake} to you and ${cheapest.theirStake} to them. Handing it over costs you almost nothing and buys enormous goodwill. It is the most reliable trade in the game and you sat on it.`);
-    const middles=G.sc.issues.filter((iss,i)=>{
+    const middles=sc.issues.filter((iss,i)=>{
       const idx=iss.options.findIndex(o=>o.key===outcome.picks[i]);
-      return idx>0&&idx<iss.options.length-1;
-    }).length;
+      return idx>0&&idx<iss.options.length-1}).length;
     if(middles>=3)
       add("major","You split the difference on almost everything",
         `${middles} of the five terms landed on a middle option. Meeting in the middle feels fair and is usually the worst deal available: it wins you nothing you care about and gives them nothing they care about.`);
   }
-
   if(rev.dealt&&rev.valueLeft>0)
     add(rev.valueLeft>12?"major":"minor",`You left ${rev.valueLeft} points on the table`,
       "That is value neither of you collected. A package existed that was better for BOTH of you, so this is not about who won &mdash; it is money you both set on fire.");
   else if(rev.dealt)
     add("good","Your deal was efficient",
       "No package existed that would have been better for both of you. Whatever else happened, the two of you found the whole pie.");
-
   if(!log.asked)
     add("major","You never asked what mattered to them",
       "It costs nothing, it costs no round, and most of them will tell you something true. You cannot trade efficiently while guessing what the other side values.");
-  else
-    add("good","You asked what they cared about",
+  else add("good","You asked what they cared about",
       "The highest-return question in any negotiation, and most people never ask it once.");
-
   if(log.revealed.length){
     const labels=log.revealed.map(k=>sc.issues.find(i=>i.key===k).label.toLowerCase()).join(", ");
     add("major","You told them where you would bend",
@@ -1385,53 +1598,49 @@ function lessonsFor(rev){
   if(rev.dealt&&rev.capture>=0.8)
     add("good","You took most of what was available",
       `The most any buyer could have extracted here, given what they would sign, was ${rev.bestScore}. You got ${rev.s.you}.`);
-
   const order={critical:0,major:1,minor:2,good:3};
   out.sort((a,b)=>order[a.sev]-order[b.sev]);
   return out;
 }
-
 function frontierSVG(rev){
-  const sc=G.sc, W=440,H=290,pad=34;
-  const x=v=>pad+(v/100)*(W-pad-14);
-  const y=v=>H-pad-(v/100)*(H-pad-16);
+  const sc=G.sc, CW=440,CH=290,pad=34;
+  const x=v=>pad+(v/100)*(CW-pad-14), y=v=>CH-pad-(v/100)*(CH-pad-16);
   const dots=allPackages(sc).map(p=>`<circle cx="${x(p.you).toFixed(1)}" cy="${y(p.them).toFixed(1)}" r="1.5" fill="#3A342C"/>`).join("");
   const front=frontier(sc).map(p=>`<circle cx="${x(p.you).toFixed(1)}" cy="${y(p.them).toFixed(1)}" r="2.8" fill="#6F675B"/>`).join("");
   const bestMark=rev.best?`<circle cx="${x(rev.best.you)}" cy="${y(rev.best.them)}" r="6" fill="none" stroke="#C9873F" stroke-width="2.5"/>`:"";
   const you=rev.dealt
-    ?`<circle cx="${x(rev.s.you)}" cy="${y(rev.s.them)}" r="7.5" fill="#4EA8A0" stroke="#171512" stroke-width="2.5"/>`
+    ?`<circle cx="${x(rev.s.you)}" cy="${y(rev.s.them)}" r="7.5" fill="#4EA8A0" stroke="#12100E" stroke-width="2.5"/>`
     :`<g stroke="#C2554A" stroke-width="3.5" stroke-linecap="round"><path d="M ${x(sc.buyerWalk)-6} ${y(sc.sellerWalk)-6} L ${x(sc.buyerWalk)+6} ${y(sc.sellerWalk)+6}"/><path d="M ${x(sc.buyerWalk)+6} ${y(sc.sellerWalk)-6} L ${x(sc.buyerWalk)-6} ${y(sc.sellerWalk)+6}"/></g>`;
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img"
+  return `<svg viewBox="0 0 ${CW} ${CH}" style="width:100%;height:auto" role="img"
       aria-label="Every possible deal plotted by your score and theirs, with yours marked">
-    <line x1="${pad}" y1="${H-pad}" x2="${W-10}" y2="${H-pad}" stroke="#3A342C"/>
-    <line x1="${pad}" y1="14" x2="${pad}" y2="${H-pad}" stroke="#3A342C"/>
-    <line x1="${x(sc.buyerWalk)}" y1="14" x2="${x(sc.buyerWalk)}" y2="${H-pad}" stroke="#4EA8A0" stroke-width="1" stroke-dasharray="4 4" opacity=".55"/>
-    <line x1="${pad}" y1="${y(sc.sellerWalk)}" x2="${W-10}" y2="${y(sc.sellerWalk)}" stroke="#C9873F" stroke-width="1" stroke-dasharray="4 4" opacity=".55"/>
+    <line x1="${pad}" y1="${CH-pad}" x2="${CW-10}" y2="${CH-pad}" stroke="#3A342C"/>
+    <line x1="${pad}" y1="14" x2="${pad}" y2="${CH-pad}" stroke="#3A342C"/>
+    <line x1="${x(sc.buyerWalk)}" y1="14" x2="${x(sc.buyerWalk)}" y2="${CH-pad}" stroke="#4EA8A0" stroke-dasharray="4 4" opacity=".55"/>
+    <line x1="${pad}" y1="${y(sc.sellerWalk)}" x2="${CW-10}" y2="${y(sc.sellerWalk)}" stroke="#C9873F" stroke-dasharray="4 4" opacity=".55"/>
     ${dots}${front}${bestMark}${you}
-    <text x="${pad}" y="${H-12}" fill="#6F675B" font-size="11" font-family="Archivo,sans-serif">0</text>
-    <text x="${W-14}" y="${H-12}" fill="#6F675B" font-size="11" text-anchor="end" font-family="Archivo,sans-serif">your score 100</text>
+    <text x="${pad}" y="${CH-12}" fill="#6F675B" font-size="11" font-family="Archivo,sans-serif">0</text>
+    <text x="${CW-14}" y="${CH-12}" fill="#6F675B" font-size="11" text-anchor="end" font-family="Archivo,sans-serif">your score 100</text>
     <text x="${pad-8}" y="20" fill="#6F675B" font-size="11" text-anchor="end" font-family="Archivo,sans-serif">100</text>
-    <text x="14" y="${H/2}" fill="#6F675B" font-size="11" text-anchor="middle" font-family="Archivo,sans-serif" transform="rotate(-90 14 ${H/2})">their score</text>
+    <text x="14" y="${CH/2}" fill="#6F675B" font-size="11" text-anchor="middle" font-family="Archivo,sans-serif" transform="rotate(-90 14 ${CH/2})">their score</text>
     <text x="${x(sc.buyerWalk)+5}" y="26" fill="#4EA8A0" font-size="10" font-family="Archivo,sans-serif">your floor</text>
-    <text x="${W-14}" y="${y(sc.sellerWalk)-6}" fill="#C9873F" font-size="10" text-anchor="end" font-family="Archivo,sans-serif">their floor</text>
+    <text x="${CW-14}" y="${y(sc.sellerWalk)-6}" fill="#C9873F" font-size="10" text-anchor="end" font-family="Archivo,sans-serif">their floor</text>
   </svg>`;
 }
-
 const HEADLINE={signed:"Deal signed.",youwalked:"You walked away. No deal.",
   theywalked:"They walked away. No deal.",raged:"They lost their temper and walked out.",
   timeout:"The clock ran out. No deal."};
 
 function showDebrief(){
-  const rev=buildReview(), lessons=lessonsFor(rev), sc=G.sc, p=G.ch.persona;
+  const rev=buildReview(), lessons=lessonsFor(rev), p=G.ch.persona;
   const good=["A+","A","B"].includes(rev.grade);
-  const farewell=line(p,good?"goodbye":"badbye",G.rng);
+  const farewell=pickLine(p,good?"goodbye":"badbye",G.rng);
   const gradeClass=good?"hi":(rev.grade==="C"||rev.grade==="D")?"mid":"lo";
-  hudEl.hidden=true;clockEl.hidden=true;restartBtn.hidden=false;
-
+  restartBtn.hidden=false;
   app.innerHTML=`
-  <div class="panel" style="margin-top:18px">
+  <div class="scene" style="border-radius:13px;margin-bottom:14px">${sceneSVG(G.ch,good?"pleased":"smug",G.seed)}</div>
+  <div class="panel">
     <div class="eyebrow">${esc(HEADLINE[G.outcome.kind]||"Session over")}</div>
-    <div class="verdict">
+    <div class="verdict" style="margin-top:12px">
       <div class="grade ${gradeClass}">${rev.grade}</div>
       <div class="stats">
         <div class="stat"><b>${rev.s.you}</b><span>your score</span></div>
@@ -1443,52 +1652,46 @@ function showDebrief(){
     </div>
     <p class="lede" style="margin-top:14px">${esc(rev.note)}</p>
   </div>
-
-  <div class="table" style="align-items:start">
+  <div class="cols" style="margin-top:14px">
     <div>
       <div class="panel">
         <div class="eyebrow">Who you were up against</div>
-        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
-          <div style="flex:0 0 130px;max-width:130px">${drawPerson(G.ch,good?"pleased":"smug")}</div>
-          <div style="flex:1 1 180px;min-width:0">
-            <strong style="font-family:var(--display);font-size:18px">${esc(G.ch.name)}</strong>
-            <div style="color:var(--them);font-family:var(--display);font-size:15px">${esc(p.name)}</div>
-            <p style="color:var(--ink-dim);font-size:13px;margin:6px 0 0">${esc(p.blurb)}</p>
-            <p style="color:var(--ink-dim);font-size:13px;margin:6px 0 0"><em>Tell:</em> ${esc(p.tell)}</p>
-          </div>
-        </div>
-        <div class="bubble" style="margin-top:14px"><p>${esc(farewell)}</p></div>
+        <h3 style="font-size:19px;margin-top:6px">${esc(G.ch.name)}</h3>
+        <div style="color:var(--them);font-family:var(--display);font-size:16px">${esc(p.name)}</div>
+        <p style="color:var(--ink-dim);font-size:13px;margin:8px 0 0">${esc(p.blurb)}</p>
+        <p style="color:var(--ink-dim);font-size:13px;margin:8px 0 0"><em>Tell:</em> ${esc(p.tell)}</p>
+        <div class="rule" style="margin:14px 0"></div>
+        <div class="eyebrow">What you could have read off them</div>
+        <p style="color:var(--ink-dim);font-size:13px;margin:8px 0 0"><b style="color:var(--ink)">The look:</b> ${esc(p.look)}</p>
+        <p style="color:var(--ink-dim);font-size:13px;margin:6px 0 0"><b style="color:var(--ink)">The room:</b> ${esc(OFFICES[p.room].blurb)}</p>
+        <div class="card" style="margin-top:14px"><p style="margin:0;font-size:15px">&ldquo;${esc(farewell)}&rdquo;</p></div>
       </div>
-
       <div class="panel">
         <div class="eyebrow">Every deal that was possible</div>
         ${frontierSVG(rev)}
         <div class="legend">
           <span><i style="background:#3A342C"></i>possible</span>
           <span><i style="background:#6F675B"></i>efficient edge</span>
-          <span><i style="background:transparent;box-shadow:inset 0 0 0 2px #C9873F"></i>best you could have had</span>
+          <span><i style="box-shadow:inset 0 0 0 2px #C9873F"></i>best available</span>
           <span><i style="background:#4EA8A0"></i>${rev.dealt?"your deal":"no deal"}</span>
         </div>
       </div>
     </div>
-
     <div>
       ${rev.rows.length?`<div class="panel">
         <div class="eyebrow">Who won what</div>
         <table class="scorecard">
-          <thead><tr><th>Term</th><th class="n" style="text-align:right">You</th><th class="n" style="text-align:right">Them</th><th></th></tr></thead>
+          <thead><tr><th>Term</th><th style="text-align:right">You</th><th style="text-align:right">Them</th><th></th></tr></thead>
           <tbody>${rev.rows.map(r=>`<tr>
             <td>${esc(r.label)}</td>
             <td class="n" style="color:var(--you)">${r.you}<span style="color:var(--ink-faint)">/${r.yourStake}</span></td>
             <td class="n" style="color:var(--them)">${r.them}<span style="color:var(--ink-faint)">/${r.theirStake}</span></td>
             <td><span class="won ${r.winner}">${r.winner==="you"?"you took it":r.winner==="them"?"they took it":"split"}</span></td>
-          </tr>`).join("")}</tbody>
-        </table>
+          </tr>`).join("")}</tbody></table>
         <p style="color:var(--ink-dim);font-size:13px;margin:10px 0 0">
           Read the denominators, not the scores. A term worth 5 to you and 35 to them
           is one you should be selling, not winning.</p>
       </div>`:""}
-
       ${rev.trades.length?`<div class="panel">
         <div class="eyebrow">Trades that would have helped both of you</div>
         <p style="color:var(--ink-dim);font-size:13px;margin:0 0 12px">
@@ -1498,40 +1701,32 @@ function showDebrief(){
         ${rev.trades.map(t=>`<div class="trade">
           <div class="line"><span class="tag give">Give</span><span>${esc(t.giveLabel)}: <s>${esc(t.giveFrom)}</s> &rarr; ${esc(t.giveTo)}</span></div>
           <div class="line"><span class="tag take">Take</span><span>${esc(t.takeLabel)}: <s>${esc(t.takeFrom)}</s> &rarr; ${esc(t.takeTo)}</span></div>
-          <div class="gain">you +${t.you}, them +${t.them}</div>
-        </div>`).join("")}
-        </div>
-      </div>`:""}
-
+          <div class="gain">you +${t.you}, them +${t.them}</div></div>`).join("")}
+        </div></div>`:""}
       <div class="panel">
         <div class="eyebrow">What to do differently</div>
         ${lessons.map(l=>`<div class="lesson ${l.sev}">
           <div class="mark">${l.sev==="critical"?"!!":l.sev==="major"?"!":l.sev==="good"?"+":"&ndash;"}</div>
-          <div><h4>${l.title}</h4><p>${l.detail}</p></div>
-        </div>`).join("")}
+          <div><h4>${l.title}</h4><p>${l.detail}</p></div></div>`).join("")}
       </div>
     </div>
   </div>
-
   <div class="panel" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
     <button class="btn primary" id="again">New deal, new person</button>
     <button class="btn" id="replay">Replay this exact deal</button>
-    <span style="color:var(--ink-faint);font-size:12px">deal #${G.seed} &mdash; same product, same hidden scores, same opponent</span>
+    <span style="color:var(--ink-faint);font-size:12px">deal #${G.seed}</span>
   </div>`;
-
   document.getElementById("again").onclick=()=>newGame();
   document.getElementById("replay").onclick=()=>newGame(G.seed);
-  window.scrollTo({top:0,behavior:"smooth"});
+  restartBtn.onclick=()=>newGame();
+  window.scrollTo({top:0,behavior:reduced()?"auto":"smooth"});
 }
 
 /* ======================================================================
-   10. Boot. Survives a republish with the game in progress.
+   11. Boot.
    ====================================================================== */
-function start(saved){
-  if(saved&&saved.seed)newGame(saved.seed);else newGame();
-}
-try{
-  window.claude?.hot?.snapshot?.(()=>({seed:G?G.seed:null}));
-}catch(e){}
-if(window.claude?.hot?.ready)window.claude.hot.ready(start);else start(window.claude?.hot?.data??{});
+function start(saved){ newGame(saved&&saved.seed?saved.seed:undefined) }
+try{ window.claude?.hot?.snapshot?.(()=>({seed:G?G.seed:null})) }catch(e){}
+if(window.claude?.hot?.ready)window.claude.hot.ready(start);
+else start(window.claude?.hot?.data??{});
 </script>
