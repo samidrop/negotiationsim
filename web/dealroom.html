@@ -24,9 +24,67 @@
 
   /* ---------------- top bar ---------------- */
   .topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-  .brandmark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.02em}
-  .brandmark span{color:var(--them)}
   .topbar .spacer{flex:1}
+  .brandbtn{background:none;border:0;padding:4px;display:flex;align-items:center;gap:10px;border-radius:10px}
+  .brandbtn:hover{background:var(--raised)}
+  .wordmark{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.03em;color:var(--ink)}
+  .wordmark b{color:var(--them);font-weight:700}
+  .crumb{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint)}
+
+  /* ---------------- menu ---------------- */
+  .menu{position:relative;border:1px solid var(--edge);border-radius:18px;overflow:hidden;
+    background:#0E0C0B;min-height:clamp(480px,74vh,690px);display:flex;flex-direction:column}
+  .menu-art{position:absolute;inset:0;line-height:0}
+  .menu-art svg{width:100%;height:100%;display:block;object-fit:cover}
+  .menu-art::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(14,12,11,.14) 0%,rgba(14,12,11,.50) 44%,rgba(14,12,11,.84) 100%)}
+  .menu-inner{position:relative;padding:clamp(24px,5vw,44px);margin-top:auto;width:100%}
+  .menu-brand{display:flex;align-items:center;gap:15px;margin-bottom:4px}
+  .menu-brand .logomark{flex:none;filter:drop-shadow(0 4px 14px rgba(0,0,0,.6))}
+  .menu-title{font-family:var(--display);font-weight:700;letter-spacing:.005em;
+    font-size:clamp(32px,6vw,54px);line-height:1;margin:0}
+  .menu-title b{color:var(--them)}
+  .menu-tag{color:var(--ink-dim);font-size:clamp(14px,2vw,17px);max-width:46ch;margin:10px 0 26px}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px}
+  .tile{
+    display:flex;align-items:center;gap:14px;text-align:left;
+    background:rgba(38,34,25,.82);border:1px solid var(--edge);border-radius:13px;
+    padding:15px 16px;color:var(--ink);transition:.16s;backdrop-filter:blur(3px);
+  }
+  .tile:hover{border-color:var(--them);transform:translateY(-2px);background:rgba(48,42,31,.9)}
+  .tile .ic{flex:none;width:44px;height:44px}
+  .tile .tx{min-width:0}
+  .tile .tx b{display:block;font-family:var(--display);font-size:17px;font-weight:600}
+  .tile .tx span{display:block;font-size:12.5px;color:var(--ink-dim);line-height:1.35}
+  .tile.lead{background:rgba(78,168,160,.14);border-color:var(--you-deep)}
+  .tile.lead:hover{border-color:var(--you)}
+  .menu-foot{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:20px;
+    font-size:12.5px;color:var(--ink-faint)}
+  .switch{display:inline-flex;align-items:center;gap:8px;background:var(--raised);
+    border:1px solid var(--edge);border-radius:99px;padding:5px 6px 5px 12px;color:var(--ink-dim);font-size:12.5px}
+  .switch button{border:0;border-radius:99px;padding:4px 11px;font-size:12px;background:transparent;color:var(--ink-faint)}
+  .switch button[aria-pressed="true"]{background:var(--them-deep);color:var(--ink)}
+  .castgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
+  .castcard{background:var(--panel);border:1px solid var(--edge);border-radius:13px;overflow:hidden}
+  .castart{line-height:0;border-bottom:1px solid var(--edge)}
+  .castart svg{width:100%;height:auto;display:block}
+  .castbody{padding:13px 15px 15px}
+  .castbody b{font-family:var(--display);font-size:17px}
+  .castbody p{margin:6px 0 0;font-size:13px;color:var(--ink-dim)}
+  .castrow span{display:inline-block;min-width:44px;font-size:10.5px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ink-faint)}
+  .castrow.tell{color:var(--them)}
+  .tutbar{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--you-deep);
+    border-left:4px solid var(--you);background:rgba(78,168,160,.10);border-radius:11px;
+    padding:12px 15px;margin-bottom:12px}
+  .tutbar .step{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--you);white-space:nowrap}
+  .tutbar p{margin:0;font-size:14.5px}
+  .pulse{animation:pulse 1.5s ease-in-out infinite;position:relative;z-index:2}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(78,168,160,.6)}50%{box-shadow:0 0 0 8px rgba(78,168,160,0)}}
+  .twinkle{animation:twinkle 4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.25}}
+  .drift{animation:drift 9s ease-in-out infinite}
+  @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
   .btn{
     border:1px solid var(--edge);background:var(--raised);color:var(--ink);
     border-radius:9px;padding:10px 15px;font-size:14px;font-weight:500;transition:.15s;
@@ -48,6 +106,15 @@
     content:"";position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(120% 90% at 50% 38%,transparent 42%,rgba(8,7,6,.62) 100%);
   }
+  #figure{transform-box:view-box;transform-origin:480px 430px;animation:breathe 4.6s ease-in-out infinite}
+  #fig-head{transform-box:view-box;transform-origin:480px 330px;animation:sway 11s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-2.5px) scaleY(1.006)}}
+  @keyframes sway{0%,100%{transform:rotate(-.7deg)}50%{transform:rotate(.9deg)}}
+  #figure.shrug{animation:breathe 4.6s ease-in-out infinite,shrug .9s ease-in-out}
+  #figure.glance{animation:breathe 4.6s ease-in-out infinite,glance .9s ease-in-out}
+  @keyframes shrug{30%,60%{transform:translateY(-7px)}}
+  @keyframes glance{40%{transform:translateX(6px) rotate(.5deg)}}
+  .nomotion #figure,.nomotion #fig-head{animation:none!important}
   .scene.shake{animation:shake .55s}
   .scene.pop{animation:pop .5s}
   @keyframes shake{10%,90%{transform:translateX(-4px)}30%,70%{transform:translateX(8px)}50%{transform:translateX(-9px)}}
@@ -153,14 +220,14 @@
   .prio-row span:last-child{text-align:right;color:var(--ink-faint);font-variant-numeric:tabular-nums}
 
   .verdict{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-  .grade{
-    font-family:var(--display);font-size:54px;font-weight:700;line-height:1;
-    width:94px;height:94px;display:grid;place-items:center;border-radius:14px;
-    background:var(--raised);border:2px solid var(--edge);
-  }
-  .grade.hi{color:var(--good);border-color:var(--good)}
-  .grade.mid{color:var(--them);border-color:var(--them)}
-  .grade.lo{color:var(--bad);border-color:var(--bad)}
+  .medal{width:104px;height:104px;flex:none}
+  .rankname{font-family:var(--display);font-size:clamp(28px,4.6vw,40px);font-weight:700;line-height:1.05}
+  .rankname.gold{color:#E3B94E} .rankname.silver{color:#C2C6C9}
+  .rankname.bronze{color:#C98B5A} .rankname.none{color:var(--ink-dim)}
+  .headline{font-size:17px;color:var(--ink);margin:6px 0 0}
+  .plainstats{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+  .plainstat{display:flex;gap:10px;align-items:baseline;font-size:15px;color:var(--ink-dim)}
+  .plainstat b{font-family:var(--display);font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums;min-width:2.4ch}
   .stats{display:flex;gap:20px;flex-wrap:wrap}
   .stat b{display:block;font-family:var(--display);font-size:25px;font-variant-numeric:tabular-nums}
   .stat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
@@ -206,9 +273,11 @@
 </style>
 
 <div class="wrap">
-  <div class="topbar">
-    <div class="brandmark">The Deal<span>&nbsp;Room</span></div>
+  <div class="topbar" id="topbar" hidden>
+    <button class="brandbtn" id="tomenu" title="Back to menu"></button>
     <div class="spacer"></div>
+    <span class="crumb" id="crumb"></span>
+    <button id="briefbtn" class="btn ghost small" hidden>My brief</button>
     <button id="restart" class="btn ghost small" hidden>New deal</button>
   </div>
   <div id="app"></div>
@@ -216,6 +285,27 @@
 
 <script>
 "use strict";
+
+
+/* ======================================================================
+   The mark: two negotiators facing each other across a table line.
+   ====================================================================== */
+function logoSVG(size){
+  return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true" class="logomark">
+    <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="#1C1916" stroke="#5A4E3C" stroke-width="3"/>
+    <g>
+      <circle cx="21" cy="24" r="7.5" fill="#4EA8A0"/>
+      <path d="M 8 44 q 0 -10 13 -10 q 13 0 13 10 Z" fill="#4EA8A0"/>
+    </g>
+    <g>
+      <circle cx="43" cy="24" r="7.5" fill="#C9873F"/>
+      <path d="M 30 44 q 0 -10 13 -10 q 13 0 13 10 Z" fill="#C9873F"/>
+    </g>
+    <rect x="7" y="43" width="50" height="4.5" rx="2.2" fill="#EDE6D9"/>
+    <rect x="30.2" y="12" width="3.6" height="32" rx="1.8" fill="#1C1916"/>
+  </svg>`;
+}
+const wordmark=()=>`<span class="wordmark">The <b>Deal</b> Room</span>`;
 
 /* ======================================================================
    1. Seeded randomness, so any deal can be replayed exactly.
@@ -505,6 +595,61 @@ const PERSONAS=[
   badbye:["Your terms were misallocated. You optimised the smallest spread and conceded the largest. That is strictly dominated."]}}
 ];
 
+/* ----------------------------------------------------------------------
+   The range. Everyone has a warm register and, when a deal genuinely goes
+   wrong, a foul one. The foul lines are aimed at the offer, the money and
+   the day -- never at who anyone is. A menu toggle turns them off.
+   ---------------------------------------------------------------------- */
+const WARM={
+  shark:["Alright. That's a decent bit of business and I don't say that often.","Look -- I like dealing with people who do the reading. You did the reading."],
+  pro:["Thank you, genuinely. It's a nicer afternoon when both sides behave like this.","That's kind of you. It does make this easier, and I mean that."],
+  burnout:["Ah man, that's actually really nice of you to say. Made my week, low bar as that is.","See, you're alright. Most people just talk at me until I agree."],
+  hype:["Okay you're my favourite person today and the bar was LOW. Love you.","STOP. That's so nice. I'm going to think about that on the drive home."],
+  bureaucrat:["That's good of you to say. Very little of this job involves being thanked.","Noted, and appreciated. Sincerely. Now, the terms."],
+  volatile:["...Yeah. Yeah, alright. That's decent of you. I'm not used to that.","Huh. Thanks. Genuinely. Don't tell anyone I went soft."],
+  oldhead:["That's a kind thing to say, and I've heard very few of them lately. Thank you.","Ha! You know, that's why I still come in. Right. Where were we."],
+  quant:["That's unnecessary and I'd like to record that I appreciated it anyway.","Acknowledged. That does marginally improve my afternoon."]
+};
+const CRUDE={
+  shark:{insult:["Oh, piss off. I've been doing this nineteen years and you open with THAT?",
+      "Christ almighty. That's not an offer, that's a bloody insult with a spreadsheet attached."],
+    rage:["No. Fuck this and fuck that offer. Nineteen years and I get THIS? Get out of my office.",
+      "We're done. Take your shitty term sheet and get out before I say something I actually mean."]},
+  pro:{insult:["Right, I'm going to drop the politeness: that number is absolute nonsense and you know it.",
+      "God. I've been civil all afternoon and you hand me that."],
+    rage:["No. I've been patient, I've been fair, and you've pissed all of it away. We're finished. Out.",
+      "Enough. I'm done being the reasonable one in this room. Get out."]},
+  burnout:{insult:["Are you shitting me. I'm barely conscious and even I can see that's garbage.",
+      "Oh my god. No. That's genuinely the worst thing I've seen all quarter and I work here."],
+    rage:["No. I don't get paid enough for this shit. We're done. I'm going home.",
+      "Fuck it. Fuck this deal, fuck the forecast, I'm out. Don't email me."]},
+  hype:{insult:["BRO. What the hell was that. That's not even lowballing, that's a hate crime against arithmetic.",
+      "Absolutely not. That's dogshit and you knew it was dogshit when you typed it."],
+    rage:["Nah. NAH. I was NICE to you. Get the fuck out of my office, genuinely.",
+      "Done. I'm done. You pissed on the vibe and now you can leave."]},
+  bureaucrat:{insult:["I'm going off-script: that is a ridiculous, insulting waste of my afternoon.",
+      "No. And frankly, sod the process, that number is offensive."],
+    rage:["This meeting is over. You can explain to my director why, because I'm too bloody angry to.",
+      "Get out. I'll minute it as 'terminated by supplier' and you can live with that."]},
+  volatile:{insult:["Are you having a laugh? Are you actually taking the piss right now?",
+      "What the hell is that. Look at me. LOOK at me. Is that a serious number to you?"],
+    rage:["NO! Fuck off! Get out! I'm not doing this, we're done, OUT!",
+      "That's it! Get out of my office! Don't you dare call me again!"]},
+  oldhead:{insult:["Don't insult me, son. I've been lowballed by better and that was still bollocks.",
+      "Thirty years and that's the worst bit of cheek I've been handed in a decade."],
+    rage:["No. I'm too old for this shit and too rich to need it. Get out of my office.",
+      "We're finished. Don't come back, and tell whoever sent you they wasted both our days."]},
+  quant:{insult:["That is, and I want to be precise here, absolute garbage.",
+      "No. That's so far below my floor it isn't a proposal, it's a piss-take."],
+    rage:["Terminating. And off the record: that was a genuinely stupid way to spend eight rounds. Get out.",
+      "We're done. You burned every round you had on a fight you couldn't win. Out."]}
+};
+for(const p of PERSONAS){
+  p.lines.warm=WARM[p.key];
+  const c=CRUDE[p.key];
+  p.lines.x_insult=c.insult; p.lines.x_rage=c.rage;
+}
+
 /* ======================================================================
    5. The person. Face and skin are random; wardrobe is chosen by who
    they are, which is exactly how it works in a real meeting.
@@ -547,8 +692,8 @@ function shade(hex,amt){
   const r=Math.max(0,Math.min(255,(n>>16)+amt)), g=Math.max(0,Math.min(255,((n>>8)&255)+amt)), b=Math.max(0,Math.min(255,(n&255)+amt));
   return"#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0");
 }
-function makeCharacter(rng,company){
-  const persona=rng.pick(PERSONAS), w=WARDROBE[persona.style];
+function makeCharacter(rng,company,forced){
+  const persona=forced||rng.pick(PERSONAS), w=WARDROBE[persona.style];
   const skin=rng.pick(SKIN);
   let hair=rng.pick(HAIRC);
   if(Math.abs(luminance(hair)-luminance(skin))<52){         // hair must not vanish into the face
@@ -603,8 +748,23 @@ const MOODS={
 };
 const BROWS={flat:{y:0,rot:0},raised:{y:-7,rot:0},angry:{y:-2,rot:16},worried:{y:-2,rot:-16}};
 
-function eyeSVG(kind,cx,side){
-  const cy=96, dark="#221F1C";
+function noseSVG(kind,skin){
+  const ink=shade(skin,-46), lo=shade(skin,-22);
+  if(kind==="button") return `<path d="M 110 104 Q 104 115 111 117" stroke="${ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="110" cy="117" rx="6" ry="3" fill="${lo}" opacity=".5"/>`;
+  if(kind==="hooked") return `<path d="M 109 99 Q 118 112 110 119 Q 105 120 103 117" stroke="${ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  if(kind==="wide")   return `<path d="M 110 101 Q 101 116 112 119" stroke="${ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="104" cy="119" rx="4" ry="2.6" fill="${lo}"/><ellipse cx="117" cy="119" rx="4" ry="2.6" fill="${lo}"/>`;
+  return `<path d="M 110 100 Q 103 116 112 118" stroke="${ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+}
+function browShape(kind){
+  if(kind==="thick") return{d:"M -15 1 Q 0 -7 15 1",w:7};
+  if(kind==="thin")  return{d:"M -13 0 Q 0 -4 13 0",w:3.4};
+  if(kind==="arched")return{d:"M -14 2 Q 0 -9 14 2",w:5};
+  return{d:"M -14 0 Q 0 -5 14 0",w:5.5};
+}
+function eyeSVG(kind,cx,side,iris){
+  const cy=96, dark=iris||"#221F1C";
   if(kind==="happy") return `<path d="M ${cx-11} ${cy+3} Q ${cx} ${cy-8} ${cx+11} ${cy+3}" stroke="${dark}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
   if(kind==="closed")return `<path d="M ${cx-11} ${cy} Q ${cx} ${cy+5} ${cx+11} ${cy}" stroke="${dark}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
   if(kind==="squint")return `<ellipse cx="${cx}" cy="${cy}" rx="10.5" ry="3.2" fill="#F7F2E9"/><circle cx="${cx}" cy="${cy}" r="3" fill="${dark}"/>`;
@@ -648,7 +808,8 @@ function hairSVG(l){
       for(let i=0;i<4;i++)front.push(`<path d="M 66 ${52+i*9} Q 110 ${44+i*9} 154 ${52+i*9}" stroke="${hi}" stroke-width="2.4" fill="none" opacity=".5" clip-path="url(#hc)"/>`);break;
     case"messy":
       front.push(cap(58,38));
-      for(let i=0;i<6;i++)front.push(`<path d="M ${72+i*14} 40 l ${i%2?7:-7} -13" stroke="${c}" stroke-width="6" stroke-linecap="round" fill="none"/>`);break;
+      for(let i=0;i<7;i++)front.push(`<path d="M ${68+i*13} ${34+(i%2?3:0)} q ${i%2?9:-9} -7 ${i%2?4:-4} -12"
+        stroke="${c}" stroke-width="7" stroke-linecap="round" fill="none"/>`);break;
     case"long":
       back.push(`<path d="M 56 70 Q 50 190 78 214 L 142 214 Q 170 190 164 70 Z" fill="${c}"/>`);
       front.push(cap(60,38));break;
@@ -705,6 +866,10 @@ function torsoSVG(l){
     if(cut==="suit"||cut==="blazer"){
       s+=`<path d="M 101 191 L 119 191 L 122 205 L 98 205 Z" fill="${tie}"/>`;           // knot
       s+=`<path d="M 99 205 L 121 205 L 115 300 L 105 300 Z" fill="${shade(coat,-38)}"/>`; // blade
+      if(l.tie==="stripe")s+=`<g stroke="${shade(coat,26)}" stroke-width="3" opacity=".8">
+        ${[0,1,2,3].map(i=>`<path d="M ${100+i*0} ${214+i*22} l 20 -9"/>`).join("")}</g>`;
+      if(l.tie==="knit")s+=`<g fill="${shade(coat,-24)}" opacity=".9">
+        ${[0,1,2,3,4].map(i=>`<rect x="101" y="${212+i*18}" width="18" height="7" rx="2"/>`).join("")}</g>`;
       s+=`<path d="M 101 191 L 110 197 L 119 191" fill="none" stroke="${shade(coat,-58)}" stroke-width="1.6"/>`;
     }
   } else if(cut==="opencollar"||cut==="untucked"||cut==="rolled"){
@@ -752,30 +917,52 @@ function fxSVG(kind){
   return"";
 }
 function personSVG(ch,mood){
-  const l=ch.look, m=MOODS[mood]||MOODS.neutral, pose=BROWS[m.brow], hair=hairSVG(l);
-  const head=HEAD_PATHS[l.jaw]||HEAD_PATHS.round;
-  const lip=shade(l.skin,-78);
-  const brow=(cx,dir)=>`<g transform="translate(${cx} ${78+pose.y}) rotate(${pose.rot*dir})">
-    <path d="M -14 0 Q 0 -5 14 0" stroke="${shade(l.hair,10)}" stroke-width="5.5" fill="none" stroke-linecap="round"/></g>`;
+  const l=ch.look, m=MOODS[mood]||MOODS.neutral;
+  const head=HEAD_PATHS[l.jaw]||HEAD_PATHS.round, hair=hairSVG(l);
+  const cheek=shade(l.skin,-20), line=shade(l.skin,-34);
+  const aged=l.age==="senior"
+    ? `<g stroke="${line}" stroke-width="1.5" fill="none" opacity=".5" stroke-linecap="round">
+         <path d="M 74 88 q 6 -4 12 -2"/><path d="M 146 88 q -6 -4 -12 -2"/>
+         <path d="M 88 124 q 6 12 2 20"/><path d="M 132 124 q -6 12 -2 20"/></g>` : "";
   return `
   <defs><clipPath id="hc"><path d="${head}"/></clipPath></defs>
-  ${hair.back}
+  <g id="fig-back">${hair.back}</g>
   <path d="M 94 140 L 126 140 L 126 180 L 94 180 Z" fill="${shade(l.skin,-30)}"/>
   <path d="M 94 140 L 126 140 L 126 152 Q 110 162 94 152 Z" fill="${shade(l.skin,-52)}"/>
-  ${torsoSVG(l)}
-  <ellipse cx="60" cy="102" rx="9" ry="13" fill="${l.skin}"/>
-  <ellipse cx="160" cy="102" rx="9" ry="13" fill="${l.skin}"/>
-  <path d="${head}" fill="${l.skin}"/>
-  <path d="M 110 32 C 82 32 62 55 62 90 C 62 120 71 143 88 152 C 95 157 102 160 110 160 Z" fill="${shade(l.skin,-16)}" opacity=".35"/>
-  ${hair.front}
-  ${brow(90,1)}${brow(130,-1)}
-  ${eyeSVG(m.eye,90,-1)}${eyeSVG(m.eye,130,1)}
-  <path d="M 110 100 Q 103 116 112 118" stroke="${shade(l.skin,-44)}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-  ${MOUTHS[m.mouth].replace(/INK/g,lip)}
-  ${facialSVG(l)}
-  ${eyewearSVG(l)}
-  ${propSVG(l)}
-  ${fxSVG(m.fx)}`;
+  <g id="fig-body">${torsoSVG(l)}${propSVG(l)}</g>
+  <g id="fig-head">
+    <g><ellipse cx="59" cy="102" rx="9.5" ry="14" fill="${l.skin}"/>
+       <path d="M 58 96 q 5 6 0 12" stroke="${shade(l.skin,-40)}" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+    <g><ellipse cx="161" cy="102" rx="9.5" ry="14" fill="${l.skin}"/>
+       <path d="M 162 96 q -5 6 0 12" stroke="${shade(l.skin,-40)}" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+    <path d="${head}" fill="${l.skin}"/>
+    <path d="M 110 32 C 82 32 62 55 62 90 C 62 120 71 143 88 152 C 95 157 102 160 110 160 Z" fill="${shade(l.skin,-16)}" opacity=".32"/>
+    <ellipse cx="82" cy="118" rx="12" ry="7" fill="${cheek}" opacity=".3"/>
+    <ellipse cx="138" cy="118" rx="12" ry="7" fill="${cheek}" opacity=".3"/>
+    ${aged}
+    ${hair.front}
+    <g id="fig-brows"></g>
+    <g id="fig-eyes"></g>
+    ${noseSVG(l.nose,l.skin)}
+    <g id="fig-mouth"></g>
+    ${facialSVG(l)}
+    ${eyewearSVG(l)}
+  </g>
+  <g id="fig-fx"></g>`;
+}
+/* Only these three groups change when the mood changes, so the breathing,
+   blinking and fidgeting animations underneath are never interrupted. */
+function faceParts(ch,mood){
+  const l=ch.look, m=MOODS[mood]||MOODS.neutral, pose=BROWS[m.brow], bs=browShape(l.brow);
+  const lip=shade(l.skin,-78);
+  const brow=(cx,dir)=>`<g transform="translate(${cx} ${78+pose.y}) rotate(${pose.rot*dir})">
+    <path d="${bs.d}" stroke="${shade(l.hair,10)}" stroke-width="${bs.w}" fill="none" stroke-linecap="round"/></g>`;
+  return{
+    brows:brow(90,1)+brow(130,-1),
+    eyes:eyeSVG(m.eye,90,-1,l.iris)+eyeSVG(m.eye,130,1,l.iris),
+    mouth:MOUTHS[m.mouth].replace(/INK/g,lip),
+    fx:fxSVG(m.fx)
+  };
 }
 
 /* ======================================================================
@@ -1015,13 +1202,42 @@ function handsSVG(ch,mood){
   return arm(180,L)+arm(684,R)+hand(L)+hand(R);
 }
 function sceneSVG(ch,mood,seed){
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(ch.name)} in their office, looking ${mood}">
-    ${officeSVG(ch,seed)}
-    <g transform="translate(312 44) scale(1.52)">${personSVG(ch,mood)}</g>
-    ${deskSVG(ch)}
-    ${handsSVG(ch,mood)}
+  return `<svg viewBox="0 0 ${W} ${H}" id="stage" role="img" aria-label="${esc(ch.name)} in their office">
+    <g id="room">${officeSVG(ch,seed)}</g>
+    <g id="figure"><g transform="translate(312 44) scale(1.52)">${personSVG(ch,mood)}</g></g>
+    <g id="deskgrp">${deskSVG(ch)}</g>
+    <g id="handsgrp">${handsSVG(ch,mood)}</g>
   </svg>`;
 }
+
+/* ---- idle life: breathing, blinking, the occasional shrug or glance ---- */
+let idleTimers=[];
+function stopIdle(){idleTimers.forEach(clearTimeout);idleTimers=[]}
+function startIdle(){
+  stopIdle();
+  if(reduced()||!SETTINGS.motion)return;
+  const blink=()=>{
+    const eyes=document.getElementById("fig-eyes");
+    if(eyes&&G&&!BLINKLESS.has(G.mood)){
+      const keep=eyes.innerHTML;
+      eyes.innerHTML=eyeSVG("closed",90,-1)+eyeSVG("closed",130,1);
+      idleTimers.push(setTimeout(()=>{if(eyes.isConnected)eyes.innerHTML=keep},120));
+    }
+    idleTimers.push(setTimeout(blink,1800+Math.random()*4200));
+  };
+  const fidget=()=>{
+    const fig=document.getElementById("figure");
+    if(fig){
+      const move=Math.random()<0.5?"shrug":"glance";
+      fig.classList.add(move);
+      idleTimers.push(setTimeout(()=>fig.classList.remove(move),900));
+    }
+    idleTimers.push(setTimeout(fidget,5000+Math.random()*7000));
+  };
+  idleTimers.push(setTimeout(blink,1400));
+  idleTimers.push(setTimeout(fidget,4000));
+}
+const BLINKLESS=new Set(["asleep","delighted","furious","laughing","shocked"]);
 
 /* ======================================================================
    7. The seller's decision making. The rules decide everything that
@@ -1132,25 +1348,243 @@ const ISSUE_WORDS={price:["price","unit cost","per unit","cost","cheaper","expen
 const namedIssues=(text,sc)=>{const t=text.toLowerCase();
   return sc.issues.filter(i=>(ISSUE_WORDS[i.key]||[]).some(w=>t.includes(w))).map(i=>i.key)};
 
+
+/* ======================================================================
+   The menu: the empty room, before anyone sits down.
+   ====================================================================== */
+function menuArtSVG(){
+  const rng=rngFrom(20260915);
+  let lights="";
+  for(let i=0;i<70;i++){
+    const x=612+Math.floor(rng.next()*300), y=64+Math.floor(rng.next()*150);
+    lights+=`<rect class="twinkle" style="animation-delay:${(rng.next()*4).toFixed(2)}s" x="${x}" y="${y}" width="4" height="5" fill="#E8C88A" opacity=".8"/>`;
+  }
+  let towers="";
+  let cx=604;
+  while(cx<910){const bw=rng.int(26,52), bh=rng.int(70,190);
+    towers+=`<rect x="${cx}" y="${232-bh}" width="${bw}" height="${bh}" fill="#1A2030"/>`;cx+=bw+rng.int(4,12)}
+  return `<svg viewBox="0 0 960 470" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="mwall" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2A2622"/><stop offset="1" stop-color="#151311"/></linearGradient>
+      <radialGradient id="mlamp" cx="50%" cy="8%" r="52%">
+        <stop offset="0" stop-color="#E8C88A" stop-opacity=".40"/>
+        <stop offset="1" stop-color="#E8C88A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="mtable" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8A6038"/><stop offset="1" stop-color="#4A3220"/></linearGradient>
+      <radialGradient id="mpool" cx="50%" cy="0%" r="70%">
+        <stop offset="0" stop-color="#E8C88A" stop-opacity=".34"/>
+        <stop offset="1" stop-color="#E8C88A" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="960" height="470" fill="url(#mwall)"/>
+    <rect y="356" width="960" height="114" fill="#141210"/>
+    <rect x="596" y="46" width="322" height="196" fill="#10141E"/>
+    ${towers}${lights}
+    <rect x="588" y="38" width="338" height="212" rx="4" fill="none" stroke="#0D0B0A" stroke-width="9"/>
+    <rect x="752" y="38" width="6" height="212" fill="#0D0B0A"/>
+    <g class="drift">
+      <path d="M 470 0 L 470 62" stroke="#3A342C" stroke-width="3"/>
+      <path d="M 428 62 L 512 62 L 498 96 L 442 96 Z" fill="#2E2A24"/>
+      <ellipse cx="470" cy="96" rx="28" ry="7" fill="#E8C88A" opacity=".5"/>
+    </g>
+    <rect width="960" height="470" fill="url(#mlamp)"/>
+    <g>
+      <rect x="72" y="58" width="128" height="92" rx="3" fill="#241D16" stroke="#4A3B29" stroke-width="3"/>
+      <rect x="84" y="70" width="104" height="8" fill="#3E5265"/><rect x="84" y="88" width="72" height="8" fill="#3E5265"/>
+      <rect x="84" y="106" width="88" height="8" fill="#3E5265"/>
+    </g>
+    <path d="M 168 356 l 34 0 l -5 34 l -24 0 Z" fill="#7A4630"/>
+    <g fill="#3F7A4A">${[0,1,2,3].map(i=>`<ellipse cx="${185+(i-1.5)*13}" cy="${330-Math.abs(i-1.5)*8}" rx="9" ry="23" transform="rotate(${(i-1.5)*24} ${185+(i-1.5)*13} 330)"/>`).join("")}</g>
+    <path d="M 150 470 L 810 470 L 700 330 L 260 330 Z" fill="url(#mtable)"/>
+    <path d="M 260 330 L 700 330 L 694 342 L 266 342 Z" fill="#A87C4C"/>
+    <path d="M 150 470 L 810 470 L 700 330 L 260 330 Z" fill="url(#mpool)"/>
+    <g>
+      <path d="M 300 330 l 70 0 l 0 -52 q -35 -14 -70 0 Z" fill="#3A3029"/>
+      <path d="M 300 282 q 35 -12 70 0 l 0 7 q -35 -11 -70 0 Z" fill="#5E5044"/>
+      <path d="M 590 330 l 70 0 l 0 -52 q -35 -14 -70 0 Z" fill="#3A3029"/>
+      <path d="M 590 282 q 35 -12 70 0 l 0 7 q -35 -11 -70 0 Z" fill="#5E5044"/>
+    </g>
+    <g opacity=".92">
+      <rect x="398" y="352" width="86" height="60" rx="2" fill="#EFEBE0" transform="rotate(-4 398 352)"/>
+      <rect x="486" y="358" width="86" height="60" rx="2" fill="#E4DFD2" transform="rotate(3 486 358)"/>
+    </g>
+  </svg>`;
+}
+const ICONS={
+  play:`<svg viewBox="0 0 48 48" class="ic"><rect x="7" y="6" width="26" height="34" rx="3" fill="#EFEBE0"/>
+    <rect x="12" y="13" width="16" height="3" fill="#8E8B85"/><rect x="12" y="20" width="13" height="3" fill="#8E8B85"/>
+    <rect x="12" y="27" width="16" height="3" fill="#8E8B85"/>
+    <circle cx="34" cy="31" r="11" fill="#4EA8A0"/><path d="M 31 26 l 9 5 l -9 5 Z" fill="#08201F"/></svg>`,
+  tutorial:`<svg viewBox="0 0 48 48" class="ic"><path d="M 24 7 c 6 0 10 4 10 9 c 0 6 -6 7 -6 12 l -8 0 c 0 -5 -6 -6 -6 -12 c 0 -5 4 -9 10 -9 Z" fill="#C9A227"/>
+    <rect x="19" y="31" width="10" height="4" rx="2" fill="#8A6B22"/><rect x="20" y="37" width="8" height="4" rx="2" fill="#8A6B22"/>
+    <g stroke="#C9A227" stroke-width="2.6" stroke-linecap="round"><path d="M 24 2 v 3"/><path d="M 39 10 l -2.4 2"/><path d="M 9 10 l 2.4 2"/></g></svg>`,
+  cast:`<svg viewBox="0 0 48 48" class="ic">
+    <g><circle cx="12" cy="17" r="6" fill="#4EA8A0"/><path d="M 2 34 q 0 -8 10 -8 q 10 0 10 8 Z" fill="#4EA8A0"/></g>
+    <g><circle cx="36" cy="17" r="6" fill="#C9873F"/><path d="M 26 34 q 0 -8 10 -8 q 10 0 10 8 Z" fill="#C9873F"/></g>
+    <g><circle cx="24" cy="24" r="7.5" fill="#EDE6D9"/><path d="M 11 44 q 0 -10 13 -10 q 13 0 13 10 Z" fill="#EDE6D9"/></g></svg>`
+};
+
+function showMenu(){
+  stopIdle();
+  topbar.hidden=true;
+  app.innerHTML=`
+  <div class="menu">
+    <div class="menu-art">${menuArtSVG()}</div>
+    <div class="menu-inner">
+      <div class="menu-brand">${logoSVG(60)}
+        <h1 class="menu-title">The <b>Deal</b> Room</h1></div>
+      <p class="menu-tag">Five terms, eight rounds, one person across the table who
+        wants what you want. Read them, trade what is cheap for you, and do not
+        sign anything worse than walking out.</p>
+      <div class="menu-grid">
+        <button class="tile lead" id="m-play">${ICONS.play}
+          <span class="tx"><b>Start a deal</b><span>New product, new opponent, new office</span></span></button>
+        <button class="tile" id="m-tut">${ICONS.tutorial}
+          <span class="tx"><b>Learn to negotiate</b><span>A guided first deal, step by step</span></span></button>
+        <button class="tile" id="m-cast">${ICONS.cast}
+          <span class="tx"><b>Meet the cast</b><span>All eight types and how to spot them</span></span></button>
+      </div>
+      <div class="menu-foot">
+        <span class="switch">Language
+          <button id="lang-clean" aria-pressed="${!SETTINGS.explicit}">Clean</button>
+          <button id="lang-raw" aria-pressed="${SETTINGS.explicit}">Unfiltered</button></span>
+        <span class="switch">Motion
+          <button id="mo-on" aria-pressed="${SETTINGS.motion}">On</button>
+          <button id="mo-off" aria-pressed="${!SETTINGS.motion}">Off</button></span>
+      </div>
+    </div>
+  </div>`;
+  const on=(id,fn)=>document.getElementById(id).onclick=fn;
+  on("m-play",()=>newGame());
+  on("m-tut",()=>startTutorial());
+  on("m-cast",showCast);
+  on("lang-clean",()=>{SETTINGS.explicit=false;showMenu()});
+  on("lang-raw",()=>{SETTINGS.explicit=true;showMenu()});
+  on("mo-on",()=>{SETTINGS.motion=true;document.body.classList.remove("nomotion");showMenu()});
+  on("mo-off",()=>{SETTINGS.motion=false;document.body.classList.add("nomotion");showMenu()});
+}
+
+/* ---- the cast: a study screen, so you can learn the tells in advance ---- */
+function showCast(){
+  stopIdle();
+  setChrome("Meet the cast");
+  const seen=[], seeds=[];
+  for(let sd=1;sd<6000&&seen.length<PERSONAS.length;sd++){
+    const ch=makeCharacter(rngFrom(sd^0x5f3a),"Sample Co.");
+    if(!seen.includes(ch.persona.key)){seen.push(ch.persona.key);seeds.push({ch,sd})}
+  }
+  seeds.sort((a,b)=>PERSONAS.indexOf(a.ch.persona)-PERSONAS.indexOf(b.ch.persona));
+  app.innerHTML=`
+    <div class="panel">
+      <h2 style="font-size:24px">The eight you will meet</h2>
+      <p class="lede" style="margin-top:8px">You are never told which one you have drawn.
+        But how they dress and the room they sit in are real clues &mdash; those are choices
+        they made. Their face is not a clue. Learn the rooms.</p>
+    </div>
+    <div class="castgrid">
+      ${seeds.map(o=>`<div class="castcard">
+        <div class="castart">${sceneSVG(o.ch,o.ch.persona.rest,o.sd).replace('id="stage"','')}</div>
+        <div class="castbody">
+          <b>${esc(o.ch.persona.name)}</b>
+          <p>${esc(o.ch.persona.blurb)}</p>
+          <p class="castrow"><span>Look</span>${esc(o.ch.persona.look)}</p>
+          <p class="castrow"><span>Room</span>${esc(OFFICES[o.ch.persona.room].blurb)}</p>
+          <p class="castrow tell"><span>Tell</span>${esc(o.ch.persona.tell)}</p>
+        </div></div>`).join("")}
+    </div>
+    <div class="panel" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn primary" id="c-play">Start a deal</button>
+      <button class="btn" id="c-menu">Back to menu</button>
+    </div>`;
+  document.getElementById("c-play").onclick=()=>newGame();
+  document.getElementById("c-menu").onclick=showMenu;
+}
+
+
+/* ======================================================================
+   The tutorial: a real deal against a patient opponent, with the game
+   pointing at the right thing at the right moment. Nothing is faked --
+   the same rules and the same maths apply.
+   ====================================================================== */
+const TUTORIAL_SEED=740115;
+const TUT_STEPS=[
+  {id:"intro",hint:"This is a real negotiation, just a gentler one. Her offer is already on the table. Read what she said, then press <b>Ask what matters</b> &mdash; it is free and costs you no round.",
+   target:"#ask",done:"asked"},
+  {id:"asked",hint:"She just told you which term decides the deal for her. Now check your own side: press <b>My brief</b> and look at what each term is worth to <i>you</i>.",
+   target:"#briefbtn",done:"brief"},
+  {id:"brief",hint:"See the mismatch? The term she cares about most is near the bottom of your list. That is the trade. Open the term sheet.",
+   target:"#counter",done:"opened"},
+  {id:"opened",hint:"Give her the <b>largest volume</b> &mdash; it costs you almost nothing. Then take the best option on your own top two terms. Watch your score climb, then send it.",
+   target:"#send",done:"sent"},
+  {id:"sent",hint:"That is the whole game. She will counter; keep your top terms, keep giving ground only where it is cheap for you. Finish the deal however you like.",
+   target:null,done:"free"}
+];
+function startTutorial(){
+  newGame(TUTORIAL_SEED,true);
+}
+function tutAdvance(event){
+  if(!G||!G.tutorial)return;
+  const step=TUT_STEPS[G.tutStep];
+  if(step&&step.done===event){G.tutStep=Math.min(G.tutStep+1,TUT_STEPS.length-1);paintTutorial()}
+}
+function paintTutorial(){
+  const bar=document.getElementById("tutbar");
+  if(!bar||!G.tutorial)return;
+  const step=TUT_STEPS[G.tutStep];
+  bar.innerHTML=`<span class="step">Step ${G.tutStep+1}/${TUT_STEPS.length}</span><p>${step.hint}</p>`;
+  document.querySelectorAll(".pulse").forEach(e=>e.classList.remove("pulse"));
+  if(step.target){
+    const el=document.querySelector(step.target);
+    if(el)el.classList.add("pulse");
+  }
+}
+
 /* ======================================================================
    9. Game state and screens.
    ====================================================================== */
 const app=document.getElementById("app");
 const restartBtn=document.getElementById("restart");
+const topbar=document.getElementById("topbar");
+const crumb=document.getElementById("crumb");
+const briefBtn=document.getElementById("briefbtn");
+document.getElementById("tomenu").innerHTML=logoSVG(30)+wordmark();
+document.getElementById("tomenu").onclick=leaveToMenu;
+restartBtn.onclick=()=>newGame();
+
+function setChrome(label,opts){
+  topbar.hidden=false;
+  crumb.textContent=label||"";
+  restartBtn.hidden=!(opts&&opts.restart);
+  briefBtn.hidden=!(opts&&opts.brief);
+}
+async function leaveToMenu(){
+  if(G&&!G.outcome&&G.started){
+    const ok=await ask("Leave this deal?","Nothing is saved. The deal, the person and the office all go away.","Leave");
+    if(!ok)return;
+  }
+  stopIdle();G=null;showMenu();
+}
 let G=null, typing=null;
 const ROUNDS=8;
+/* Player settings. Kept in memory only -- nothing is written to disk. */
+const SETTINGS={explicit:true,motion:true};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const pickLine=(p,k,rng)=>rng.pick(p.lines[k]||["..."]);
+function pickLine(p,k,rng){
+  if(SETTINGS.explicit&&p.lines["x_"+k])return rng.pick(p.lines["x_"+k]);
+  return rng.pick(p.lines[k]||["..."]);
+}
 const reduced=()=>window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function newGame(seed){
+function newGame(seed,tutorial){
   const s=seed??Math.floor(Math.random()*900000)+1000;
   const sc=buildScenario(s), rng=rngFrom(s^0x5f3a);
-  const ch=makeCharacter(rng,sc.sellerCo);
+  // The tutorial always faces The Professional: patient, and honest when asked.
+  const ch=makeCharacter(rng,sc.sellerCo,tutorial?PERSONAS.find(x=>x.key==="pro"):null);
   G={seed:s,sc,ch,rng,rounds:ROUNDS,round:1,
      seller:makeSeller(sc,ch.persona,ROUNDS,rng),
      theirs:null,draft:null,yours:null,mood:ch.persona.rest,
-     said:"",note:"",outcome:null,drawerOpen:false,
+     said:"",note:"",outcome:null,drawerOpen:false,started:false,
+     tutorial:!!tutorial,tutStep:0,
      log:{asked:false,insults:0,warmth:0,revealed:[],offers:[]}};
   const opening=G.seller.opening();
   G.theirs=opening.picks.slice();G.draft=opening.picks.slice();
@@ -1160,7 +1594,7 @@ function newGame(seed){
 /* ------------------------------------------------------------- brief */
 function showBrief(){
   const {sc}=G;
-  restartBtn.hidden=true;
+  setChrome(G.tutorial?"Tutorial \u00b7 your brief":"Your brief");
   const ranked=sc.issues.slice().sort((a,b)=>stakeYou(b)-stakeYou(a));
   const top=Math.max(...ranked.map(stakeYou));
   app.innerHTML=`
@@ -1209,8 +1643,10 @@ function showBrief(){
 
 /* -------------------------------------------------------------- play */
 function showPlay(){
-  restartBtn.hidden=false;
+  G.started=true;
+  setChrome(G.tutorial?"Tutorial":"Negotiation",{restart:!G.tutorial,brief:true});
   app.innerHTML=`
+    ${G.tutorial?'<div class="tutbar" id="tutbar"></div>':''}
     <div class="scene" id="scene">${sceneSVG(G.ch,G.mood,G.seed)}</div>
     <div class="dialogue">
       <div class="dl-head">
@@ -1240,15 +1676,15 @@ function showPlay(){
   document.getElementById("saybtn").onclick=saySomething;
   document.getElementById("sayinput").addEventListener("keydown",e=>{if(e.key==="Enter")saySomething()});
   document.getElementById("scene").onclick=finishTyping;
-  restartBtn.onclick=()=>newGame();
+  setMood(G.mood);
+  startIdle();
+  if(G.tutorial)paintTutorial();
 }
 
 /* Dialogue types itself out, like a game. Click to skip. */
 function speak(text,mood,note){
   G.said=text;G.note=note||"";
-  if(mood)G.mood=mood;
-  const scene=document.getElementById("scene");
-  if(scene)scene.innerHTML=sceneSVG(G.ch,G.mood,G.seed);
+  if(mood)setMood(mood);
   const dl=document.getElementById("dl"), n=document.getElementById("note");
   const r=document.getElementById("round");
   if(r)r.textContent=`Round ${Math.min(G.round,G.rounds)} / ${G.rounds}`;
@@ -1269,15 +1705,56 @@ function finishTyping(){
   const dl=document.getElementById("dl");
   dl.textContent='"'+G.said+'"';dl.classList.remove("typing");
 }
-function react(mood,fx){
+function setMood(mood){
   G.mood=mood;
+  const parts=faceParts(G.ch,mood);
+  const put=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html};
+  put("fig-brows",parts.brows);put("fig-eyes",parts.eyes);
+  put("fig-mouth",parts.mouth);put("fig-fx",parts.fx);
+  const hands=document.getElementById("handsgrp");
+  if(hands)hands.innerHTML=handsSVG(G.ch,mood);
+}
+function react(mood,fx){
+  setMood(mood);
   const scene=document.getElementById("scene");
   if(!scene)return;
-  scene.innerHTML=sceneSVG(G.ch,mood,G.seed);
-  if(fx&&!reduced()){scene.classList.remove("shake","pop");void scene.offsetWidth;scene.classList.add(fx)}
+  if(fx&&!reduced()&&SETTINGS.motion){
+    scene.classList.remove("shake","pop");void scene.offsetWidth;scene.classList.add(fx);
+  }
 }
 
 /* ------------------------------------------------------- term sheet */
+briefBtn.onclick=openBrief;
+function openBrief(){
+  if(document.getElementById("drawer"))return;
+  const {sc}=G;
+  const ranked=sc.issues.slice().sort((a,b)=>stakeYou(b)-stakeYou(a));
+  const top=Math.max(...ranked.map(stakeYou));
+  const back=document.createElement("div");back.className="backdrop";back.id="backdrop";
+  const d=document.createElement("div");d.className="drawer";d.id="drawer";
+  d.innerHTML=`<div class="grip"></div>
+    <div class="drawer-head"><div><h3 style="font-size:19px">Your brief</h3>
+      <div class="eyebrow" style="margin:2px 0 0">${esc(sc.buyerRole)}</div></div>
+      <button class="btn ghost small" id="closebrief">Close</button></div>
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:10px">What each term is worth to you</div>
+      ${ranked.map(i=>`<div class="prio-row"><span>${esc(i.label)}</span>
+        <span class="prio-bar"><i style="width:${Math.round(stakeYou(i)/top*100)}%"></i></span>
+        <span>${stakeYou(i)}</span></div>`).join("")}
+      <p style="color:var(--ink-dim);font-size:13px;margin:12px 0 0">
+        Guard the top of that list. The bottom is what you sell them.</p>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="eyebrow">Your walk-away</div>
+      <div style="font-family:var(--display);font-size:38px;line-height:1.1">${sc.buyerWalk}</div>
+      <p style="color:var(--ink-dim);font-size:13px;margin:4px 0 0">
+        Sign for less than this and you did worse than walking out with nothing.</p>
+    </div>`;
+  document.body.appendChild(back);document.body.appendChild(d);
+  back.onclick=closeDrawer;
+  document.getElementById("closebrief").onclick=closeDrawer;
+  tutAdvance("brief");
+}
 function openDrawer(){
   if(document.getElementById("drawer"))return;
   const back=document.createElement("div");back.className="backdrop";back.id="backdrop";
@@ -1285,6 +1762,7 @@ function openDrawer(){
   document.body.appendChild(back);document.body.appendChild(d);
   back.onclick=closeDrawer;
   renderDrawer();
+  tutAdvance("opened");
 }
 function closeDrawer(){
   document.getElementById("drawer")?.remove();
@@ -1383,6 +1861,7 @@ async function sendOffer(){
     if(!ok)return;
   }
   closeDrawer();
+  tutAdvance("sent");
   G.yours=picks;G.log.offers.push(picks);
   const reply=G.seller.respond(picks,G.round), p=G.ch.persona;
 
@@ -1428,6 +1907,7 @@ async function acceptTheirs(){
 }
 function askPriorities(){
   G.log.asked=true;
+  tutAdvance("asked");
   react("thinking",null);
   speak(G.seller.hint(),null,"Asking cost you nothing and no round. Most people never do it once.");
 }
@@ -1451,7 +1931,7 @@ function saySomething(){
     case"threat":key="threat";mood="smug";note="Threats are cheap. They only work if they think you mean it.";break;
     case"insult":key="insult";mood="angry";G.seller.insults++;G.log.insults++;
       note="That cost you goodwill. Some people have very little to spare.";break;
-    case"flatter":key="small";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;
+    case"flatter":key="warm";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;
       note="Warmth is free and it buys you patience.";break;
     case"flexible":key="small";mood="smug";
       named.forEach(k=>{G.seller.nudge(k,-1.2);if(!G.log.revealed.includes(k))G.log.revealed.push(k)});
@@ -1520,18 +2000,16 @@ function buildReview(){
     return{label:iss.label,you:o.you,yourStake:ys,them:o.them,theirStake:ts,
       winner:Math.abs(yShare-tShare)<0.2?"split":(yShare>tShare?"you":"them"),yShare};
   }):[];
-  let grade="F",note="No deal. A signable package existed and neither of you found it.";
+  let medal="none", rank="Rookie",
+      note="You walked out with nothing, and there was a deal on the table both of you would have signed.";
   if(dealt){
     const v=0.65*capture+0.35*efficiency;
-    const scale=[[0.90,"A+","Close to the best outcome available to you. Genuinely well negotiated."],
-      [0.80,"A","Strong. You found the trades and took most of what was gettable."],
-      [0.70,"B","Solid. You made real trades but left some on the table."],
-      [0.58,"C","Workable deal, ordinary negotiation. The value was there to take."],
-      [0.45,"D","You signed something worse than you needed to."]];
-    grade="F";note="This deal cost you most of what was available.";
-    for(const[cut,g,n]of scale)if(v>=cut){grade=g;note=n;break}
+    if(v>=0.82){medal="gold";rank="Shark";note="About as well as this could have gone. You found the trades and you took them.";}
+    else if(v>=0.66){medal="silver";rank="Closer";note="A strong deal. You traded properly, with a little still left behind.";}
+    else if(v>=0.48){medal="bronze";rank="Dealmaker";note="A real deal, but an ordinary one. There was more on the table than you took.";}
+    else {medal="none";rank="Rookie";note="You signed, but this deal cost you most of what was available.";}
   }
-  return{s,rows,capture,efficiency,valueLeft,grade,note,best,bestScore,dealt,viable,
+  return{s,rows,capture,efficiency,valueLeft,medal,rank,note,best,bestScore,dealt,viable,
     trades:dealt?winWinTrades(sc,outcome.picks).slice(0,3):[]};
 }
 function lessonsFor(rev){
@@ -1626,31 +2104,51 @@ function frontierSVG(rev){
     <text x="${CW-14}" y="${y(sc.sellerWalk)-6}" fill="#C9873F" font-size="10" text-anchor="end" font-family="Archivo,sans-serif">their floor</text>
   </svg>`;
 }
+function medalSVG(kind){
+  const face={gold:["#E3B94E","#8A6B22"],silver:["#C7CBCE","#7C8386"],
+              bronze:["#C98B5A","#7A4F2C"],none:["#3A342C","#2A251F"]}[kind];
+  return `<svg viewBox="0 0 100 100" class="medal" aria-hidden="true">
+    <path d="M 30 4 L 44 4 L 56 40 L 38 40 Z" fill="#8C3A32"/>
+    <path d="M 70 4 L 56 4 L 44 40 L 62 40 Z" fill="#6E2B25"/>
+    <circle cx="50" cy="63" r="31" fill="${face[1]}"/>
+    <circle cx="50" cy="60" r="29" fill="${face[0]}"/>
+    <circle cx="50" cy="60" r="23" fill="none" stroke="${face[1]}" stroke-width="2.5" opacity=".7"/>
+    ${kind==="none"?`<path d="M 38 48 L 62 72 M 62 48 L 38 72" stroke="#6F675B" stroke-width="5" stroke-linecap="round"/>`
+      :`<g><circle cx="42" cy="58" r="6" fill="${face[1]}"/><path d="M 32 74 q 0 -8 10 -8 q 10 0 10 8 Z" fill="${face[1]}"/>
+         <circle cx="60" cy="58" r="6" fill="${face[1]}"/><path d="M 50 74 q 0 -8 10 -8 q 10 0 10 8 Z" fill="${face[1]}"/>
+         <rect x="30" y="72" width="40" height="3.6" rx="1.8" fill="${face[0]}"/></g>`}
+  </svg>`;
+}
 const HEADLINE={signed:"Deal signed.",youwalked:"You walked away. No deal.",
   theywalked:"They walked away. No deal.",raged:"They lost their temper and walked out.",
   timeout:"The clock ran out. No deal."};
 
 function showDebrief(){
   const rev=buildReview(), lessons=lessonsFor(rev), p=G.ch.persona;
-  const good=["A+","A","B"].includes(rev.grade);
+  const good=rev.medal==="gold"||rev.medal==="silver";
   const farewell=pickLine(p,good?"goodbye":"badbye",G.rng);
-  const gradeClass=good?"hi":(rev.grade==="C"||rev.grade==="D")?"mid":"lo";
-  restartBtn.hidden=false;
+  setChrome("Result",{restart:true});
+  const worst=lessons.find(l=>l.sev!=="good");
   app.innerHTML=`
   <div class="scene" style="border-radius:13px;margin-bottom:14px">${sceneSVG(G.ch,good?"pleased":"smug",G.seed)}</div>
   <div class="panel">
     <div class="eyebrow">${esc(HEADLINE[G.outcome.kind]||"Session over")}</div>
     <div class="verdict" style="margin-top:12px">
-      <div class="grade ${gradeClass}">${rev.grade}</div>
-      <div class="stats">
-        <div class="stat"><b>${rev.s.you}</b><span>your score</span></div>
-        <div class="stat"><b>${rev.s.them}</b><span>their score</span></div>
-        <div class="stat"><b>${Math.round(rev.capture*100)}%</b><span>value captured</span></div>
-        <div class="stat"><b>${rev.dealt?Math.round(rev.efficiency*100)+"%":"&mdash;"}</b><span>pie found</span></div>
-        <div class="stat"><b>${rev.dealt?rev.valueLeft:"&mdash;"}</b><span>left on table</span></div>
+      ${medalSVG(rev.medal)}
+      <div style="min-width:0">
+        <div class="rankname ${rev.medal}">${esc(rev.rank)}</div>
+        <p class="headline">${esc(rev.note)}</p>
       </div>
     </div>
-    <p class="lede" style="margin-top:14px">${esc(rev.note)}</p>
+    <div class="plainstats">
+      <div class="plainstat"><b>${rev.s.you}</b>
+        <span>points out of the <b style="font-size:15px">${rev.bestScore}</b> you could have got</span></div>
+      ${rev.dealt&&rev.valueLeft>0?`<div class="plainstat"><b>${rev.valueLeft}</b>
+        <span>points you and ${esc(G.ch.name.split(" ")[0])} both threw away &mdash; neither of you had to</span></div>`:""}
+      ${rev.dealt&&rev.valueLeft===0?`<div class="plainstat"><b>0</b>
+        <span>points wasted. Nothing was left behind by either of you</span></div>`:""}
+      ${worst?`<div class="plainstat"><b>&#9654;</b><span>Biggest mistake: ${worst.title.replace(/^You /,"you ")}</span></div>`:""}
+    </div>
   </div>
   <div class="cols" style="margin-top:14px">
     <div>
@@ -1714,19 +2212,25 @@ function showDebrief(){
   <div class="panel" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
     <button class="btn primary" id="again">New deal, new person</button>
     <button class="btn" id="replay">Replay this exact deal</button>
+    <button class="btn ghost" id="tomenu2">Back to menu</button>
     <span style="color:var(--ink-faint);font-size:12px">deal #${G.seed}</span>
   </div>`;
   document.getElementById("again").onclick=()=>newGame();
   document.getElementById("replay").onclick=()=>newGame(G.seed);
-  restartBtn.onclick=()=>newGame();
+  document.getElementById("tomenu2").onclick=()=>{stopIdle();G=null;showMenu()};
   window.scrollTo({top:0,behavior:reduced()?"auto":"smooth"});
 }
 
 /* ======================================================================
    11. Boot.
    ====================================================================== */
-function start(saved){ newGame(saved&&saved.seed?saved.seed:undefined) }
-try{ window.claude?.hot?.snapshot?.(()=>({seed:G?G.seed:null})) }catch(e){}
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&document.getElementById("drawer"))closeDrawer();
+});
+function start(saved){
+  if(saved&&saved.seed&&saved.playing)newGame(saved.seed);else showMenu();
+}
+try{ window.claude?.hot?.snapshot?.(()=>({seed:G?G.seed:null,playing:!!(G&&G.started&&!G.outcome)})) }catch(e){}
 if(window.claude?.hot?.ready)window.claude.hot.ready(start);
 else start(window.claude?.hot?.data??{});
 </script>
