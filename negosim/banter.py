@@ -24,6 +24,8 @@ FACE_FOR: dict[str, str] = {
     P.THREAT: X.SMUG,
     P.SMALLTALK: X.PLEASED,
     P.STALL: X.BORED,
+    P.EPILOGUE_GOOD: X.PLEASED,
+    P.EPILOGUE_BAD: X.SMUG,
 }
 
 MOOD_FOR: dict[str, str] = {
@@ -40,6 +42,8 @@ MOOD_FOR: dict[str, str] = {
     P.THREAT: "called the bluff",
     P.SMALLTALK: "briefly human",
     P.STALL: "impatient",
+    P.EPILOGUE_GOOD: "candid, giving credit where it is due",
+    P.EPILOGUE_BAD: "candid, telling them what they got wrong",
 }
 
 # A loose comic register per personality, used for unprompted asides.
@@ -140,6 +144,12 @@ DESCRIPTIONS = {
     P.THREAT: "The buyer threatened to walk away from the deal.",
     P.SMALLTALK: "The buyer made small talk or was friendly.",
     P.STALL: "The buyer is wasting time and you want to move on.",
+    P.EPILOGUE_GOOD: ("The negotiation is over and the act is dropped. Tell the buyer, "
+                      "honestly, what they did well. You can still be blunt about it."),
+    P.EPILOGUE_BAD: ("The negotiation is over and the act is dropped. Tell the buyer, "
+                     "honestly, the single biggest thing they got wrong. Be blunt and "
+                     "a little smug, but actually useful -- this is the one moment you "
+                     "are on their side."),
 }
 
 

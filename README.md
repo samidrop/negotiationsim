@@ -66,6 +66,50 @@ Talking is not cosmetic. Insulting them burns goodwill and shortens their fuse;
 being warm buys patience back; telling them you are flexible on a term makes
 them stop paying you for it; naming a trade out loud makes them expect it.
 
+## The debrief
+
+When the deal closes (or doesn't), three things happen.
+
+**They drop the act.** Whoever you just negotiated against tells you, in their
+own voice, what they saw you do. The Professional is constructive about it. The
+Shark tells you what he let you get away with. The Burnout admits he'd have
+caved on three terms if you'd pushed.
+
+**A map of every deal that was possible**, with yours marked on it:
+
+```
+  their score
+  100 +----------------------------------------------
+      |o
+      |. o.o ...o
+      |   ........o.o
+      | .   ...........ooo.o
+      |  . ..................o.o.o
+      |    ... ...................ooo
+      |      .........................oo
+      |         ..............@..........Boo
+      |             ........................ooo
+    0 |                                             o
+      +----------------------------------------------
+       0                              your score  100
+
+  . possible   o efficient   B best you could have had   @ your deal
+```
+
+**Then the hard numbers.** A "who won what" table showing, term by term, what
+each side was playing for and who took it. The win-win trades you walked past,
+stated as concrete swaps. The best package they would ever have signed. Then
+the mistakes, worst first — and a grade.
+
+The analysis is exhaustive, not opinion: the simulator knows all 1,280 packages
+and both hidden scoresheets, so it can say precisely which trades existed.
+
+One structural fact the debrief is built around: **no single term can ever make
+both sides better off.** Every issue on its own is a straight tug of war. Gains
+for both only exist when you trade one term against another. That is the whole
+game, and it is why "meeting in the middle" on everything is the worst common
+outcome.
+
 ## Live AI dialogue (optional)
 
 Out of the box every character speaks from 241 hand-written lines and reads your
@@ -110,6 +154,7 @@ python3 -m unittest discover -s tests
 | `negosim/portrait.py` | Clipart faces in 256 colours, with thirteen expressions |
 | `negosim/intent.py` | Reading what the player typed in plain English |
 | `negosim/banter.py` | Choosing the face and the line for the moment |
+| `negosim/coach.py` | The debrief: scorecard, win-win trades, mistakes, grade, frontier map |
 | `negosim/llm.py` | Optional live dialogue via the Claude API |
 | `negosim/game.py` | The playable round loop |
 | `negosim/hud.py` | The live side bar |
@@ -118,4 +163,4 @@ python3 -m unittest discover -s tests
 | `negotiate.py` | Command line entry point |
 | `tests/` | Checks that the scenario is actually negotiable and the maths is right |
 
-Python 3.9+. No dependencies.
+Python 3.9+. No dependencies. 100 tests: `python3 -m unittest discover -s tests`

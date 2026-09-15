@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from . import banter, hud, intent, persona as P, portrait as X, ui
+from . import banter, coach, hud, intent, persona as P, portrait as X, ui
 from .analysis import judge
 from .character import Character, generate_character
 from .deal import BUYER, SELLER, Offer, Scenario
@@ -39,6 +39,7 @@ class Outcome:
     seed: int
     history: list[tuple[str, Offer]] = field(default_factory=list)
     fleeced: bool = False      # they gleefully accepted; you overpaid badly
+    log: "coach.PlayLog" = field(default_factory=lambda: coach.PlayLog())
 
     @property
     def is_deal(self) -> bool:
@@ -74,8 +75,7 @@ class Game:
         self.your_offer: Offer | None = None
         self.history: list[tuple[str, Offer]] = []
         self.round = 1
-        self.asked_priorities = False
-        self.things_said = 0
+        self.log = coach.PlayLog(rounds_available=rounds)
 
     # -- input -------------------------------------------------------------
 
@@ -238,7 +238,7 @@ class Game:
         named = intent.mentioned_issues(text, self.scenario.issue_keys)
 
         if meaning == intent.ASK_PRIORITIES:
-            self.asked_priorities = True
+            self.log.asked_priorities = True
             self.render_speech(
                 self.seller.hint(), X.THINKING,
                 extra="You asked what drives them. Whether that was the truth "
@@ -259,13 +259,17 @@ class Game:
             return P.THREAT, "Threats are cheap. They only work if they think you mean it."
         if meaning == intent.INSULT:
             seller.insults += 1
+            self.log.insults_given += 1
             return P.INSULT, "That cost you goodwill. Some people have very little to spare."
         if meaning == intent.FLATTER:
             seller.insults = max(0, seller.insults - 1)
+            self.log.warmth_given += 1
             return P.SMALLTALK, "Warmth is free and it buys you patience."
         if meaning == intent.SIGNAL_FLEXIBLE:
             for key in named:
                 seller.importance[key] = max(0.3, seller.importance[key] - 1.2)
+                if key not in self.log.revealed_flexibility:
+                    self.log.revealed_flexibility.append(key)
             if named:
                 labels = ", ".join(self.scenario.issue(k).label.lower() for k in named)
                 return P.SMALLTALK, (f"You just told them you don't care about {labels}. "
@@ -274,6 +278,8 @@ class Game:
         if meaning == intent.PROPOSE_TRADE:
             for key in named:
                 seller.importance[key] += 0.8
+                if key not in self.log.trades_proposed:
+                    self.log.trades_proposed.append(key)
             if named:
                 labels = ", ".join(self.scenario.issue(k).label.lower() for k in named)
                 return P.CLOSE, (f"You flagged {labels} as something you want. "
@@ -299,8 +305,9 @@ class Game:
             return self._outcome(QUIT, None)
 
     def _outcome(self, kind: str, offer: Offer | None, fleeced: bool = False) -> Outcome:
+        self.log.rounds_used = self.round
         return Outcome(kind, offer, self.round, self.scenario, self.product,
-                       self.character, self.seed, self.history, fleeced)
+                       self.character, self.seed, self.history, fleeced, self.log)
 
     def _rounds(self) -> Outcome:
         while self.round <= self.rounds:
@@ -323,7 +330,7 @@ class Game:
                 if outcome:
                     return outcome
             elif choice == "3":
-                self.asked_priorities = True
+                self.log.asked_priorities = True
                 self.render_speech(self.seller.hint(), X.THINKING,
                                    extra="Asking cost you nothing. Most people never ask.")
             elif choice == "4":
@@ -345,6 +352,7 @@ class Game:
             return None
         self.your_offer = offer
         self.history.append(("you", offer))
+        self.log.your_offers.append(offer)
 
         before = self.seller.last_counter
         reply = self.seller.respond(offer, self.round)
@@ -451,6 +459,12 @@ def summarise(outcome: Outcome) -> str:
     return "\n".join(out)
 
 
+def deliver_epilogue(game: "Game", rev) -> None:
+    """They drop the act and tell you what they saw. Still in character."""
+    situation = P.EPILOGUE_GOOD if rev.grade in ("A+", "A", "B") else P.EPILOGUE_BAD
+    game.speak(situation)
+
+
 def start(seed: int | None = None, rounds: int = 8) -> Outcome:
     scenario, product, seed = generate_scenario(seed)
     rng = random.Random(seed)
@@ -459,4 +473,7 @@ def start(seed: int | None = None, rounds: int = 8) -> Outcome:
     game = Game(scenario, product, character, seed, rounds=rounds, rng=rng)
     outcome = game.play()
     print(summarise(outcome))
+    rev = coach.review(outcome, outcome.log)
+    deliver_epilogue(game, rev)
+    print(coach.render(rev))
     return outcome

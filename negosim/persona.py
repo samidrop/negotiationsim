@@ -17,6 +17,7 @@ from dataclasses import dataclass
 # Situations a line can be written for.
 OPEN, INSULT, BELOW, CLOSE = "open", "insult", "below", "close"
 ACCEPT, THIN, DELIGHT, RAGE, WALK = "accept", "thin", "delight", "rage", "walk"
+EPILOGUE_GOOD, EPILOGUE_BAD = "epilogue_good", "epilogue_bad"
 PRESSED, THREAT, SMALLTALK, STALL = "pressed", "threat", "smalltalk", "stall"
 
 
@@ -568,3 +569,97 @@ def line(persona: Persona, situation: str, rng: random.Random, fallback: str = "
     if not pool:
         return fallback
     return rng.choice(pool)
+
+
+# --------------------------------------------------------------------------
+# The epilogue: what they say once the deal is done and the act drops.
+# Kept separate from the negotiating lines because it is a different
+# register -- they have nothing left to win, so they say what they saw.
+# --------------------------------------------------------------------------
+
+EPILOGUES: dict[str, dict[str, tuple[str, ...]]] = {
+    "shark": {
+        EPILOGUE_GOOD: (
+            "You did well and I'm not going to pretend otherwise. You worked out what I was protecting and you made me pay for it.",
+            "Fine. You beat me on the terms that counted and you didn't waste rounds proving it. That's the job.",
+        ),
+        EPILOGUE_BAD: (
+            "Here's your free lesson, since it costs me nothing now: you fought me hardest on the one term where neither of us could win. I let you.",
+            "You spent the whole meeting on price. Price was never the game. You'll work that out eventually, probably after your board does.",
+        ),
+    },
+    "pro": {
+        EPILOGUE_GOOD: (
+            "Genuinely well played. You asked the right question early and you built around the answer. Most people never do either.",
+            "That was a good negotiation. You traded rather than argued, and we both leave with something defensible.",
+        ),
+        EPILOGUE_BAD: (
+            "Can I offer something? You conceded on the terms you needed and held firm on the ones you didn't. That's backwards, and it's very common.",
+            "You had more room than you used. I'd have gone further if you'd asked me to, and I'd have told you where if you'd asked that too.",
+        ),
+    },
+    "burnout": {
+        EPILOGUE_GOOD: (
+            "Yeah, alright, that was decent. You didn't waffle. I respect not waffling.",
+            "Honestly? Good job. You got more out of me than I planned to give and I only half noticed.",
+        ),
+        EPILOGUE_BAD: (
+            "Not being funny but I'd have caved on like three of those if you'd pushed. I was barely here.",
+            "You were so busy negotiating you forgot to ask me anything. I'd have told you. I tell everyone. Nobody asks.",
+        ),
+    },
+    "hype": {
+        EPILOGUE_GOOD: (
+            "Okay real talk, that was clean. You clocked what I actually wanted and you charged me for it. Respect.",
+            "Nah you cooked there. Genuinely. I was doing the friendly thing and you didn't fall for it once.",
+        ),
+        EPILOGUE_BAD: (
+            "Love you, but you got played by a guy being nice to you. That's the whole trick. That's it. That's the entire trick.",
+            "You were so pleased I was smiling that you stopped counting. Happens every time and it'll happen again.",
+        ),
+    },
+    "bureaucrat": {
+        EPILOGUE_GOOD: (
+            "That was efficiently done. You found the terms I had discretion on and you stayed there. Very few people bother.",
+            "Well handled. You stopped arguing with the policy and started working around it, which is the correct move.",
+        ),
+        EPILOGUE_BAD: (
+            "A note for next time: I said 'I can't approve that' about six times. On four of those I could have. You never once tested it.",
+            "You accepted every constraint I described as if I'd proved it. I hadn't. Nobody ever makes me.",
+        ),
+    },
+    "volatile": {
+        EPILOGUE_GOOD: (
+            "See? That's how you do it. You read me, you didn't poke me, and you still got paid. Good.",
+            "Alright, that was sharp. You knew when to push and when to shut up. Most people only know the first one.",
+        ),
+        EPILOGUE_BAD: (
+            "You went in swinging at someone you'd known for ninety seconds. Read the room first. The room was me.",
+            "That whole thing could have gone better if you'd worked out what kind of person you were sat across from.",
+        ),
+    },
+    "oldhead": {
+        EPILOGUE_GOOD: (
+            "That was properly done, and I don't say that often. You traded what was cheap for you and expensive for me. That's the whole craft.",
+            "Good. You'll be fine in this business. You asked questions before you made demands, which took me ten years to learn.",
+        ),
+        EPILOGUE_BAD: (
+            "You negotiated like it was a fight. It's a trade. Different sport, different muscles.",
+            "You never asked me a single thing about my business. Thirty years and I'll still tell anyone who asks. Nobody asks.",
+        ),
+    },
+    "quant": {
+        EPILOGUE_GOOD: (
+            "Your allocation was close to optimal. You concentrated your concessions on your low-weight terms, which is exactly correct.",
+            "Efficient outcome. You captured most of the available surplus and you did it without wasting rounds. Well modelled.",
+        ),
+        EPILOGUE_BAD: (
+            "Your terms were misallocated. You optimised the issue with the smallest spread and conceded the ones with the largest. That is strictly dominated.",
+            "There were packages better for both of us than the one you signed. That's not a moral failing, it's just money neither of us collected.",
+        ),
+    },
+}
+
+# Merge the epilogues into each personality's dialogue.
+for _persona in PERSONAS:
+    _persona.lines.update(EPILOGUES[_persona.key])
