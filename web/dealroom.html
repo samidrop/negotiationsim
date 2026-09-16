@@ -102,8 +102,12 @@
   .tutbar{display:flex;gap:12px;align-items:flex-start;border:1px solid #C3D4E3;
     border-left:4px solid var(--you);background:var(--you-soft);border-radius:11px;
     padding:12px 15px;margin-bottom:12px}
-  .tutbar .step{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--you);white-space:nowrap}
-  .tutbar p{margin:0;font-size:14.5px}
+  .tutbar .step{font-size:12px;font-weight:700;color:#fff;background:var(--you);
+    border-radius:99px;padding:3px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .tutbody{flex:1;min-width:0}
+  .tutbar p{margin:0;font-size:14.5px;line-height:1.55}
+  .tutacts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .btn.small{padding:7px 13px;font-size:13px}
   .pulse{animation:pulse 1.5s ease-in-out infinite;position:relative;z-index:2}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,78,121,.55)}50%{box-shadow:0 0 0 8px rgba(31,78,121,0)}}
   .twinkle{animation:twinkle 4s ease-in-out infinite}
@@ -312,6 +316,18 @@
   .modal-back{position:fixed;inset:0;background:rgba(40,34,26,.40);z-index:100;display:grid;place-items:center;padding:20px;animation:fade .18s}
   .modal{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:22px;max-width:min(94vw,440px);box-shadow:0 20px 60px rgba(40,34,26,.26)}
   .modal h3{font-size:19px;margin-bottom:8px}
+  .tip{
+    position:absolute;z-index:200;max-width:min(88vw,330px);
+    background:var(--ink);color:#F7F4ED;border-radius:10px;padding:11px 13px;
+    font-size:13px;line-height:1.5;box-shadow:0 10px 30px rgba(20,16,10,.34);
+    pointer-events:none;animation:fade .12s;
+  }
+  .tip b{display:block;font-family:var(--display);font-size:14.5px;margin-bottom:4px;color:#FFD9A8}
+  .tip p{margin:0;color:#E4DED2}
+  [data-tip]{cursor:help;border-bottom:1px dashed var(--edge-lit)}
+  .gloss{display:flex;flex-direction:column;gap:13px;margin-top:14px}
+  .glossrow b{display:block;font-family:var(--display);font-size:15.5px;color:var(--ink)}
+  .glossrow p{margin:3px 0 0;font-size:13.5px;color:var(--ink-dim)}
   .modal.opening{max-width:min(94vw,500px)}
   .openrule{height:1px;background:var(--edge);margin:15px 0 13px}
   .openstat{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;margin-top:12px;
@@ -332,6 +348,7 @@
     <button class="brandbtn" id="tomenu" title="Back to menu"></button>
     <div class="spacer"></div>
     <span class="crumb" id="crumb"></span>
+    <button id="helpbtn" class="btn ghost small" hidden title="What the words mean">?</button>
     <button id="briefbtn" class="btn ghost small" hidden>My brief</button>
     <button id="restart" class="btn ghost small" hidden>New deal</button>
   </div>
@@ -1106,6 +1123,7 @@ function personSVG(ch,mood){
     <ellipse cx="138" cy="118" rx="12" ry="7" fill="${cheek}" opacity=".3"/>
     ${aged}
     ${hair.front}
+    <g id="fig-flush"></g>
     <g id="fig-brows"></g>
     <g id="fig-eyes"></g>
     ${noseSVG(l.nose,l.skin)}
@@ -1487,6 +1505,48 @@ function sceneSVG(ch,mood,seed){
   </svg>`;
 }
 
+
+
+/* ----------------------------------------------------------------------
+   Tension. Not a bar -- you read it off their face. It climbs when you
+   lowball them, insult them or burn the clock, and it falls when a deal
+   gets close or you are decent to them. High tension flushes the skin,
+   beads sweat and hardens whatever expression they were already wearing.
+   ---------------------------------------------------------------------- */
+function bumpTension(n){
+  if(!G)return;
+  G.tension=Math.max(0,Math.min(100,(G.tension||0)+n));
+  paintTension();
+}
+function tensionLevel(){
+  const t=G?G.tension||0:0;
+  return t>=78?"boiling":t>=54?"hot":t>=30?"warm":"cool";
+}
+function paintTension(){
+  const el=document.getElementById("fig-flush");
+  if(!el||!G)return;
+  const t=G.tension||0, skin=G.ch.look.skin;
+  // Blood goes to the cheeks and the ears first, not evenly over the face.
+  const flush=Math.min(.34,t/100*.38);
+  let out=`<ellipse cx="110" cy="116" rx="50" ry="56" fill="#C23B22" opacity="${(flush*0.42).toFixed(3)}" clip-path="url(#hc)"/>`
+    +`<ellipse cx="82" cy="118" rx="19" ry="12" fill="#BE3A22" opacity="${flush.toFixed(3)}" clip-path="url(#hc)"/>`
+    +`<ellipse cx="138" cy="118" rx="19" ry="12" fill="#BE3A22" opacity="${flush.toFixed(3)}" clip-path="url(#hc)"/>`
+    +`<ellipse cx="110" cy="152" rx="26" ry="12" fill="#BE3A22" opacity="${(flush*0.7).toFixed(3)}" clip-path="url(#hc)"/>`;
+  if(t>=44)out+=`<ellipse cx="59" cy="102" rx="9.5" ry="14" fill="#BE3A22" opacity="${(flush*0.8).toFixed(3)}"/>
+                 <ellipse cx="161" cy="102" rx="9.5" ry="14" fill="#BE3A22" opacity="${(flush*0.8).toFixed(3)}"/>`;
+  if(t>=62)out+=`<path d="M 150 62 q 7 13 0 19 q -7 -6 0 -19 Z" fill="#7FB6D6" opacity=".85"/>`;
+  if(t>=78)out+=`<g stroke="#8E2A1C" stroke-width="2.4" fill="none" opacity=".7" stroke-linecap="round">
+      <path d="M 70 54 l 7 7 l -7 6"/><path d="M 78 52 l 7 7 l -7 6"/></g>`;
+  el.innerHTML=out;
+}
+/* Tension colours which face they pull, not just how red it is. */
+function tensionMood(base){
+  const lvl=tensionLevel();
+  if(lvl==="boiling"&&(base==="annoyed"||base==="thinking"))return"angry";
+  if(lvl==="hot"&&base==="thinking")return"annoyed";
+  if(lvl==="cool"&&base==="annoyed")return"thinking";
+  return base;
+}
 
 /* ---- where they are looking ----------------------------------------
    Gaze is the loudest thing on a face. It drifts while they think, drops
@@ -1882,17 +1942,27 @@ function showCast(){
    the same rules and the same maths apply.
    ====================================================================== */
 const TUTORIAL_SEED=740115;
+
+/* Chapters. The first few teach the idea with nothing on the line; the
+   rest run alongside a real negotiation. `done` names the action that
+   advances the step -- "read" means the player presses Next. */
 const TUT_STEPS=[
-  {id:"intro",hint:"This is a real negotiation, just a gentler one. Her offer is already on the table. Read what she said, then press <b>Ask what matters</b> &mdash; it is free and costs you no round.",
-   target:"#ask",done:"asked"},
-  {id:"asked",hint:"She just told you which term decides the deal for her. Now check your own side: press <b>My brief</b> and look at what each term is worth to <i>you</i>.",
-   target:"#briefbtn",done:"brief"},
-  {id:"brief",hint:"See the mismatch? The term she cares about most is near the bottom of your list. That is the trade. Open the term sheet.",
-   target:"#counter",done:"opened"},
-  {id:"opened",hint:"Give her the <b>largest volume</b> &mdash; it costs you almost nothing. Then take the best option on your own top two terms. Watch your score climb, then send it.",
-   target:"#send",done:"sent"},
-  {id:"sent",hint:"That is the whole game. She will counter; keep your top terms, keep giving ground only where it is cheap for you. Finish the deal however you like.",
-   target:null,done:"free"}
+ {hint:()=>`Welcome. You are the <b>buyer</b>. Somebody across the table is the <b>seller</b>, and you are going to argue about one contract for a few minutes.<br><br>Nothing here is jargon you need to know already \u2014 anything underlined, you can hover or tap for a plain explanation.`,done:"read"},
+ {hint:()=>`You are buying <b>${esc(G.sc.product.item)}</b> from ${esc(G.sc.sellerCo)}. That part is fixed. What you argue about is the <b>five terms</b> of the contract: the price, how much you commit to buy, when you pay, how fast they deliver, and whether they can sell to your rivals.`,done:"read"},
+ {hint:()=>`Every option on every term is worth some <b data-tip="points">points</b> to you. Getting your favourite option on all five would be 100.<br><br>You also have a <b data-tip="walkaway">walk-away</b> of ${G.sc.buyerWalk}. That is what you get for standing up and leaving. Sign for less than that and you have done worse than not signing at all.`,done:"read"},
+ {hint:()=>{
+    const r=G.sc.issues.slice().sort((a,b)=>stakeYou(b)-stakeYou(a));
+    return `Here is the important part. <b>They have their own scoresheet and it is nothing like yours.</b><br><br>For you, ${esc(r[0].label.toLowerCase())} is the big one and ${esc(r[r.length-1].label.toLowerCase())} barely matters. For them it is the other way round on at least one term. Press <b>My brief</b> in the top bar to see your own list.`},done:"brief"},
+ {hint:()=>`That gap is the whole game.<br><br><b>Sell them the thing that is cheap for you and dear to them. Keep the thing that is dear to you.</b> Do that and you both walk out better off than if you had just split every difference down the middle.`,done:"read"},
+ {hint:()=>`So: find out what they want. Press <b>Ask what matters</b>. It is free and it does not use up a round \u2014 and most people never do it once.`,done:"asked"},
+ {hint:()=>`Watch her eyes when she answers. Someone being straight with you looks at you; someone shading it glances away first.<br><br>Now hold her answer next to your own list. The term she just named \u2014 how many points is it worth to <i>you</i>?`,done:"read"},
+ {hint:()=>`Time to build an offer. Press <b>Open the term sheet</b>.`,done:"opened"},
+ {hint:()=>{
+    const r=G.sc.issues.slice().sort((a,b)=>stakeYou(b)-stakeYou(a));
+    return `Give her the option she wants on <b>${esc(r[r.length-1].label.toLowerCase())}</b> \u2014 it costs you only ${stakeYou(r[r.length-1])} points.<br><br>Then take your best option on <b>${esc(r[0].label.toLowerCase())}</b>, worth ${stakeYou(r[0])}. Watch the number at the bottom climb, then press <b>Send this offer</b>.`},done:"sent"},
+ {hint:()=>`Now read her. Under the speech there is a line telling you exactly what she changed and whether it helped you.<br><br>And look at her face. The more you push her, the more she flushes. Push too hard and she will walk out for good.`,done:"read"},
+ {hint:()=>`Keep going. Concede only where it is cheap for you, and make her pay for every step. Her demands fall as the clock runs down, so patience is worth something \u2014 but run out of rounds and you both get nothing.`,done:"read"},
+ {hint:()=>`That is everything. Finish this deal however you like, and the scoreboard at the end will tell you what you missed and why.<br><br>Good luck. Most people lose this by fighting hardest over price, which is the one term where nobody can win.`,done:"read"}
 ];
 function startTutorial(){
   newGame(TUTORIAL_SEED,true);
@@ -1900,18 +1970,116 @@ function startTutorial(){
 function tutAdvance(event){
   if(!G||!G.tutorial)return;
   const step=TUT_STEPS[G.tutStep];
-  if(step&&step.done===event){G.tutStep=Math.min(G.tutStep+1,TUT_STEPS.length-1);paintTutorial()}
+  if(!step||step.done!==event)return;
+  if(G.tutStep>=TUT_STEPS.length-1){
+    G.tutorial=false;
+    const b=document.getElementById("tutbar");if(b)b.remove();
+    document.querySelectorAll(".pulse").forEach(e=>e.classList.remove("pulse"));
+    setChrome("Negotiation",{restart:true,brief:true});
+    return;
+  }
+  G.tutStep++;paintTutorial();
 }
+const TUT_TARGET={asked:"#ask",brief:"#briefbtn",opened:"#counter",sent:"#send"};
 function paintTutorial(){
   const bar=document.getElementById("tutbar");
   if(!bar||!G.tutorial)return;
-  const step=TUT_STEPS[G.tutStep];
-  bar.innerHTML=`<span class="step">Step ${G.tutStep+1}/${TUT_STEPS.length}</span><p>${step.hint}</p>`;
+  const step=TUT_STEPS[G.tutStep], last=G.tutStep>=TUT_STEPS.length-1;
+  bar.innerHTML=`
+    <span class="step">${G.tutStep+1} / ${TUT_STEPS.length}</span>
+    <div class="tutbody"><p>${step.hint()}</p>
+      <div class="tutacts">
+        ${step.done==="read"?`<button class="btn small primary" id="tutnext">${last?"Start negotiating":"Next"}</button>`:""}
+        ${last?"":`<button class="btn small ghost" id="tutskip">Skip the lesson</button>`}
+      </div></div>`;
   document.querySelectorAll(".pulse").forEach(e=>e.classList.remove("pulse"));
-  if(step.target){
-    const el=document.querySelector(step.target);
-    if(el)el.classList.add("pulse");
-  }
+  const sel=TUT_TARGET[step.done];
+  if(sel){const el=document.querySelector(sel);if(el)el.classList.add("pulse")}
+  const nx=document.getElementById("tutnext");
+  if(nx)nx.onclick=()=>tutAdvance("read");
+  const sk=document.getElementById("tutskip");
+  if(sk)sk.onclick=()=>{
+    G.tutorial=false;
+    document.querySelectorAll(".pulse").forEach(e=>e.classList.remove("pulse"));
+    const b=document.getElementById("tutbar");if(b)b.remove();
+    setChrome("Negotiation",{restart:true,brief:true});
+  };
+}
+
+
+/* ======================================================================
+   Plain English for every term the game uses. The real vocabulary stays
+   on screen -- you should leave knowing it -- but nothing is ever more
+   than a hover or a tap away from an explanation.
+   ====================================================================== */
+const GLOSSARY={
+  price:{title:"Price per unit",
+    plain:"What you pay for one of the things you're buying. Lower is better for you, higher is better for them. This is the one term where every point you win is a point they lose \u2014 there is no clever trade hiding in it."},
+  volume:{title:"Volume commitment",
+    plain:"How much you promise to buy over the year. Promising a lot is a risk for you \u2014 you're locked in whether you need it or not \u2014 but it is usually the single most valuable thing you can give a supplier, because it lets them plan their factory."},
+  payment:{title:"Payment terms",
+    plain:"How long you get to pay after the goods arrive. \u201cNet 90\u201d means you pay 90 days later. Longer is better for you because you keep your cash longer; shorter is better for them for exactly the same reason."},
+  delivery:{title:"Delivery window",
+    plain:"How long they take to deliver after you order. Also called lead time. Shorter is better for you \u2014 less waiting, less stock sitting in a warehouse."},
+  exclusivity:{title:"Exclusivity",
+    plain:"Whether they promise not to sell the same thing to your competitors, and where. Good for you because it keeps a rival from getting the same deal. Costly for them because it closes off customers they could otherwise sell to."},
+  points:{title:"Points",
+    plain:"A private score for how good a deal is <i>for you</i>. Every option is worth some points; getting your best option on all five terms would be 100. They have their own separate scoresheet and it is weighted differently, which is the whole game."},
+  walkaway:{title:"Walk-away",
+    plain:"The lowest score you should ever accept. Walking out with no deal is worth exactly this number. Sign anything below it and you have literally done worse than getting up and leaving."},
+  stake:{title:"Points at stake",
+    plain:"The gap between the best and worst option on this term. A big number means this term can swing your score a lot, so it is worth fighting for. A small number means you can give it away cheaply."},
+  counter:{title:"Counter-offer",
+    plain:"Your own version of the deal, sent back to them. You change whichever terms you like and send the whole package at once."},
+  zopa:{title:"Where a deal is possible",
+    plain:"Both of you have a floor. Any package that clears both floors is a deal you could both sign. Your job is to find one of those that is as far up your own scale as you can push it."}
+};
+
+/* A tooltip that works on hover and on tap, for anything carrying data-tip. */
+let tipEl=null;
+function hideTip(){if(tipEl){tipEl.remove();tipEl=null}}
+function showTip(target){
+  hideTip();
+  const g=GLOSSARY[target.dataset.tip];
+  if(!g)return;
+  tipEl=document.createElement("div");
+  tipEl.className="tip";
+  tipEl.innerHTML=`<b>${esc(g.title)}</b><p>${g.plain}</p>`;
+  document.body.appendChild(tipEl);
+  const r=target.getBoundingClientRect(), t=tipEl.getBoundingClientRect();
+  let left=r.left+r.width/2-t.width/2;
+  left=Math.max(10,Math.min(left,window.innerWidth-t.width-10));
+  let top=r.top-t.height-10;
+  if(top<8)top=r.bottom+10;
+  tipEl.style.left=left+"px";tipEl.style.top=(top+window.scrollY)+"px";
+}
+document.addEventListener("pointerover",e=>{
+  const t=e.target.closest("[data-tip]");
+  if(t)showTip(t);
+});
+document.addEventListener("pointerout",e=>{
+  if(e.target.closest("[data-tip]"))hideTip();
+});
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tip]");
+  if(t){e.preventDefault();showTip(t)}else hideTip();
+});
+document.addEventListener("scroll",hideTip,true);
+
+/* The same content, all on one screen, reachable at any time. */
+function openGlossary(){
+  const back=document.createElement("div");back.className="modal-back";
+  back.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="What the words mean"
+      style="max-width:min(94vw,600px);max-height:86vh;overflow:auto">
+    <h3>What the words mean</h3>
+    <p style="margin-bottom:4px">Every term this game uses, in plain English.</p>
+    <div class="gloss">${Object.values(GLOSSARY).map(g=>
+      `<div class="glossrow"><b>${esc(g.title)}</b><p>${g.plain}</p></div>`).join("")}</div>
+    <div class="modal-actions"><button class="btn primary" data-close>Got it</button></div></div>`;
+  document.body.appendChild(back);
+  back.addEventListener("click",e=>{
+    if(e.target===back||e.target.closest("[data-close]"))back.remove();
+  });
 }
 
 /* ======================================================================
@@ -1922,6 +2090,8 @@ const restartBtn=document.getElementById("restart");
 const topbar=document.getElementById("topbar");
 const crumb=document.getElementById("crumb");
 const briefBtn=document.getElementById("briefbtn");
+const helpBtn=document.getElementById("helpbtn");
+helpBtn.onclick=openGlossary;
 document.getElementById("tomenu").innerHTML=logoSVG(30)+wordmark();
 document.getElementById("tomenu").onclick=leaveToMenu;
 restartBtn.onclick=()=>newGame();
@@ -1931,6 +2101,7 @@ function setChrome(label,opts){
   crumb.textContent=label||"";
   restartBtn.hidden=!(opts&&opts.restart);
   briefBtn.hidden=!(opts&&opts.brief);
+  helpBtn.hidden=!(opts&&opts.brief);
 }
 async function leaveToMenu(){
   if(G&&!G.outcome&&G.started){
@@ -1965,7 +2136,7 @@ function newGame(seed,tutorial){
      seller:makeSeller(sc,ch.persona,ROUNDS,rng),
      theirs:null,draft:null,yours:null,mood:ch.persona.rest,
      said:"",note:"",outcome:null,drawerOpen:false,started:false,
-     tutorial:!!tutorial,tutStep:0,heard:new Set(),
+     tutorial:!!tutorial,tutStep:0,heard:new Set(),tension:0,
      log:{asked:false,insults:0,warmth:0,revealed:[],offers:[]}};
   const opening=G.seller.opening();
   G.theirs=opening.picks.slice();G.draft=opening.picks.slice();
@@ -2136,7 +2307,7 @@ function setMood(mood){
   const put=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html};
   put("fig-brows",parts.brows);put("fig-eyes",parts.eyes);
   put("fig-mouth",parts.mouth);put("fig-fx",parts.fx);
-  applyGaze();
+  applyGaze();paintTension();
   const hands=document.getElementById("handsgrp");
   if(hands)hands.innerHTML=handsSVG(G.ch,mood);
 }
@@ -2244,10 +2415,10 @@ function renderDrawer(){
         <div class="eyebrow" style="margin-bottom:10px">Your counter &mdash; numbers are what each option is worth to you</div>
         <div class="terms" id="terms"></div>
         <div class="meter">
-          <div class="meter-top"><span>Your package is worth</span><b class="num" id="ys">${y.you}</b></div>
+          <div class="meter-top"><span data-tip="points">Your package is worth</span><b class="num" id="ys">${y.you}</b></div>
           <div class="bar"><div class="fill${y.you<sc.buyerWalk?" under":""}" id="fill" style="width:${y.you}%"></div>
             <div class="floor" style="left:${sc.buyerWalk}%"></div></div>
-          <div class="meter-legend"><span>walk away = <b class="num">${sc.buyerWalk}</b></span>
+          <div class="meter-legend"><span data-tip="walkaway">walk away = <b class="num">${sc.buyerWalk}</b></span>
             <span class="num" id="yv">${money(contractValue(sc,G.draft))}/yr</span></div>
         </div>
         <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
@@ -2316,6 +2487,10 @@ async function sendOffer(){
   setGaze("paper",1500);
   G.yours=picks;G.log.offers.push(picks);
   const reply=G.seller.respond(picks,G.round), p=G.ch.persona;
+  // How far under their floor you came in decides how much this costs you.
+  const theirs=scoreOf(sc,picks).them, gap=sc.sellerWalk-theirs;
+  bumpTension(gap>26?30:gap>12?18:gap>0?7:-14);
+  if(G.round>=G.rounds-2)bumpTension(6);
 
   if(reply.kind==="accept"){
     const fleeced=reply.mood==="delight";
@@ -2336,19 +2511,42 @@ async function sendOffer(){
     speak(pickLine(p,"walk",G.rng),null,"");
     return setTimeout(()=>finish("theywalked",null,false),2200);
   }
-  const moved=movedTerm(G.theirs,reply.offer.picks);
+  const explained=explainMove(G.theirs,reply.offer.picks);
   G.theirs=reply.offer.picks.slice();G.round++;
   setTimeout(()=>passPaper("in"),620);
-  const mood=reply.mood==="insult"?"angry":reply.mood==="close"?"thinking":"annoyed";
+  let mood=reply.mood==="insult"?"angry":reply.mood==="close"?"thinking":"annoyed";
+  if(reply.mood==="close"&&tensionLevel()==="cool"&&G.rng.chance(.4))mood="laughing";
+  mood=tensionMood(mood);
   react(mood,reply.mood==="insult"?"recoil":null);
   setGaze(reply.mood==="close"?"you":reply.mood==="insult"?"paper":"calc",2400);
   if(reply.mood==="close")lean("in");
   if(reply.mood==="insult")lean("back");
-  speak(pickLine(p,reply.mood,G.rng),null,
-    moved?`They moved on <b>${esc(moved)}</b>. Their offer is now worth <b>${scoreOf(sc,G.theirs).you}</b> to you.`
-         :`Their offer is worth <b>${scoreOf(sc,G.theirs).you}</b> to you.`);
+  speak(pickLine(p,reply.mood,G.rng),null,explained);
   if(G.round>G.rounds)setTimeout(()=>finish("timeout",null,false),2200);
 }
+
+/* Say what they actually did, in words, and whether it helped you. People
+   should not have to diff two term sheets in their head. */
+function explainMove(before,after){
+  const sc=G.sc, moves=[];
+  sc.issues.forEach((iss,i)=>{
+    if(before[i]===after[i])return;
+    const was=optionOf(iss,before[i]), now=optionOf(iss,after[i]);
+    moves.push({label:iss.label.toLowerCase(),from:was.label,to:now.label,delta:now.you-was.you});
+  });
+  const net=scoreOf(sc,after).you-scoreOf(sc,before).you;
+  if(!moves.length)
+    return `They changed nothing. Their offer is still worth <b>${scoreOf(sc,after).you}</b> to you.`;
+  const phrase=moves.map(m=>{
+    const dir=m.delta>0?"your way":m.delta<0?"their way":"sideways";
+    return `<b>${esc(m.label)}</b> from ${esc(m.from)} to ${esc(m.to)} (${dir})`;
+  }).join(", and ");
+  const verdict=net>0?`That leaves you <b>${net}</b> better off.`
+              :net<0?`That leaves you <b>${-net}</b> worse off.`
+              :`That leaves you exactly where you were.`;
+  return `They moved ${phrase}. ${verdict} Their offer is now worth <b>${scoreOf(sc,after).you}</b> to you.`;
+}
+
 function movedTerm(a,b){for(let i=0;i<a.length;i++)if(a[i]!==b[i])return G.sc.issues[i].label;return null}
 
 async function acceptTheirs(){
@@ -2387,10 +2585,10 @@ function saySomething(){
   let key="small",mood=p.rest,note="";
   switch(kind){
     case"why":key="pressed";mood="smug";break;
-    case"threat":key="threat";mood="smug";note="Threats are cheap. They only work if they think you mean it.";break;
-    case"insult":key="insult";mood="angry";G.seller.insults++;G.log.insults++;
+    case"threat":key="threat";mood="smug";bumpTension(12);note="Threats are cheap. They only work if they think you mean it.";break;
+    case"insult":key="insult";mood="angry";G.seller.insults++;G.log.insults++;bumpTension(26);
       note="That cost you goodwill. Some people have very little to spare.";break;
-    case"flatter":key="warm";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;
+    case"flatter":key="warm";mood="pleased";G.seller.insults=Math.max(0,G.seller.insults-1);G.log.warmth++;bumpTension(-18);
       note="Warmth is free and it buys you patience.";break;
     case"flexible":key="small";mood="smug";
       named.forEach(k=>{G.seller.nudge(k,-1.2);if(!G.log.revealed.includes(k))G.log.revealed.push(k)});
