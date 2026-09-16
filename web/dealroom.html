@@ -2,7 +2,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&family=Archivo:wght@400;500;600;700&display=swap">
 <style>
   :root{
-    --ground:#FBFAF7; --panel:#FFFFFF; --raised:#F4F2EC; --edge:#E3DFD6; --edge-lit:#C6C0B3;
+    --ground:#F6F2E9; --panel:#FFFDF8; --raised:#F1EBDD; --edge:#E0D8C7; --edge-lit:#C2B8A2;
+    --cream:#EFE7D6; --cream-deep:#E4D9C2;
     --ink:#1B1A18; --ink-dim:#5C574F; --ink-faint:#8B857A;
     --you:#1F4E79; --you-soft:#E6EDF4; --them:#C4643C; --them-soft:#FAEAE1;
     --bad:#B3382C; --good:#3F7A4A;
@@ -34,17 +35,18 @@
 
   /* ---------------- menu ---------------- */
   .menu{position:relative;border:1px solid var(--edge);border-radius:18px;overflow:hidden;
-    background:#E8ECEF;box-shadow:var(--shadow);min-height:clamp(520px,80vh,740px);display:flex;flex-direction:column}
+    background:#E4E8EB;box-shadow:var(--shadow);min-height:clamp(560px,88vh,820px);display:flex;flex-direction:column}
   .menu-art{position:absolute;inset:0;line-height:0}
   .menu-art svg{width:100%;height:100%;display:block;object-fit:cover}
   .menu-art::after{content:"";position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 30%)}
   .menu-inner{
-    position:relative;padding:clamp(22px,4vw,34px) clamp(22px,5vw,40px) clamp(22px,4vw,32px);
+    position:relative;padding:clamp(24px,4vw,38px) clamp(22px,5vw,42px) clamp(22px,4vw,34px);
     margin-top:auto;width:100%;
-    background:rgba(251,250,247,.93);backdrop-filter:blur(10px);
-    border-top:1px solid rgba(27,26,24,.10);
-    box-shadow:0 -14px 40px rgba(30,26,20,.10);
+    background:linear-gradient(180deg,rgba(247,242,231,.90),rgba(239,231,214,.97));
+    backdrop-filter:blur(12px);
+    border-top:1px solid rgba(27,26,24,.12);
+    box-shadow:0 -16px 44px rgba(60,48,28,.14);
   }
   .menu-brand{display:flex;align-items:center;gap:15px;margin-bottom:4px}
   .menu-brand .logomark{flex:none;filter:drop-shadow(0 3px 10px rgba(30,26,20,.18))}
@@ -52,23 +54,35 @@
     font-size:clamp(32px,6vw,54px);line-height:1;margin:0}
   .menu-title b{color:var(--you)}
   .menu-tag{color:var(--ink-dim);font-size:clamp(14px,1.8vw,16.5px);max-width:52ch;margin:8px 0 20px}
-  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
   .tile{
-    display:flex;align-items:center;gap:14px;text-align:left;
-    background:rgba(255,255,255,.92);border:1px solid var(--edge);border-radius:13px;
-    padding:15px 16px;color:var(--ink);transition:.16s;backdrop-filter:blur(4px);
-    box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:16px;text-align:left;
+    background:var(--panel);border:1px solid var(--edge);border-radius:16px;
+    padding:20px;color:var(--ink);transition:.18s;
+    box-shadow:0 1px 2px rgba(60,48,28,.06),0 8px 24px rgba(60,48,28,.09);
   }
   .tile:hover{border-color:var(--ink-faint);transform:translateY(-2px);background:#fff}
-  .tile .ic{flex:none;width:44px;height:44px}
+  .tile .ic{flex:none;width:58px;height:58px}
   .tile .tx{min-width:0}
-  .tile .tx b{display:block;font-family:var(--display);font-size:17px;font-weight:600}
-  .tile .tx span{display:block;font-size:12.5px;color:var(--ink-dim);line-height:1.35}
+  .tile .tx b{display:block;font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:2px}
+  .tile .tx span{display:block;font-size:13.5px;color:var(--ink-dim);line-height:1.38}
   .tile.lead{background:var(--you);border-color:var(--you);color:#fff}
   .tile.lead:hover{background:#2A5F8E;border-color:#2A5F8E;transform:translateY(-2px)}
   .tile.lead .tx span{color:rgba(255,255,255,.82)}
-  .menu-foot{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:20px;
-    font-size:12.5px;color:var(--ink-faint)}
+  .menu-foot{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
+  .settingsbar{
+    display:flex;align-items:center;gap:12px;width:100%;
+    background:rgba(255,253,248,.7);border:1px solid var(--edge);border-radius:13px;
+    padding:11px 15px;color:var(--ink-dim);font-size:13.5px;text-align:left;transition:.16s;
+  }
+  .settingsbar:hover{border-color:var(--ink-faint);background:var(--panel)}
+  .settingsbar .gear{flex:none;width:22px;height:22px}
+  .settingsbar b{color:var(--ink);font-weight:600;font-family:var(--display);font-size:15px}
+  .settingsbar .now{margin-left:auto;font-size:12px;color:var(--ink-faint);text-align:right}
+  .setlist{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+  .setrow{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .setrow b{display:block;font-family:var(--display);font-size:15.5px;color:var(--ink)}
+  .setrow span{display:block;font-size:12.5px;color:var(--ink-dim);max-width:34ch}
   .switch{display:inline-flex;align-items:center;gap:8px;background:var(--raised);
     border:1px solid var(--edge);border-radius:99px;padding:5px 6px 5px 12px;color:var(--ink-dim);font-size:12.5px}
   .switch button{border:0;border-radius:99px;padding:4px 11px;font-size:12px;background:transparent;color:var(--ink-faint)}
@@ -122,8 +136,15 @@
   #figure.shrug{animation:breathe 4.6s ease-in-out infinite,shrug .9s ease-in-out}
   #figure.glance{animation:breathe 4.6s ease-in-out infinite,glance .9s ease-in-out}
   @keyframes shrug{30%,60%{transform:translateY(-7px)}}
+  #figure.leanin{animation:breathe 4.6s ease-in-out infinite,leanin 2.2s ease-in-out}
+  #figure.leanback{animation:breathe 4.6s ease-in-out infinite,leanback 2.2s ease-in-out}
+  @keyframes leanin{30%,70%{transform:translateY(9px) scale(1.035)}}
+  @keyframes leanback{30%,70%{transform:translateY(-8px) scale(.975)}}
+  .scene.recoil{animation:recoil .5s ease-out}
+  @keyframes recoil{35%{transform:translateY(-5px)}}
   @keyframes glance{40%{transform:translateX(6px) rotate(.5deg)}}
   .nomotion #figure,.nomotion #fig-head{animation:none!important}
+  #fig-eyes .pupil{transition:transform .42s cubic-bezier(.3,.8,.4,1)}
   /* A term sheet actually crossing the desk, in whichever direction. */
   #paper{transform-box:view-box;opacity:0}
   #paper.out{animation:paperOut 1.05s cubic-bezier(.3,.7,.4,1) forwards}
@@ -289,6 +310,15 @@
   .modal-back{position:fixed;inset:0;background:rgba(40,34,26,.40);z-index:100;display:grid;place-items:center;padding:20px;animation:fade .18s}
   .modal{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:22px;max-width:min(94vw,440px);box-shadow:0 20px 60px rgba(40,34,26,.26)}
   .modal h3{font-size:19px;margin-bottom:8px}
+  .modal.opening{max-width:min(94vw,500px)}
+  .openrule{height:1px;background:var(--edge);margin:15px 0 13px}
+  .openstat{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;margin-top:12px;
+    padding-top:11px;border-top:1px dashed var(--edge);font-size:13.5px;color:var(--ink-dim)}
+  .openstat b{color:var(--ink);font-family:var(--display);font-size:17px}
+  .dealbar{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;
+    background:var(--cream);border:1px solid var(--edge);border-radius:10px;
+    padding:10px 14px;margin-bottom:14px;font-size:13.5px;color:var(--ink-dim)}
+  .dealbar b{font-family:var(--display);font-size:16px;color:var(--ink)}
   .modal p{margin:0;color:var(--ink-dim);font-size:14px}
   .modal p b{color:var(--ink)}
   .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
@@ -314,18 +344,17 @@
    The mark: two negotiators facing each other across a table line.
    ====================================================================== */
 function logoSVG(size){
+  const ribs=[0,1,2,3,4,5,6].map(i=>`<rect x="${14.5+i*5.3}" y="43.5" width="2.2" height="10" rx="1" fill="#4C79A0"/>`).join("");
   return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true" class="logomark">
-    <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="#FFFFFF" stroke="#1B1A18" stroke-width="3"/>
-    <g>
-      <circle cx="21" cy="24" r="7.5" fill="#1F4E79"/>
-      <path d="M 8 44 q 0 -10 13 -10 q 13 0 13 10 Z" fill="#1F4E79"/>
-    </g>
-    <g>
-      <circle cx="43" cy="24" r="7.5" fill="#C4643C"/>
-      <path d="M 30 44 q 0 -10 13 -10 q 13 0 13 10 Z" fill="#C4643C"/>
-    </g>
-    <rect x="7" y="43" width="50" height="4.5" rx="2.2" fill="#1B1A18"/>
-    <rect x="30.2" y="12" width="3.6" height="32" rx="1.8" fill="#FFFFFF"/>
+    <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="#FFFDF8" stroke="#1B1A18" stroke-width="3"/>
+    <path d="M 10 31 Q 32 9 54 31" stroke="#C4643C" stroke-width="3" fill="none"
+      stroke-linecap="round" stroke-dasharray="1 5.6"/>
+    <circle cx="10" cy="31" r="3.2" fill="#C4643C"/>
+    <path d="M 49.5 17 l 7.5 5.5 l -8.5 3 l 1.5 -4 Z" fill="#C4643C"/>
+    <rect x="11" y="39" width="42" height="16" rx="2" fill="#1F4E79"/>
+    <rect x="11" y="39" width="42" height="3.4" rx="1.7" fill="#2E6494"/>
+    ${ribs}
+    <rect x="11" y="52" width="42" height="3" rx="1" fill="#17395A"/>
   </svg>`;
 }
 const wordmark=()=>`<span class="wordmark">The <b>Deal</b> Room</span>`;
@@ -346,31 +375,31 @@ function rngFrom(seed){const r=mulberry32(seed);return{
    2. What is being bought and sold.
    ====================================================================== */
 const CATALOG=[
-  {item:"facial tissue",unit:"case",units:"cases",price:18.40,vols:[8000,20000,45000,90000],buyer:"a national drugstore chain",seller:"a paper converting mill"},
-  {item:"lithium cells",unit:"cell",units:"cells",price:4.75,vols:[50000,150000,400000,900000],buyer:"an e-bike manufacturer",seller:"a battery fabricator"},
-  {item:"cold brew concentrate",unit:"keg",units:"kegs",price:62.00,vols:[1200,3000,7500,16000],buyer:"a coffee shop group",seller:"a specialty roastery"},
-  {item:"corrugated shipping boxes",unit:"bundle",units:"bundles",price:11.20,vols:[25000,60000,140000,300000],buyer:"an online retailer",seller:"a packaging plant"},
-  {item:"stainless fasteners",unit:"box",units:"boxes",price:27.50,vols:[6000,15000,36000,80000],buyer:"an appliance assembler",seller:"a fastener works"},
-  {item:"organic oat milk",unit:"case",units:"cases",price:21.80,vols:[10000,26000,60000,130000],buyer:"a grocery chain",seller:"a plant-milk dairy"},
-  {item:"nitrile gloves",unit:"case",units:"cases",price:46.00,vols:[4000,11000,26000,55000],buyer:"a hospital network",seller:"a medical supplies maker"},
-  {item:"recycled printer paper",unit:"pallet",units:"pallets",price:385.00,vols:[900,2200,5000,11000],buyer:"a government print office",seller:"a paper recycler"},
-  {item:"disc brake rotors",unit:"unit",units:"units",price:8.90,vols:[20000,55000,130000,280000],buyer:"a bicycle brand",seller:"a components machinist"},
-  {item:"solar microinverters",unit:"unit",units:"units",price:118.00,vols:[2000,5500,13000,28000],buyer:"a rooftop solar installer",seller:"a power electronics firm"},
-  {item:"hardwood flooring planks",unit:"carton",units:"cartons",price:74.50,vols:[3500,9000,21000,46000],buyer:"a homebuilding group",seller:"a timber mill"},
-  {item:"espresso machine gaskets",unit:"pack",units:"packs",price:33.00,vols:[3000,8000,19000,42000],buyer:"an appliance service network",seller:"a rubber moulder"},
-  {item:"loose lab-grown diamonds",unit:"stone",units:"stones",price:410.00,vols:[400,1100,2600,6000],buyer:"a jewellery chain",seller:"a gem grower"},
-  {item:"reclaimed oak crates",unit:"crate",units:"crates",price:26.50,vols:[2000,5500,13000,30000],buyer:"a wine importer",seller:"a cooperage"},
-  {item:"stage lighting rigs",unit:"rig",units:"rigs",price:940.00,vols:[120,320,800,1900],buyer:"a touring production company",seller:"a lighting manufacturer"},
-  {item:"surgical sutures",unit:"box",units:"boxes",price:88.00,vols:[2500,6500,15000,34000],buyer:"a hospital group",seller:"a medical device firm"},
-  {item:"hand-thrown stoneware mugs",unit:"dozen",units:"dozens",price:54.00,vols:[900,2400,5800,13000],buyer:"a hotel group",seller:"a ceramics studio"},
-  {item:"saffron threads",unit:"kilo",units:"kilos",price:1650.00,vols:[40,110,260,600],buyer:"a food manufacturer",seller:"a spice trader"},
-  {item:"aircraft-grade rivets",unit:"drum",units:"drums",price:305.00,vols:[500,1400,3200,7500],buyer:"an aerospace subcontractor",seller:"a precision fastener works"},
-  {item:"reef-safe sunscreen",unit:"case",units:"cases",price:64.00,vols:[3000,8000,19000,44000],buyer:"a resort chain",seller:"a cosmetics blender"},
-  {item:"vintage vinyl pressings",unit:"crate",units:"crates",price:180.00,vols:[300,850,2000,4800],buyer:"a record shop group",seller:"a pressing plant"},
-  {item:"industrial bee hives",unit:"hive",units:"hives",price:240.00,vols:[250,700,1700,4000],buyer:"an almond grower",seller:"an apiary cooperative"},
-  {item:"carbon fibre bicycle frames",unit:"frame",units:"frames",price:420.00,vols:[600,1600,3800,9000],buyer:"a bicycle brand",seller:"a composites factory"},
-  {item:"emergency ration packs",unit:"pallet",units:"pallets",price:520.00,vols:[200,560,1300,3100],buyer:"a disaster relief agency",seller:"a food packer"},
-  {item:"theatre velvet by the roll",unit:"roll",units:"rolls",price:295.00,vols:[300,800,1900,4400],buyer:"a theatre refurbisher",seller:"a textile mill"}
+  {item:"facial tissue",unit:"case",units:"cases",price:18.40,vols:[8000,20000,45000,90000],buyer:"a national drugstore chain",seller:"a paper converting mill",firm:"Paper Mills"},
+  {item:"lithium cells",unit:"cell",units:"cells",price:4.75,vols:[50000,150000,400000,900000],buyer:"an e-bike manufacturer",seller:"a battery fabricator",firm:"Cell Works"},
+  {item:"cold brew concentrate",unit:"keg",units:"kegs",price:62.00,vols:[1200,3000,7500,16000],buyer:"a coffee shop group",seller:"a specialty roastery",firm:"Roastery"},
+  {item:"corrugated shipping boxes",unit:"bundle",units:"bundles",price:11.20,vols:[25000,60000,140000,300000],buyer:"an online retailer",seller:"a packaging plant",firm:"Packaging"},
+  {item:"stainless fasteners",unit:"box",units:"boxes",price:27.50,vols:[6000,15000,36000,80000],buyer:"an appliance assembler",seller:"a fastener works",firm:"Fastener Works"},
+  {item:"organic oat milk",unit:"case",units:"cases",price:21.80,vols:[10000,26000,60000,130000],buyer:"a grocery chain",seller:"a plant-milk dairy",firm:"Creamery"},
+  {item:"nitrile gloves",unit:"case",units:"cases",price:46.00,vols:[4000,11000,26000,55000],buyer:"a hospital network",seller:"a medical supplies maker",firm:"Medical Supply"},
+  {item:"recycled printer paper",unit:"pallet",units:"pallets",price:385.00,vols:[900,2200,5000,11000],buyer:"a government print office",seller:"a paper recycler",firm:"Recycling"},
+  {item:"disc brake rotors",unit:"unit",units:"units",price:8.90,vols:[20000,55000,130000,280000],buyer:"a bicycle brand",seller:"a components machinist",firm:"Machining"},
+  {item:"solar microinverters",unit:"unit",units:"units",price:118.00,vols:[2000,5500,13000,28000],buyer:"a rooftop solar installer",seller:"a power electronics firm",firm:"Power Systems"},
+  {item:"hardwood flooring planks",unit:"carton",units:"cartons",price:74.50,vols:[3500,9000,21000,46000],buyer:"a homebuilding group",seller:"a timber mill",firm:"Timber"},
+  {item:"espresso machine gaskets",unit:"pack",units:"packs",price:33.00,vols:[3000,8000,19000,42000],buyer:"an appliance service network",seller:"a rubber moulder",firm:"Rubber Works"},
+  {item:"loose lab-grown diamonds",unit:"stone",units:"stones",price:410.00,vols:[400,1100,2600,6000],buyer:"a jewellery chain",seller:"a gem grower",firm:"Gem Labs"},
+  {item:"reclaimed oak crates",unit:"crate",units:"crates",price:26.50,vols:[2000,5500,13000,30000],buyer:"a wine importer",seller:"a cooperage",firm:"Cooperage"},
+  {item:"stage lighting rigs",unit:"rig",units:"rigs",price:940.00,vols:[120,320,800,1900],buyer:"a touring production company",seller:"a lighting manufacturer",firm:"Stage Systems"},
+  {item:"surgical sutures",unit:"box",units:"boxes",price:88.00,vols:[2500,6500,15000,34000],buyer:"a hospital group",seller:"a medical device firm",firm:"Medical"},
+  {item:"hand-thrown stoneware mugs",unit:"dozen",units:"dozens",price:54.00,vols:[900,2400,5800,13000],buyer:"a hotel group",seller:"a ceramics studio",firm:"Ceramics"},
+  {item:"saffron threads",unit:"kilo",units:"kilos",price:1650.00,vols:[40,110,260,600],buyer:"a food manufacturer",seller:"a spice trader",firm:"Spice Traders"},
+  {item:"aircraft-grade rivets",unit:"drum",units:"drums",price:305.00,vols:[500,1400,3200,7500],buyer:"an aerospace subcontractor",seller:"a precision fastener works",firm:"Aerospace"},
+  {item:"reef-safe sunscreen",unit:"case",units:"cases",price:64.00,vols:[3000,8000,19000,44000],buyer:"a resort chain",seller:"a cosmetics blender",firm:"Laboratories"},
+  {item:"vintage vinyl pressings",unit:"crate",units:"crates",price:180.00,vols:[300,850,2000,4800],buyer:"a record shop group",seller:"a pressing plant",firm:"Pressings"},
+  {item:"industrial bee hives",unit:"hive",units:"hives",price:240.00,vols:[250,700,1700,4000],buyer:"an almond grower",seller:"an apiary cooperative",firm:"Apiaries"},
+  {item:"carbon fibre bicycle frames",unit:"frame",units:"frames",price:420.00,vols:[600,1600,3800,9000],buyer:"a bicycle brand",seller:"a composites factory",firm:"Composites"},
+  {item:"emergency ration packs",unit:"pallet",units:"pallets",price:520.00,vols:[200,560,1300,3100],buyer:"a disaster relief agency",seller:"a food packer",firm:"Provisions"},
+  {item:"theatre velvet by the roll",unit:"roll",units:"rolls",price:295.00,vols:[300,800,1900,4400],buyer:"a theatre refurbisher",seller:"a textile mill",firm:"Textiles"}
 ];
 const BUYER_CO=["Northwind","Cobalt Row","Harrow & Vale","Meridian","Fairweather","Bright Harbor","Kestrel","Ironwood","Tallgrass","Lumen","Redpoint"];
 const SELLER_CO=["Castellan","Orsini","Pelham Works","Brightside","Aldergate","Voss & Sons","Quarry Lane","Marchetti","Stonefield","Halcyon"];
@@ -398,7 +427,7 @@ function softIssue(key,label,labels,youTop,themTop){
 function buildScenario(seed){
   const rng=rngFrom(seed), product=rng.pick(CATALOG);
   const buyerCo=rng.pick(BUYER_CO)+" "+rng.pick(SUFFIX);
-  const sellerCo=rng.pick(SELLER_CO)+" "+rng.pick(SUFFIX);
+  const sellerCo=rng.pick(SELLER_CO)+" "+product.firm;
   const priceW=rng.pick([28,30,32]), buyerVol=rng.int(3,7), sellerVol=rng.int(30,38);
   const soft=rng.shuffle(splitWeight(100-priceW-buyerVol,3,14,32,rng));
   const theirSoft=rng.shuffle(splitWeight(100-priceW-sellerVol,3,3,17,rng));
@@ -413,7 +442,10 @@ function buildScenario(seed){
     softIssue("delivery","Delivery window",["2 weeks","4 weeks","8 weeks","12 weeks"],soft[1],theirSoft[1]),
     softIssue("exclusivity","Exclusivity",["Global, 2 yrs","Region, 2 yrs","Region, 1 yr","None"],soft[2],theirSoft[2])
   ];
+  const midVol=product.vols[2];
   const sc={product,buyerCo,sellerCo,issues,seed,
+    subject:`${product.item} \u2014 a year's supply`,
+    dealLine:`You are buying <b>${product.item}</b> from ${sellerCo}, on a one-year supply contract worth roughly ${money(product.price*midVol)} a year.`,
     buyerRole:"Head of Procurement, "+buyerCo, sellerRole:"VP of Sales, "+sellerCo};
   setWalkaways(sc,rng);
   return sc;
@@ -896,7 +928,9 @@ function eyeSVG(kind,cx,side,iris){
   const cy=96, dark=iris||"#221F1C";
   if(kind==="happy") return `<path d="M ${cx-11} ${cy+3} Q ${cx} ${cy-8} ${cx+11} ${cy+3}" stroke="${dark}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
   if(kind==="closed")return `<path d="M ${cx-11} ${cy} Q ${cx} ${cy+5} ${cx+11} ${cy}" stroke="${dark}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-  if(kind==="squint")return `<ellipse cx="${cx}" cy="${cy}" rx="10.5" ry="3.2" fill="#F7F2E9"/><circle cx="${cx}" cy="${cy}" r="3" fill="${dark}"/>`;
+  if(kind==="squint")return `<ellipse cx="${cx}" cy="${cy}" rx="10.5" ry="3.2" fill="#F7F2E9"/>`+
+    `<g class="pupil"><circle cx="${cx}" cy="${cy}" r="3" fill="${dark}"/></g>`+
+    `<path d="M ${cx-11} ${cy-3.4} q 11 -2.6 22 0" stroke="${shade(dark,-10)}" stroke-width="1.8" fill="none" opacity=".45"/>`;
   if(kind==="dollar")return `<text x="${cx}" y="${cy+7}" text-anchor="middle" font-family="Zilla Slab,serif" font-size="20" font-weight="700" fill="#7FA860">$</text>`;
   const rx=kind==="wide"?11:10, ry=kind==="wide"?10:7.4, r=kind==="wide"?4:4.6, off=kind==="side"?side*3.6:0;
   return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#F7F2E9"/>`+
@@ -1347,18 +1381,23 @@ const EGGS={
 };
 /* Which eggs suit whom. Some are universal; some only make sense on one desk. */
 const EGG_POOL={
-  shark:["ring","trophy2","motivational","shredder","vietnam"],
+  shark:["ring","trophy2","motivational","shredder"],
   pro:["babyphoto","fishtank","vietnam","motivational"],
-  burnout:["energydrinks","cat","divorce","worlds_ok_boss","vietnam"],
-  hype:["guitar","energydrinks","motivational","trophy2","vietnam"],
-  bureaucrat:["shredder","worlds_ok_boss","babyphoto","vietnam"],
-  volatile:["divorce","guitar","trophy2","cat","vietnam"],
-  oldhead:["babyphoto","trophy2","guitar","fishtank","vietnam"],
-  quant:["cat","fishtank","energydrinks","worlds_ok_boss","vietnam"]
+  burnout:["energydrinks","cat","divorce","worlds_ok_boss"],
+  hype:["guitar","energydrinks","motivational","trophy2"],
+  bureaucrat:["shredder","worlds_ok_boss","babyphoto"],
+  volatile:["divorce","guitar","trophy2","cat"],
+  oldhead:["babyphoto","trophy2","guitar","fishtank"],
+  quant:["cat","fishtank","energydrinks","worlds_ok_boss"]
 };
 const EGG_SPOTS=[[452,96],[742,286],[62,168],[856,214],[236,150]];
 function eastereggSVG(ch,rng,floorY){
-  if(!rng.chance(0.55))return"";            // most rooms have nothing odd in them
+  // A flag on the wall is a once-in-a-while thing, not office furniture.
+  if(rng.chance(0.02)){
+    const spot=EGG_SPOTS[Math.floor(rng.next()*EGG_SPOTS.length)];
+    return `<g class="egg" data-egg="vietnam">${EGGS.vietnam.draw(spot[0],spot[1])}</g>`;
+  }
+  if(!rng.chance(0.45))return"";            // most rooms have nothing odd in them
   const pool=EGG_POOL[ch.persona.key]||[];
   const key=pool[Math.floor(rng.next()*pool.length)];
   const egg=EGGS[key];
@@ -1462,6 +1501,31 @@ function sceneSVG(ch,mood,seed){
   </svg>`;
 }
 
+
+/* ---- where they are looking ----------------------------------------
+   Gaze is the loudest thing on a face. It drifts while they think, drops
+   to the paper when an offer lands, slides away when they are being less
+   than straight with you, and locks onto you when they mean it. */
+const GAZE={
+  you:[0,0], paper:[0,3.4], away:[-3.6,-1], calc:[2.6,-2.2],
+  ceiling:[0,-3.4], down:[0,3.8]
+};
+function setGaze(where,holdMs){
+  if(!G)return;
+  G.gaze=GAZE[where]||GAZE.you;
+  applyGaze();
+  if(holdMs){
+    clearTimeout(G.gazeTimer);
+    G.gazeTimer=setTimeout(()=>{G.gaze=GAZE.you;applyGaze()},holdMs);
+  }
+}
+function applyGaze(){
+  const [x,y]=G&&G.gaze?G.gaze:[0,0];
+  document.querySelectorAll("#fig-eyes .pupil").forEach(el=>{
+    el.setAttribute("transform",`translate(${x} ${y})`);
+  });
+}
+
 /* ---- idle life: breathing, blinking, the occasional shrug or glance ---- */
 let idleTimers=[];
 function stopIdle(){idleTimers.forEach(clearTimeout);idleTimers=[]}
@@ -1477,6 +1541,14 @@ function startIdle(){
     }
     idleTimers.push(setTimeout(blink,1800+Math.random()*4200));
   };
+  const drift=()=>{
+    if(G&&!G.gazeLocked){
+      const spots=["you","you","away","calc","ceiling"];
+      G.gaze=GAZE[spots[Math.floor(Math.random()*spots.length)]];
+      applyGaze();
+    }
+    idleTimers.push(setTimeout(drift,2600+Math.random()*3600));
+  };
   const fidget=()=>{
     const fig=document.getElementById("figure");
     if(fig){
@@ -1488,6 +1560,7 @@ function startIdle(){
   };
   idleTimers.push(setTimeout(blink,1400));
   idleTimers.push(setTimeout(fidget,4000));
+  idleTimers.push(setTimeout(drift,2200));
 }
 const BLINKLESS=new Set(["asleep","delighted","furious","laughing","shocked"]);
 
@@ -1678,6 +1751,38 @@ const ICONS={
     <g><circle cx="24" cy="24" r="7.5" fill="#EDE6D9"/><path d="M 11 44 q 0 -10 13 -10 q 13 0 13 10 Z" fill="#EDE6D9"/></g></svg>`
 };
 
+
+/* One panel for every preference, rather than a row of switches. */
+function openSettings(){
+  const back=document.createElement("div");back.className="modal-back";
+  const row=(label,help,id,a,b,onA,onB,isA)=>`
+    <div class="setrow"><div><b>${label}</b><span>${help}</span></div>
+      <span class="switch"><button data-act="${id}a" aria-pressed="${isA}">${a}</button>
+        <button data-act="${id}b" aria-pressed="${!isA}">${b}</button></span></div>`;
+  back.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="Settings" style="max-width:min(94vw,520px)">
+    <h3>Settings</h3>
+    <div class="setlist">
+      ${row("Language","How foul they get when a deal collapses","lang","Clean","Unfiltered",0,0,!SETTINGS.explicit)}
+      ${row("Show their points","Reveals what each term is worth to them. Training wheels.","rv","Hide","Show",0,0,!SETTINGS.reveal)}
+      ${row("Motion","Breathing, blinking, sliding paper and typed-out speech","mo","On","Off",0,0,SETTINGS.motion)}
+    </div>
+    <div class="modal-actions"><button class="btn primary" data-close>Done</button></div></div>`;
+  document.body.appendChild(back);
+  const close=()=>{back.remove();showMenu()};
+  back.addEventListener("click",e=>{
+    if(e.target===back)return close();
+    const act=e.target.closest("[data-act]");
+    if(e.target.closest("[data-close]"))return close();
+    if(!act)return;
+    const a=act.dataset.act;
+    if(a==="langa")SETTINGS.explicit=false; if(a==="langb")SETTINGS.explicit=true;
+    if(a==="rva")SETTINGS.reveal=false;     if(a==="rvb")SETTINGS.reveal=true;
+    if(a==="moa"){SETTINGS.motion=true;document.body.classList.remove("nomotion")}
+    if(a==="mob"){SETTINGS.motion=false;document.body.classList.add("nomotion")}
+    back.remove();openSettings();
+  });
+}
+
 function showMenu(){
   stopIdle();
   topbar.hidden=true;
@@ -1699,15 +1804,14 @@ function showMenu(){
           <span class="tx"><b>Meet the cast</b><span>All eight types and how to spot them</span></span></button>
       </div>
       <div class="menu-foot">
-        <span class="switch">Language
-          <button id="lang-clean" aria-pressed="${!SETTINGS.explicit}">Clean</button>
-          <button id="lang-raw" aria-pressed="${SETTINGS.explicit}">Unfiltered</button></span>
-        <span class="switch">Show their points
-          <button id="rv-off" aria-pressed="${!SETTINGS.reveal}">Hide</button>
-          <button id="rv-on" aria-pressed="${SETTINGS.reveal}">Show</button></span>
-        <span class="switch">Motion
-          <button id="mo-on" aria-pressed="${SETTINGS.motion}">On</button>
-          <button id="mo-off" aria-pressed="${!SETTINGS.motion}">Off</button></span>
+        <button class="settingsbar" id="m-settings">
+          <svg class="gear" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7Z" fill="none" stroke="#5C574F" stroke-width="1.8"/>
+            <path d="M12 2.5l1.5 2.6 3-.3.6 3 2.6 1.5-1.4 2.7 1.4 2.7-2.6 1.5-.6 3-3-.3L12 21.5l-1.5-2.6-3 .3-.6-3L4.3 14.7l1.4-2.7-1.4-2.7 2.6-1.5.6-3 3 .3L12 2.5Z"
+              fill="none" stroke="#5C574F" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span><b>Settings</b><br>Language, hints and motion</span>
+          <span class="now">${SETTINGS.explicit?"Unfiltered":"Clean"} &middot; hints ${SETTINGS.reveal?"on":"off"} &middot; motion ${SETTINGS.motion?"on":"off"}</span>
+        </button>
       </div>
     </div>
   </div>`;
@@ -1715,12 +1819,7 @@ function showMenu(){
   on("m-play",()=>newGame());
   on("m-tut",()=>startTutorial());
   on("m-cast",showCast);
-  on("lang-clean",()=>{SETTINGS.explicit=false;showMenu()});
-  on("lang-raw",()=>{SETTINGS.explicit=true;showMenu()});
-  on("rv-off",()=>{SETTINGS.reveal=false;showMenu()});
-  on("rv-on",()=>{SETTINGS.reveal=true;showMenu()});
-  on("mo-on",()=>{SETTINGS.motion=true;document.body.classList.remove("nomotion");showMenu()});
-  on("mo-off",()=>{SETTINGS.motion=false;document.body.classList.add("nomotion");showMenu()});
+  on("m-settings",openSettings);
 }
 
 /* ---- the cast: a study screen, so you can learn the tells in advance ---- */
@@ -1866,6 +1965,9 @@ function showBrief(){
   <div class="panel">
     <div class="eyebrow">Confidential brief &mdash; ${esc(sc.buyerRole)}</div>
     <h1 style="font-size:clamp(27px,5vw,38px);margin:6px 0 10px">${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))} supply agreement</h1>
+    <div class="dealbar" style="margin:0 0 16px">
+      <b>${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))}</b>
+      <span>one year's supply &middot; about ${money(sc.product.price*sc.product.vols[2])} a year</span></div>
     <p class="lede">You buy for <strong>${esc(sc.buyerCo)}</strong>, ${esc(sc.product.buyer)}.
       Across the table is <strong>${esc(sc.sellerCo)}</strong>, ${esc(sc.product.seller)}.
       You both score every term privately and <strong>you are weighted differently</strong> &mdash;
@@ -1901,13 +2003,43 @@ function showBrief(){
   document.getElementById("go").onclick=()=>{
     G.mood=G.ch.persona.rest;
     showPlay();
-    speak(pickLine(G.ch.persona,"open",G.rng),G.ch.persona.rest,
-      `<b>The room:</b> ${esc(OFFICES[G.ch.persona.room].blurb)}${
-         G.timeLabel?" "+esc(G.timeLabel):""}`);
+    const opener=pickLine(G.ch.persona,"open",G.rng);
+    const roomNote=`<b>The room:</b> ${esc(OFFICES[G.ch.persona.room].blurb)}${
+      G.timeLabel?" "+esc(G.timeLabel):""}`;
+    setTimeout(()=>showOpeningCard(()=>speak(opener,G.ch.persona.rest,roomNote)),360);
   };
 }
 
 /* -------------------------------------------------------------- play */
+
+/* Walking in, you get told what the deal is and what they have opened
+   with. You should never have to go hunting for either. */
+function showOpeningCard(then){
+  const {sc}=G, sco=scoreOf(sc,G.theirs);
+  const back=document.createElement("div");back.className="modal-back";back.id="openingcard";
+  back.innerHTML=`<div class="modal opening" role="dialog" aria-modal="true" aria-label="The deal">
+    <div class="eyebrow">On the table</div>
+    <h3 style="font-size:23px;margin:4px 0 8px">${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))}</h3>
+    <p style="margin:0 0 4px">${sc.dealLine}</p>
+    <div class="openrule"></div>
+    <div class="eyebrow" style="color:var(--them)">${esc(G.ch.name)} opens with</div>
+    <table class="sheet" style="margin-top:8px">${sc.issues.map((iss,i)=>{
+      const o=optionOf(iss,G.theirs[i]);
+      return`<tr><td>${esc(iss.label)}</td><td style="color:var(--ink)">${esc(o.label)}</td><td>${o.you}</td></tr>`;
+    }).join("")}</table>
+    <div class="openstat">
+      <span>Worth <b>${sco.you}</b> to you</span>
+      <span>Your walk-away is <b>${sc.buyerWalk}</b></span>
+      <span class="num">${money(contractValue(sc,G.theirs))}/yr</span>
+    </div>
+    <div class="modal-actions"><button class="btn primary" data-close>Let's talk</button></div>
+  </div>`;
+  document.body.appendChild(back);
+  const close=()=>{back.remove();if(then)then()};
+  back.addEventListener("click",e=>{if(e.target===back||e.target.closest("[data-close]"))close()});
+  back.querySelector("[data-close]").focus();
+}
+
 function showPlay(){
   G.started=true;
   setChrome(G.tutorial?"Tutorial":"Negotiation",{restart:!G.tutorial,brief:true});
@@ -1987,6 +2119,7 @@ function setMood(mood){
   const put=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html};
   put("fig-brows",parts.brows);put("fig-eyes",parts.eyes);
   put("fig-mouth",parts.mouth);put("fig-fx",parts.fx);
+  applyGaze();
   const hands=document.getElementById("handsgrp");
   if(hands)hands.innerHTML=handsSVG(G.ch,mood);
 }
@@ -1999,12 +2132,22 @@ function passPaper(dir){
   el.classList.remove("out","in");void el.getBoundingClientRect();
   el.classList.add(dir);
 }
+/* Leaning in when a deal is close, back when they are offended. Small,
+   but it is what people actually do. */
+function lean(dir){
+  if(reduced()||!SETTINGS.motion)return;
+  const fig=document.getElementById("figure");
+  if(!fig)return;
+  fig.classList.remove("leanin","leanback");void fig.offsetWidth;
+  fig.classList.add(dir==="in"?"leanin":"leanback");
+  setTimeout(()=>fig.classList.remove("leanin","leanback"),2200);
+}
 function react(mood,fx){
   setMood(mood);
   const scene=document.getElementById("scene");
   if(!scene)return;
   if(fx&&!reduced()&&SETTINGS.motion){
-    scene.classList.remove("shake","pop");void scene.offsetWidth;scene.classList.add(fx);
+    scene.classList.remove("shake","pop","recoil");void scene.offsetWidth;scene.classList.add(fx);
   }
 }
 
@@ -2062,6 +2205,10 @@ function renderDrawer(){
       <div><h3 style="font-size:19px">Term sheet</h3>
         <div class="eyebrow" style="margin:2px 0 0">Round ${G.round} of ${G.rounds}</div></div>
       <button class="btn ghost small" id="closedrawer">Close</button>
+    </div>
+    <div class="dealbar">
+      <b>${esc(sc.product.item.replace(/^./,c=>c.toUpperCase()))}</b>
+      <span>one-year supply from ${esc(sc.sellerCo)} to ${esc(sc.buyerCo)}</span>
     </div>
     <div class="cols">
       <div class="card">
@@ -2149,18 +2296,20 @@ async function sendOffer(){
   closeDrawer();
   tutAdvance("sent");
   passPaper("out");
+  setGaze("paper",1500);
   G.yours=picks;G.log.offers.push(picks);
   const reply=G.seller.respond(picks,G.round), p=G.ch.persona;
 
   if(reply.kind==="accept"){
     const fleeced=reply.mood==="delight";
     react(fleeced?"delighted":reply.mood==="thin"?"smug":"pleased","pop");
+    setGaze("you");lean("in");
     speak(pickLine(p,fleeced?"delight":reply.mood==="thin"?"thin":"accept",G.rng),null,
       fleeced?"They could not sign it fast enough. That is never a good sign.":"");
     return setTimeout(()=>finish("signed",picks,fleeced),2100);
   }
   if(reply.kind==="rage"){
-    react("furious","shake");
+    react("furious","shake");setGaze("you");lean("in");
     speak(pickLine(p,"rage",G.rng),null,
       "They shove the chair back, sweep the term sheet off the desk and walk out.");
     return setTimeout(()=>finish("raged",null,false),2600);
@@ -2174,7 +2323,10 @@ async function sendOffer(){
   G.theirs=reply.offer.picks.slice();G.round++;
   setTimeout(()=>passPaper("in"),620);
   const mood=reply.mood==="insult"?"angry":reply.mood==="close"?"thinking":"annoyed";
-  react(mood,null);
+  react(mood,reply.mood==="insult"?"recoil":null);
+  setGaze(reply.mood==="close"?"you":reply.mood==="insult"?"paper":"calc",2400);
+  if(reply.mood==="close")lean("in");
+  if(reply.mood==="insult")lean("back");
   speak(pickLine(p,reply.mood,G.rng),null,
     moved?`They moved on <b>${esc(moved)}</b>. Their offer is now worth <b>${scoreOf(sc,G.theirs).you}</b> to you.`
          :`Their offer is worth <b>${scoreOf(sc,G.theirs).you}</b> to you.`);
@@ -2196,6 +2348,8 @@ async function acceptTheirs(){
 function askPriorities(){
   G.log.asked=true;
   tutAdvance("asked");
+  // An honest answer comes with eye contact. A shaded one does not.
+  setGaze(G.rng.chance(G.ch.persona.honesty)?"you":"away",2200);
   react("thinking",null);
   speak(G.seller.hint(),null,"Asking cost you nothing and no round. Most people never do it once.");
 }
