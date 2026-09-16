@@ -16,6 +16,33 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from pathlib import Path
+
+
+def load_env_file(path: Path | None = None) -> None:
+    """Read key=value lines from a .env file into the environment.
+
+    Deliberately dependency-free, and deliberately non-destructive: a
+    variable already set in the real environment always wins, so exporting
+    a key by hand still overrides the file. Anything missing, malformed or
+    unreadable is ignored -- a broken .env must never stop the game.
+    """
+    path = path or Path(__file__).resolve().parent.parent / ".env"
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key, value = key.strip(), value.strip().strip("'\"")
+        if key and value and key not in os.environ:
+            os.environ[key] = value
+
+
+load_env_file()
 
 MODEL = os.environ.get("NEGOSIM_MODEL", "claude-opus-5")
 MAX_TOKENS = 300
@@ -36,9 +63,12 @@ def _load():
     except ImportError:
         _state, _reason = "unavailable", "the 'anthropic' package is not installed"
         return None
+    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+        _state, _reason = "unavailable", "no ANTHROPIC_API_KEY found (add one to your .env file)"
+        return None
     try:
-        # Credentials resolve from ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN,
-        # or a profile written by `ant auth login`.
+        # The key is read from the environment, which load_env_file() fills
+        # from .env. It is never written down anywhere in the source.
         _client = anthropic.Anthropic()
         _state = "ready"
     except Exception as exc:  # noqa: BLE001 - never let this break the game

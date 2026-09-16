@@ -127,9 +127,22 @@ same characters write their lines fresh instead:
 
 ```bash
 pip install anthropic
-export ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env        # then paste your key into .env
 python3 negotiate.py check
 ```
+
+**Your key lives in `.env` and nowhere else.** That file is listed in
+`.gitignore`, so it is never committed and never pushed. `.env.example` is the
+template and is safe to commit because it contains no real key. The code reads
+the key from the environment at run time; it is not written down anywhere in
+the source.
+
+If you prefer, `export ANTHROPIC_API_KEY=...` in your shell still works and
+takes precedence over the file.
+
+> The browser version needs no key at all and makes no network calls. Never put
+> an API key in a web page — anything in the HTML is visible to everyone who
+> opens it.
 
 The language model only chooses the words. Whether an offer is accepted,
 refused, or rage-quit is always decided by the rules, so the game cannot be

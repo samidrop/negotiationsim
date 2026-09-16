@@ -1,4 +1,10 @@
 __pycache__/
 *.pyc
-.env
 transcripts/
+
+# Secrets. Never commit these.
+.env
+.env.*
+!.env.example
+*.key
+*.pem

@@ -87,8 +87,9 @@ def cmd_check(args: argparse.Namespace) -> int:
     if not available:
         print(ui.wrap(
             "The game is fully playable without it -- every character has written "
-            "dialogue. To switch live dialogue on, install the SDK with "
-            "'pip install anthropic' and set an ANTHROPIC_API_KEY.", "  "))
+            "dialogue. To switch live dialogue on: 'pip install anthropic', then "
+            "copy .env.example to .env and put your key in it. The .env file is "
+            "ignored by git, so it never reaches GitHub.", "  "))
     return 0
 
 
