@@ -36,40 +36,41 @@
   /* ---------------- menu ---------------- */
   .menu{position:relative;border:1px solid var(--edge);border-radius:18px;overflow:hidden;
     background:#E4E8EB;box-shadow:var(--shadow);min-height:clamp(560px,88vh,820px);display:flex;flex-direction:column}
-  .menu-art{position:absolute;inset:0;line-height:0}
-  .menu-art svg{width:100%;height:100%;display:block;object-fit:cover}
+  .menu-art{position:relative;flex:1 1 auto;min-height:190px;line-height:0;overflow:hidden}
+  .menu-art svg{position:absolute;inset:0;width:100%;height:100%;display:block}
   .menu-art::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 30%)}
+    background:linear-gradient(180deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 34%,rgba(247,242,231,.55) 100%)}
   .menu-inner{
     position:relative;padding:clamp(24px,4vw,38px) clamp(22px,5vw,42px) clamp(22px,4vw,34px);
-    margin-top:auto;width:100%;
+    margin-top:auto;width:100%;text-align:center;
     background:linear-gradient(180deg,rgba(247,242,231,.90),rgba(239,231,214,.97));
     backdrop-filter:blur(12px);
     border-top:1px solid rgba(27,26,24,.12);
     box-shadow:0 -16px 44px rgba(60,48,28,.14);
   }
-  .menu-brand{display:flex;align-items:center;gap:15px;margin-bottom:4px}
+  .menu-brand{display:flex;align-items:center;justify-content:center;gap:15px;margin-bottom:4px}
   .menu-brand .logomark{flex:none;filter:drop-shadow(0 3px 10px rgba(30,26,20,.18))}
   .menu-title{font-family:var(--display);font-weight:700;letter-spacing:.005em;
     font-size:clamp(32px,6vw,54px);line-height:1;margin:0}
   .menu-title b{color:var(--you)}
-  .menu-tag{color:var(--ink-dim);font-size:clamp(14px,1.8vw,16.5px);max-width:52ch;margin:8px 0 20px}
-  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .menu-tag{color:var(--ink-dim);font-size:clamp(14px,1.8vw,16.5px);max-width:54ch;margin:10px auto 22px}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:14px;
+    max-width:920px;margin:0 auto}
   .tile{
-    display:flex;align-items:center;gap:16px;text-align:left;
+    display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
     background:var(--panel);border:1px solid var(--edge);border-radius:16px;
     padding:20px;color:var(--ink);transition:.18s;
     box-shadow:0 1px 2px rgba(60,48,28,.06),0 8px 24px rgba(60,48,28,.09);
   }
   .tile:hover{border-color:var(--ink-faint);transform:translateY(-2px);background:#fff}
-  .tile .ic{flex:none;width:58px;height:58px}
+  .tile .ic{flex:none;width:62px;height:62px}
   .tile .tx{min-width:0}
   .tile .tx b{display:block;font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:2px}
   .tile .tx span{display:block;font-size:13.5px;color:var(--ink-dim);line-height:1.38}
   .tile.lead{background:var(--you);border-color:var(--you);color:#fff}
   .tile.lead:hover{background:#2A5F8E;border-color:#2A5F8E;transform:translateY(-2px)}
   .tile.lead .tx span{color:rgba(255,255,255,.82)}
-  .menu-foot{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
+  .menu-foot{display:flex;gap:12px;align-items:center;margin:18px auto 0;max-width:920px}
   .settingsbar{
     display:flex;align-items:center;gap:12px;width:100%;
     background:rgba(255,253,248,.7);border:1px solid var(--edge);border-radius:13px;
@@ -78,6 +79,7 @@
   .settingsbar:hover{border-color:var(--ink-faint);background:var(--panel)}
   .settingsbar .gear{flex:none;width:22px;height:22px}
   .settingsbar b{color:var(--ink);font-weight:600;font-family:var(--display);font-size:15px}
+  .settingsbar span{text-align:left}
   .settingsbar .now{margin-left:auto;font-size:12px;color:var(--ink-faint);text-align:right}
   .setlist{display:flex;flex-direction:column;gap:14px;margin-top:16px}
   .setrow{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
@@ -401,9 +403,9 @@ const CATALOG=[
   {item:"emergency ration packs",unit:"pallet",units:"pallets",price:520.00,vols:[200,560,1300,3100],buyer:"a disaster relief agency",seller:"a food packer",firm:"Provisions"},
   {item:"theatre velvet by the roll",unit:"roll",units:"rolls",price:295.00,vols:[300,800,1900,4400],buyer:"a theatre refurbisher",seller:"a textile mill",firm:"Textiles"}
 ];
+const SUFFIX=["Industries","Group","Holdings","Retail","Partners","Brands"];
 const BUYER_CO=["Northwind","Cobalt Row","Harrow & Vale","Meridian","Fairweather","Bright Harbor","Kestrel","Ironwood","Tallgrass","Lumen","Redpoint"];
 const SELLER_CO=["Castellan","Orsini","Pelham Works","Brightside","Aldergate","Voss & Sons","Quarry Lane","Marchetti","Stonefield","Halcyon"];
-const SUFFIX=["Industries","Supply Co.","Group","Manufacturing","Partners","Works"];
 
 /* ======================================================================
    3. The scenario. Both sides top out at 100. Price is a pure tug of war;
@@ -1304,21 +1306,6 @@ const KITS={
   legacy:["frames","shelf","trophy","plantHealthy"],
   minimal:["monitors","whiteboard"]
 };
-function deskKitSVG(office,rng){
-  let s="";
-  const y=DESK_Y+4;
-  if(rng.chance(0.85))s+=`<rect x="200" y="${y-14}" width="90" height="14" rx="2" fill="#1C1814"/>
-    <rect x="206" y="${y-11}" width="78" height="8" fill="#C9A227" opacity=".7"/>`;   // nameplate
-  if(rng.chance(0.75))s+=`<path d="M 690 ${y-2} l 0 -18 l 26 0 l 0 18 Z" fill="#E6E2D6"/>
-    <path d="M 716 ${y-16} q 10 4 0 10" stroke="#E6E2D6" stroke-width="3" fill="none"/>`; // mug
-  if(rng.chance(0.7))s+=`<rect x="310" y="${y-10}" width="88" height="10" fill="#EDEAE0"/>
-    <rect x="316" y="${y-16}" width="80" height="8" fill="#F6F3EA"/>`;                  // papers
-  if(office==="legacy"&&rng.chance(0.7))
-    s+=`<ellipse cx="640" cy="${y-4}" rx="26" ry="8" fill="#3A2F22"/><ellipse cx="640" cy="${y-8}" rx="20" ry="6" fill="#241C15"/>`;
-  if(office==="minimal"||office==="corporate")
-    s+=`<path d="M 618 ${y-2} l 96 0 l -8 -34 l -80 0 Z" fill="#2A2E33"/><rect x="628" y="${y-34}" width="76" height="30" fill="#1E2B33"/>`;
-  return s;
-}
 
 /* ----------------------------------------------------------------------
    Easter eggs. Small things left around the room that say more about the
@@ -1326,63 +1313,62 @@ function deskKitSVG(office,rng){
    whoever you have drawn.
    ---------------------------------------------------------------------- */
 const EGGS={
-  vietnam:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  vietnam:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect x="0" y="0" width="54" height="36" fill="#DA251D" stroke="#7C7364" stroke-width="2"/>
     <path d="M 27 7 l 4.4 13.6 h 14.3 l -11.6 8.4 l 4.4 13.6 l -11.5 -8.4 l -11.5 8.4 l 4.4 -13.6 l -11.6 -8.4 h 14.3 Z"
       transform="translate(0 -4) scale(0.78) translate(7 5)" fill="#FFFF00"/>
     <rect x="-3" y="-4" width="4" height="46" rx="2" fill="#9A9184"/></g>`},
-  divorce:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y}) rotate(-6)">
+  divorce:{draw:(x,y)=>`<g transform="translate(${x} ${y}) rotate(-6)">
     <rect width="52" height="66" rx="2" fill="#F6F3EA" stroke="#B9B2A0" stroke-width="2"/>
     <rect x="7" y="9" width="38" height="5" fill="#B3382C"/>
     <rect x="7" y="21" width="30" height="3.5" fill="#B9B2A0"/><rect x="7" y="29" width="34" height="3.5" fill="#B9B2A0"/>
     <rect x="7" y="37" width="26" height="3.5" fill="#B9B2A0"/>
     <path d="M 9 52 q 11 -8 20 0 q 9 7 15 -2" stroke="#2F4A7A" stroke-width="2.2" fill="none"/></g>`},
-  ring:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  ring:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect x="-4" y="6" width="30" height="16" rx="4" fill="#7A2030"/>
     <circle cx="11" cy="8" r="7" fill="none" stroke="#D9BE62" stroke-width="2.6"/>
     <path d="M 11 -1 l 3.4 3.6 l -3.4 3.8 l -3.4 -3.8 Z" fill="#BFE6F2"/></g>`},
-  trophy2:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  trophy2:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect x="0" y="26" width="34" height="8" fill="#6E5A2E"/>
     <path d="M 8 26 L 26 26 L 24 6 L 10 6 Z" fill="#C9A227"/>
     <rect x="6" y="30" width="22" height="3" fill="#EDE6D9"/>
     <text x="17" y="22" text-anchor="middle" font-family="Archivo,sans-serif" font-size="8" fill="#6E5A2E">#2</text></g>`},
-  cat:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  cat:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <ellipse cx="18" cy="26" rx="18" ry="11" fill="#5B534A"/>
     <circle cx="33" cy="17" r="9" fill="#5B534A"/>
     <path d="M 27 10 l 2 -8 l 6 5 Z M 39 10 l 4 -7 l 2 8 Z" fill="#5B534A"/>
     <circle cx="30" cy="16" r="1.6" fill="#D9E36A"/><circle cx="36" cy="16" r="1.6" fill="#D9E36A"/>
     <path d="M 1 24 q -8 -10 2 -14" stroke="#5B534A" stroke-width="5" fill="none" stroke-linecap="round"/></g>`},
-  worlds_ok_boss:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  worlds_ok_boss:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <path d="M 6 4 h 22 v 20 h -6 l 0 8 l -8 -8 h -8 Z" fill="#E8E4D8" stroke="#B9B2A0" stroke-width="1.6"/>
     <rect x="4" y="24" width="26" height="12" rx="2" fill="#B08D4A"/>
     <text x="17" y="15" text-anchor="middle" font-family="Archivo,sans-serif" font-size="6.5" fill="#6E675B">OK-ish</text></g>`},
-  motivational:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  motivational:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect width="72" height="52" fill="#2F3A44" stroke="#8B857A" stroke-width="2"/>
     <path d="M 8 40 L 26 22 L 38 32 L 62 10" stroke="#7FA860" stroke-width="3" fill="none"/>
     <text x="36" y="49" text-anchor="middle" font-family="Zilla Slab,serif" font-size="7" fill="#EDE6D9">SYNERGY</text></g>`},
-  fishtank:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  fishtank:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect width="64" height="42" rx="3" fill="#BEE0EA" stroke="#8B857A" stroke-width="2"/>
     <rect x="3" y="33" width="58" height="7" fill="#C9B98A"/>
     <path d="M 22 20 l 9 -5 l 0 10 Z" fill="#E08A3C"/><circle cx="20" cy="20" r="1.6" fill="#2F4A5A"/>
     <path d="M 46 30 q 3 -12 0 -18" stroke="#3F7A4A" stroke-width="3" fill="none"/></g>`},
-  shredder:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  shredder:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect y="12" width="52" height="26" rx="3" fill="#4A4C50"/>
     <rect x="8" y="16" width="36" height="3" fill="#1D1F22"/>
     <g fill="#F2EEE2">${[0,1,2,3].map(i=>`<rect x="${10+i*9}" y="${-2-(i%2)*5}" width="6" height="16"/>`).join("")}</g></g>`},
-  guitar:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y}) rotate(-8)">
+  guitar:{draw:(x,y)=>`<g transform="translate(${x} ${y}) rotate(-8)">
     <ellipse cx="18" cy="46" rx="18" ry="20" fill="#B5651D"/><circle cx="18" cy="44" r="6" fill="#2A211A"/>
     <rect x="14" y="-6" width="8" height="34" fill="#6B4423"/><rect x="12" y="-12" width="12" height="8" rx="2" fill="#2A211A"/></g>`},
-  babyphoto:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  babyphoto:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     <rect width="40" height="46" fill="#F3EFE4" stroke="#A98038" stroke-width="3"/>
     <circle cx="20" cy="20" r="9" fill="#E8C3A0"/><path d="M 7 40 q 0 -11 13 -11 q 13 0 13 11 Z" fill="#9FC4DE"/></g>`},
-  energydrinks:{w:1,draw:(x,y)=>`<g transform="translate(${x} ${y})">
+  energydrinks:{draw:(x,y)=>`<g transform="translate(${x} ${y})">
     ${[0,1,2,3].map(i=>`<rect x="${i*13}" y="${i%2?4:0}" width="10" height="24" rx="2" fill="${i%2?"#4E7F2E":"#2E6FA8"}"/>`).join("")}
     <rect x="14" y="-18" width="10" height="24" rx="2" fill="#4E7F2E"/></g>`}
 };
-/* Which eggs suit whom. Some are universal; some only make sense on one desk. */
 const EGG_POOL={
   shark:["ring","trophy2","motivational","shredder"],
-  pro:["babyphoto","fishtank","vietnam","motivational"],
+  pro:["babyphoto","fishtank","motivational"],
   burnout:["energydrinks","cat","divorce","worlds_ok_boss"],
   hype:["guitar","energydrinks","motivational","trophy2"],
   bureaucrat:["shredder","worlds_ok_boss","babyphoto"],
@@ -1678,63 +1664,94 @@ const namedIssues=(text,sc)=>{const t=text.toLowerCase();
    The menu: the empty room, before anyone sits down.
    ====================================================================== */
 function menuArtSVG(){
-  const rng=rngFrom(20260915);
-  let towers="",cx=604;
-  while(cx<910){const bw=rng.int(26,52), bh=rng.int(70,190);
-    towers+=`<rect x="${cx}" y="${232-bh}" width="${bw}" height="${bh}" fill="#9EBACF"/>`+
-            `<rect x="${cx}" y="${232-bh}" width="${Math.round(bw*0.4)}" height="${bh}" fill="#B3CADC"/>`;
-    cx+=bw+rng.int(4,12);}
-  let panes="";
-  for(let i=0;i<60;i++){
-    const x=612+Math.floor(rng.next()*292), y=70+Math.floor(rng.next()*150);
-    panes+=`<rect class="twinkle" style="animation-delay:${(rng.next()*5).toFixed(2)}s" x="${x}" y="${y}" width="4" height="5" fill="#7FA0BC" opacity=".55"/>`;
+  const rng=rngFrom(4120263);
+  const BOX=["#2E6494","#C4643C","#3F7A4A","#B8912E","#7A4A6B","#3E6C96","#9A4A36","#4E6B57"];
+  const QUAY=200;                         // everything on the dock stands on this line
+  const box=(x,y,w,h,c)=>{
+    const ribs=Math.max(2,Math.round(w/8));
+    let r="";
+    for(let i=0;i<ribs;i++)
+      r+=`<rect x="${(x+2.5+i*(w-5)/ribs).toFixed(1)}" y="${y+2.5}" width="${Math.max(1.4,(w-5)/ribs-2).toFixed(1)}" height="${h-5}" fill="rgba(255,255,255,.14)"/>`;
+    return `<g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.4" fill="${c}"/>${r}`+
+      `<rect x="${x}" y="${y}" width="${w}" height="2.2" fill="rgba(255,255,255,.24)"/>`+
+      `<rect x="${x}" y="${y+h-2.2}" width="${w}" height="2.2" fill="rgba(0,0,0,.22)"/></g>`;
+  };
+  let stacks="", sx=-14;
+  while(sx<980){
+    const cw=rng.int(54,86), rows=rng.int(2,5);
+    for(let r=0;r<rows;r++){
+      const per=rng.chance(.45)?2:1;
+      for(let c=0;c<per;c++){
+        const w=per===2?cw/2-2:cw;
+        stacks+=box(sx+c*(cw/2), QUAY-16-r*17, w, 15, BOX[rng.int(0,BOX.length-1)]);
+      }
+    }
+    sx+=cw+rng.int(8,22);
   }
-  return `<svg viewBox="0 0 960 470" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  const crane=(x,top)=>`
+    <g stroke="#67737D" stroke-width="5" fill="none" stroke-linecap="square">
+      <path d="M ${x} ${QUAY} L ${x} ${top+26}"/><path d="M ${x+54} ${QUAY} L ${x+54} ${top+26}"/>
+      <path d="M ${x-4} ${top+26} L ${x+58} ${top+26}"/>
+      <path d="M ${x+27} ${top+26} L ${x+27} ${top+10}"/>
+      <path d="M ${x-46} ${top+10} L ${x+128} ${top+10}"/>
+      <path d="M ${x+27} ${top+10} L ${x+96} ${top-16}"/>
+    </g>
+    <rect x="${x+62}" y="${top+12}" width="15" height="19" rx="2" fill="#93A0AA"/>
+    <path d="M ${x+104} ${top+12} L ${x+104} ${top+44}" stroke="#67737D" stroke-width="2.5"/>
+    ${box(x+92,top+44,26,14,"#C4643C")}`;
+  let far="", fx=0;
+  while(fx<960){const bw=rng.int(14,28),bh=rng.int(16,58);
+    far+=`<rect x="${fx}" y="${132-bh}" width="${bw}" height="${bh}" fill="#AEBECC" opacity=".8"/>`;fx+=bw+rng.int(3,11)}
+  return `<svg viewBox="0 0 960 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
-      <linearGradient id="mwall" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#E7EAED"/><stop offset="1" stop-color="#C6CBD0"/></linearGradient>
-      <linearGradient id="msky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#9AC7E8"/><stop offset="1" stop-color="#D3E6F4"/></linearGradient>
-      <linearGradient id="mtable" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#B07C46"/><stop offset="1" stop-color="#6B4626"/></linearGradient>
-      <linearGradient id="mshaft" x1="0" y1="0" x2="0.4" y2="1">
-        <stop offset="0" stop-color="#FFF8E6" stop-opacity=".62"/>
-        <stop offset="1" stop-color="#FFF8E6" stop-opacity="0"/></linearGradient>
+      <linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8CB4D8"/><stop offset=".55" stop-color="#C8CFD4"/>
+        <stop offset="1" stop-color="#F0D6B4"/></linearGradient>
+      <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#7893AA"/><stop offset="1" stop-color="#55738B"/></linearGradient>
+      <linearGradient id="apron" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#B4AFA5"/><stop offset="1" stop-color="#8E8A82"/></linearGradient>
     </defs>
-    <rect width="960" height="470" fill="url(#mwall)"/>
-    <rect y="356" width="960" height="114" fill="#AEB3B8"/><rect y="350" width="960" height="7" fill="#8E9499"/>
-    <rect x="596" y="46" width="322" height="196" fill="url(#msky)"/>
-    ${towers}${panes}
-    <g fill="#FFFFFF" opacity=".8">
-      <ellipse cx="660" cy="86" rx="40" ry="14"/><ellipse cx="690" cy="80" rx="26" ry="11"/>
-      <ellipse cx="850" cy="118" rx="34" ry="12"/></g>
-    <rect x="588" y="38" width="338" height="212" rx="4" fill="none" stroke="#8E9AA3" stroke-width="9"/>
-    <rect x="752" y="38" width="6" height="212" fill="#8E9AA3"/>
-    <path d="M 596 60 L 918 60 L 700 470 L 250 470 Z" fill="url(#mshaft)"/>
+    <rect width="960" height="330" fill="url(#dawn)"/>
+    <circle cx="700" cy="104" r="30" fill="#FFE6BE" opacity=".9"/>
+    <circle cx="700" cy="104" r="58" fill="#FFE6BE" opacity=".22"/>
+    <g opacity=".6" fill="#FFFFFF">
+      <ellipse cx="200" cy="48" rx="54" ry="13"/><ellipse cx="246" cy="41" rx="32" ry="10"/>
+      <ellipse cx="820" cy="60" rx="42" ry="11"/></g>
     <g class="drift">
-      <path d="M 470 0 L 470 62" stroke="#A8ADB2" stroke-width="3"/>
-      <path d="M 428 62 L 512 62 L 498 96 L 442 96 Z" fill="#E8E4DA"/>
-      <ellipse cx="470" cy="96" rx="28" ry="7" fill="#FFF3D6"/>
+      <path d="M 120 34 l 34 11 l -34 11 l 9 -11 Z" fill="#4A5661"/>
+      <path d="M 137 45 l 24 -3 l -7 6 Z" fill="#4A5661"/>
+      <g stroke="#FFFFFF" stroke-width="2.4" stroke-dasharray="3 12" opacity=".6"><path d="M 14 45 L 120 45"/></g>
     </g>
+    ${far}
+    <rect y="132" width="960" height="46" fill="url(#sea)"/>
+    <g opacity=".45" stroke="#CFDDE8" stroke-width="2" fill="none">
+      <path d="M 40 150 q 16 -4 32 0 M 210 164 q 16 -4 32 0 M 430 148 q 16 -4 32 0
+               M 640 166 q 16 -4 32 0 M 840 152 q 16 -4 32 0"/></g>
     <g>
-      <rect x="72" y="58" width="128" height="92" rx="3" fill="#F6F3EA" stroke="#B0A894" stroke-width="3"/>
-      <rect x="84" y="70" width="104" height="8" fill="#9FBBD2"/><rect x="84" y="88" width="72" height="8" fill="#9FBBD2"/>
-      <rect x="84" y="106" width="88" height="8" fill="#9FBBD2"/>
+      <path d="M 516 178 L 830 178 L 808 156 L 538 156 Z" fill="#37444F"/>
+      <rect x="566" y="128" width="72" height="28" fill="#EAE6DC"/>
+      <g fill="#5E7C93"><rect x="574" y="135" width="11" height="9"/><rect x="590" y="135" width="11" height="9"/>
+        <rect x="606" y="135" width="11" height="9"/></g>
+      <rect x="690" y="116" width="13" height="40" fill="#C4643C"/>
+      ${box(710,138,40,17,"#2E6494")}${box(754,138,40,17,"#3F7A4A")}
     </g>
-    <path d="M 168 356 l 34 0 l -5 34 l -24 0 Z" fill="#B0714A"/>
-    <g fill="#4E8F58">${[0,1,2,3].map(i=>`<ellipse cx="${185+(i-1.5)*13}" cy="${330-Math.abs(i-1.5)*8}" rx="9" ry="23" transform="rotate(${(i-1.5)*24} ${185+(i-1.5)*13} 330)"/>`).join("")}</g>
+    <rect y="178" width="960" height="24" fill="#A29D94"/>
+    <rect y="178" width="960" height="4" fill="#C6C1B7"/>
+    <g opacity=".92">${crane(80,44)}${crane(404,24)}${crane(724,52)}</g>
+    ${stacks}
+    <rect y="${QUAY}" width="960" height="130" fill="url(#apron)"/>
+    <rect y="${QUAY}" width="960" height="5" fill="#C6C1B7"/>
+    <g stroke="#DCD6C9" stroke-width="4" stroke-dasharray="26 22" opacity=".6">
+      <path d="M 0 250 L 960 250"/></g>
     <g>
-      <path d="M 300 330 l 70 0 l 0 -52 q -35 -14 -70 0 Z" fill="#4A5157"/>
-      <path d="M 300 282 q 35 -12 70 0 l 0 7 q -35 -11 -70 0 Z" fill="#6E747A"/>
-      <path d="M 590 330 l 70 0 l 0 -52 q -35 -14 -70 0 Z" fill="#4A5157"/>
-      <path d="M 590 282 q 35 -12 70 0 l 0 7 q -35 -11 -70 0 Z" fill="#6E747A"/>
+      <rect x="120" y="236" width="96" height="40" rx="3" fill="#C4643C"/>
+      <rect x="120" y="236" width="96" height="5" fill="rgba(255,255,255,.25)"/>
+      <rect x="216" y="248" width="34" height="28" rx="3" fill="#3E4A55"/>
+      <circle cx="146" cy="280" r="9" fill="#2A2E33"/><circle cx="196" cy="280" r="9" fill="#2A2E33"/>
+      <circle cx="238" cy="280" r="9" fill="#2A2E33"/>
     </g>
-    <path d="M 150 470 L 810 470 L 700 330 L 260 330 Z" fill="url(#mtable)"/>
-    <path d="M 260 330 L 700 330 L 694 342 L 266 342 Z" fill="#D2A570"/>
-    <g opacity=".96">
-      <rect x="398" y="352" width="86" height="60" rx="2" fill="#FFFDF7" transform="rotate(-4 398 352)"/>
-      <rect x="486" y="358" width="86" height="60" rx="2" fill="#F4F1E7" transform="rotate(3 486 358)"/>
-    </g>
+    <g>${box(700,244,74,32,"#B8912E")}${box(782,244,74,32,"#2E6494")}</g>
   </svg>`;
 }
 const ICONS={
@@ -2446,9 +2463,9 @@ function buildReview(){
       note="You walked out with nothing, and there was a deal on the table both of you would have signed.";
   if(dealt){
     const v=0.65*capture+0.35*efficiency;
-    if(v>=0.82){medal="gold";rank="Shark";note="About as well as this could have gone. You found the trades and you took them.";}
-    else if(v>=0.66){medal="silver";rank="Closer";note="A strong deal. You traded properly, with a little still left behind.";}
-    else if(v>=0.48){medal="bronze";rank="Dealmaker";note="A real deal, but an ordinary one. There was more on the table than you took.";}
+    if(v>=0.705){medal="gold";rank="Shark";note="About as well as this could have gone. You found the trades and you took them.";}
+    else if(v>=0.536){medal="silver";rank="Closer";note="A strong deal. You traded properly, with a little still left behind.";}
+    else if(v>=0.404){medal="bronze";rank="Dealmaker";note="A real deal, but an ordinary one. There was more on the table than you took.";}
     else {medal="none";rank="Rookie";note="You signed, but this deal cost you most of what was available.";}
   }
   return{s,rows,capture,efficiency,valueLeft,medal,rank,note,best,bestScore,dealt,viable,
